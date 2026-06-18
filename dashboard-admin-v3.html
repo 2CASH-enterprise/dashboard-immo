@@ -353,6 +353,43 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--ink);font-siz
         <div class="scraper-status" id="scraper-status"></div>
       </div>
 
+      <!-- Import CSV / Excel -->
+      <div class="card mb-18">
+        <div class="card-header">
+          <div class="card-title">📥 Importer depuis un fichier (CSV / Excel / Google Sheet)</div>
+        </div>
+        <div class="card-body">
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <div style="font-size:13px;color:var(--ink-2);line-height:1.6">
+              Colle directement les données copiées depuis ton Google Sheet, ou importe un fichier <strong>.csv</strong> / <strong>.xlsx</strong>.<br/>
+              Colonnes attendues : <code style="background:var(--bg);padding:2px 6px;border-radius:4px;font-size:12px">Nom, Adresse, Note, Place ID</code> (ou similaire — détection automatique).
+            </div>
+
+            <div style="display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap">
+              <!-- Coller des données -->
+              <div style="flex:1;min-width:280px;display:flex;flex-direction:column;gap:8px">
+                <label class="form-label">Coller depuis Google Sheet / Excel</label>
+                <textarea id="paste-area" placeholder="Colle ici (Cmd+V) les lignes copiées depuis ton tableau…&#10;Ex:&#10;Agence Dupont	12 rue de la Paix, Rennes	4.5	ChIJ...&#10;Immo Martin	8 avenue Foch, Rennes	4.2	ChIJ..." style="width:100%;min-height:120px;padding:10px 12px;border:1px solid var(--border-2);border-radius:8px;font-size:12px;font-family:monospace;resize:vertical;outline:none" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--border-2)'"></textarea>
+                <button class="btn btn-primary btn-sm" style="align-self:flex-start" onclick="parsePastedData()">📋 Analyser le texte collé</button>
+              </div>
+
+              <!-- Upload fichier -->
+              <div style="flex:1;min-width:280px;display:flex;flex-direction:column;gap:8px">
+                <label class="form-label">Ou importe un fichier</label>
+                <div id="drop-zone" style="border:2px dashed var(--border-2);border-radius:10px;padding:28px 16px;text-align:center;cursor:pointer;transition:all .15s;display:flex;flex-direction:column;align-items:center;gap:8px" onclick="document.getElementById('file-input').click()">
+                  <div style="font-size:28px">📄</div>
+                  <div style="font-size:13px;color:var(--ink-2);font-weight:500">Clique pour choisir un fichier</div>
+                  <div style="font-size:11px;color:var(--ink-3)">.csv ou .xlsx</div>
+                </div>
+                <input type="file" id="file-input" accept=".csv,.xlsx,.xls" style="display:none" onchange="handleFileImport(event)"/>
+              </div>
+            </div>
+
+            <div id="import-status" style="font-size:12px;min-height:18px"></div>
+          </div>
+        </div>
+      </div>
+
       <!-- Résultats -->
       <div class="results-panel" id="results-panel">
         <div class="results-header">
@@ -877,6 +914,123 @@ function renderBarChart(id,data,color){
 }
 renderBarChart('activity-chart',[{label:'Lun',val:8},{label:'Mar',val:12},{label:'Mer',val:7},{label:'Jeu',val:15},{label:'Ven',val:5},{label:'Sam',val:0},{label:'Dim',val:0}],'var(--blue)');
 renderBarChart('mrr-chart',[{label:'M-4',val:0},{label:'M-3',val:0},{label:'M-2',val:149},{label:'M-1',val:498},{label:'Ce mois',val:847}],'var(--green)');
+
+// ── IMPORT CSV / EXCEL / PASTE ───────────────────────────────────────────────
+function detectColumns(headerRow){
+  const map = {name:-1, address:-1, rating:-1, place_id:-1, phone:-1, email:-1, ville:-1, site:-1};
+  headerRow.forEach((h,i)=>{
+    const v = (h||'').toString().toLowerCase().trim();
+    if(/nom|name|agence/.test(v) && map.name===-1) map.name=i;
+    else if(/adresse|address|vicinity/.test(v) && map.address===-1) map.address=i;
+    else if(/note|rating|avis/.test(v) && map.rating===-1) map.rating=i;
+    else if(/place.?id/.test(v) && map.place_id===-1) map.place_id=i;
+    else if(/t[ée]l|phone/.test(v) && map.phone===-1) map.phone=i;
+    else if(/email|mail/.test(v) && map.email===-1) map.email=i;
+    else if(/ville|city/.test(v) && map.ville===-1) map.ville=i;
+    else if(/site|web/.test(v) && map.site===-1) map.site=i;
+  });
+  return map;
+}
+
+function rowsToProspectsAndImport(rows){
+  if(!rows.length){return 0;}
+  const firstRow = rows[0].map(c=>(c||'').toString().toLowerCase());
+  const looksLikeHeader = firstRow.some(c=>/nom|name|adresse|address|note|rating|place.?id/.test(c));
+  const map = detectColumns(rows[0]);
+  const dataRows = looksLikeHeader ? rows.slice(1) : rows;
+  const useMap = looksLikeHeader ? map : {name:0,address:1,rating:2,place_id:3,phone:-1,email:-1,ville:-1,site:-1};
+
+  let count = 0;
+  dataRows.forEach(r=>{
+    const name = useMap.name>=0 ? r[useMap.name] : '';
+    if(!name || !name.toString().trim()) return;
+    if(prospects.find(p=>p.name===name)) return;
+
+    const address = useMap.address>=0 ? (r[useMap.address]||'') : '';
+    const ville = useMap.ville>=0 ? (r[useMap.ville]||'') : (address.split(',').pop()||'').trim();
+
+    prospects.push({
+      id:nextId++,
+      name: name.toString().trim(),
+      contact: '—',
+      email: useMap.email>=0 ? (r[useMap.email]||'') : '',
+      phone: useMap.phone>=0 ? (r[useMap.phone]||'') : '',
+      ville: ville || '—',
+      website: useMap.site>=0 ? (r[useMap.site]||'') : '',
+      status:'contacte',
+      seq:'À envoyer',
+      ouvert:false,
+      source:'import',
+      rating: useMap.rating>=0 ? (r[useMap.rating]||'') : '',
+    });
+    count++;
+  });
+  return count;
+}
+
+function setImportStatus(msg, color='var(--ink-3)'){
+  const el = document.getElementById('import-status');
+  el.style.color = color;
+  el.textContent = msg;
+}
+
+function parsePastedData(){
+  const raw = document.getElementById('paste-area').value;
+  if(!raw.trim()){setImportStatus('⚠️ Colle d\'abord des données dans la zone de texte','var(--amber)');return;}
+  const sep = raw.includes('\t') ? '\t' : (raw.split('\n')[0].split(',').length>1 ? ',' : '\t');
+  const rows = raw.trim().split('\n').map(line=>line.split(sep).map(c=>c.trim()));
+  const count = rowsToProspectsAndImport(rows);
+  if(count>0){
+    setImportStatus(`✅ ${count} agence${count>1?'s':''} importée${count>1?'s':''} dans ta liste de prospection !`,'var(--green)');
+    document.getElementById('paste-area').value='';
+    setTimeout(()=>showPage('prospection',document.querySelector('[onclick*=prospection]')),900);
+  } else {
+    setImportStatus('Aucune nouvelle agence trouvée (déjà présentes ou format non reconnu)','var(--amber)');
+  }
+}
+
+function parseCSV(text){
+  const sep = text.split('\n')[0].includes(';') ? ';' : ',';
+  return text.trim().split('\n').map(line=>line.split(sep).map(c=>c.replace(/^"|"$/g,'').trim()));
+}
+
+function handleFileImport(event){
+  const file = event.target.files[0];
+  if(!file) return;
+  setImportStatus('⏳ Lecture du fichier…');
+  const ext = file.name.split('.').pop().toLowerCase();
+  const reader = new FileReader();
+
+  if(ext === 'csv'){
+    reader.onload = (e)=>{
+      const rows = parseCSV(e.target.result);
+      const count = rowsToProspectsAndImport(rows);
+      if(count>0){
+        setImportStatus(`✅ ${count} agence${count>1?'s':''} importée${count>1?'s':''} depuis ${file.name} !`,'var(--green)');
+        setTimeout(()=>showPage('prospection',document.querySelector('[onclick*=prospection]')),900);
+      } else {
+        setImportStatus('Aucune nouvelle agence trouvée dans ce fichier','var(--amber)');
+      }
+    };
+    reader.readAsText(file, 'UTF-8');
+  } else if(ext === 'xlsx' || ext === 'xls'){
+    setImportStatus('⚠️ Pour les fichiers Excel, exporte d\'abord en CSV (Fichier → Télécharger → CSV), ou copie-colle directement les cellules dans la zone de texte ci-dessus.','var(--amber)');
+  } else {
+    setImportStatus('Format non supporté — utilise .csv ou colle le texte directement','var(--red)');
+  }
+  event.target.value = '';
+}
+
+document.addEventListener('DOMContentLoaded', ()=>{
+  const dz = document.getElementById('drop-zone');
+  if(!dz) return;
+  ['dragover','dragenter'].forEach(ev=>dz.addEventListener(ev, e=>{e.preventDefault();dz.style.borderColor='var(--blue)';dz.style.background='var(--blue-bg)';}));
+  ['dragleave','drop'].forEach(ev=>dz.addEventListener(ev, e=>{e.preventDefault();dz.style.borderColor='var(--border-2)';dz.style.background='transparent';}));
+  dz.addEventListener('drop', e=>{
+    const file = e.dataTransfer.files[0];
+    if(file){ handleFileImport({target:{files:[file], value:''}}); }
+  });
+});
 
 // Init
 renderProspects();
