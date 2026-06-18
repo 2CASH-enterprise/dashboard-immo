@@ -670,8 +670,14 @@ function setStatus(msg,color='rgba(255,255,255,.4)'){
 }
 
 async function searchPlaces(){
-  const CORS = "https://thingproxy.freeboard.io/fetch/";
+  const CORS = "https://agenc-ai.com/proxy/";
   const GKEY = "AIzaSyBSlntvhcYg8KCiUHBcw9lQTLOgbRA1Mao";
+
+  async function gFetch(url) {
+    const path = url.replace('https://maps.googleapis.com/', '');
+    const res = await fetch(CORS + path);
+    return res.json();
+  }
   const keyword = document.getElementById('search-keyword').value.trim()||'agence immobilière';
   const location = document.getElementById('search-location').value.trim();
   if(!location){alert('Entre une ville ou zone');return;}
@@ -685,16 +691,14 @@ async function searchPlaces(){
   try {
     // 1. Géocoder la ville
     const geoUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(location)}&key=${GKEY}`;
-    const geoRes = await fetch(CORS + encodeURIComponent(geoUrl));
-    const geoData = await geoRes.json();
+    const geoData = await gFetch(geoUrl);
     if(!geoData.results?.length) throw new Error('Ville introuvable. Essaie "Lyon" ou "Bordeaux".');
     const {lat,lng} = geoData.results[0].geometry.location;
     setStatus('<div class="spinner" style="border-color:rgba(255,255,255,.2);border-top-color:rgba(255,255,255,.7)"></div> Recherche des agences dans un rayon de '+radius/1000+'km…');
 
     // 2. Places Nearby Search
     const placesUrl = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lng}&radius=${radius}&keyword=${encodeURIComponent(keyword)}&type=real_estate_agency&key=${GKEY}`;
-    const placesRes = await fetch(CORS + encodeURIComponent(placesUrl));
-    const placesData = await placesRes.json();
+    const placesData = await gFetch(placesUrl);
 
     if(placesData.status==='REQUEST_DENIED') throw new Error('Clé API refusée.');
     if(placesData.status==='ZERO_RESULTS'){setStatus('Aucun résultat. Essaie un rayon plus grand.');btn.disabled=false;btn.innerHTML='<span>🔍</span> Rechercher';return;}
@@ -716,8 +720,7 @@ async function searchPlaces(){
     await Promise.all(toDetail.map(async (p)=>{
       try{
         const dUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${p.place_id}&fields=formatted_phone_number,website&key=${GKEY}`;
-        const dRes = await fetch(CORS + encodeURIComponent(dUrl));
-        const dData = await dRes.json();
+        const dData = await gFetch(dUrl);
         if(dData.result){
           p.phone = dData.result.formatted_phone_number||'';
           p.website = dData.result.website ? dData.result.website.replace(/^https?:\/\//,'').replace(/\/$/,'') : '';
