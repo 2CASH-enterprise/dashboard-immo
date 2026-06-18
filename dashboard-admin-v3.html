@@ -314,11 +314,13 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--ink);font-siz
         <div class="scraper-title">🗺️ Recherche d'agences — Google Places</div>
         <div class="scraper-sub">Trouve des agences immobilières indépendantes et importe-les directement dans ta liste de prospection</div>
 
-        <!-- Proxy actif -->
+        <!-- Clé API -->
         <div class="api-key-row">
-          <div class="api-key-icon">✅</div>
-          <div class="api-key-label" style="color:rgba(13,122,78,.9);font-weight:600">Proxy Google Places actif</div>
-          <span style="font-size:11px;color:rgba(255,255,255,.3);margin-left:8px">Via Apps Script — aucune clé requise ici</span>
+          <div class="api-key-icon">🔑</div>
+          <div class="api-key-label">Clé API Google :</div>
+          <input class="api-key-input" type="password" id="api-key-input" placeholder="AIza..." value=""/>
+          <button onclick="toggleKeyVisibility()" style="background:none;border:none;color:rgba(255,255,255,.3);cursor:pointer;font-size:12px">👁</button>
+          <button onclick="saveApiKey()" style="background:rgba(22,73,255,.3);border:1px solid rgba(22,73,255,.5);color:#fff;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer;font-family:var(--font-body)">Enregistrer</button>
         </div>
 
         <!-- Formulaire de recherche -->
@@ -671,14 +673,27 @@ function setStatus(msg,color='rgba(255,255,255,.4)'){
 
 async function searchPlaces(){
   const CORS = "https://agenc-ai.com/proxy/";
-  const GKEY = "AIzaSyBSlntvhcYg8KCiUHBcw9lQTLOgbRA1Mao";
+  let GKEY = localStorage.getItem('gkey') || '';
 
+  function saveApiKey(){
+    GKEY = document.getElementById('api-key-input').value.trim();
+    localStorage.setItem('gkey', GKEY);
+    setStatus('✅ Clé API enregistrée','rgba(13,122,78,.8)');
+  }
+  function toggleKeyVisibility(){
+    const inp=document.getElementById('api-key-input');
+    inp.type = inp.type==='password'?'text':'password';
+  }
   async function gFetch(url) {
     const path = url.replace('https://maps.googleapis.com/', '');
     const res = await fetch(CORS + path);
     return res.json();
   }
-  const keyword = document.getElementById('search-keyword').value.trim()||'agence immobilière';
+  if(!GKEY){
+    const k = document.getElementById('api-key-input')?.value.trim();
+    if(k) { GKEY = k; localStorage.setItem('gkey', GKEY); }
+    else { alert('Entre ta clé API Google Places d\'abord'); return; }
+  }
   const location = document.getElementById('search-location').value.trim();
   if(!location){alert('Entre une ville ou zone');return;}
   const radius = document.getElementById('search-radius').value;
