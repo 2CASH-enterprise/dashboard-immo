@@ -694,6 +694,7 @@ async function searchPlaces(){
     if(k) { GKEY = k; localStorage.setItem('gkey', GKEY); }
     else { alert('Entre ta clé API Google Places d\'abord'); return; }
   }
+  const keyword = document.getElementById('search-keyword').value.trim()||'agence immobilière';
   const location = document.getElementById('search-location').value.trim();
   if(!location){alert('Entre une ville ou zone');return;}
   const radius = document.getElementById('search-radius').value;
