@@ -671,28 +671,28 @@ function setStatus(msg,color='rgba(255,255,255,.4)'){
   el.innerHTML=msg;
 }
 
-async function searchPlaces(){
-  const CORS = "https://agenc-ai.com/proxy/";
-  let GKEY = localStorage.getItem('gkey') || '';
+const CORS = "https://agenc-ai.com/proxy/";
 
-  function saveApiKey(){
-    GKEY = document.getElementById('api-key-input').value.trim();
-    localStorage.setItem('gkey', GKEY);
-    setStatus('✅ Clé API enregistrée','rgba(13,122,78,.8)');
-  }
-  function toggleKeyVisibility(){
-    const inp=document.getElementById('api-key-input');
-    inp.type = inp.type==='password'?'text':'password';
-  }
-  async function gFetch(url) {
-    const path = url.replace('https://maps.googleapis.com/', '');
-    const res = await fetch(CORS + path);
-    return res.json();
-  }
+function saveApiKey(){
+  const k = document.getElementById('api-key-input').value.trim();
+  if(k){ localStorage.setItem('gkey', k); setStatus('✅ Clé API enregistrée','rgba(13,122,78,.8)'); }
+}
+function toggleKeyVisibility(){
+  const inp=document.getElementById('api-key-input');
+  inp.type = inp.type==='password'?'text':'password';
+}
+async function gFetch(url) {
+  const path = url.replace('https://maps.googleapis.com/', '');
+  const res = await fetch(CORS + path);
+  return res.json();
+}
+
+async function searchPlaces(){
+  let GKEY = localStorage.getItem('gkey') || '';
   if(!GKEY){
     const k = document.getElementById('api-key-input')?.value.trim();
-    if(k) { GKEY = k; localStorage.setItem('gkey', GKEY); }
-    else { alert('Entre ta clé API Google Places d\'abord'); return; }
+    if(k){ GKEY = k; localStorage.setItem('gkey', GKEY); }
+    else { alert("Entre ta clé API Google Places d'abord"); return; }
   }
   const keyword = document.getElementById('search-keyword').value.trim()||'agence immobilière';
   const location = document.getElementById('search-location').value.trim();
