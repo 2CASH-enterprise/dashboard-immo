@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ImmoAssistant — Dashboard Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#0f0f0f;--ink-2:#3d3d3a;--ink-3:#888780;--ink-4:#c2c0b6;
+  --bg:#f5f4f0;--surface:#ffffff;--border:#e8e5de;--border-2:#d3d1c7;
+  --blue:#1649ff;--blue-bg:#eef1ff;--blue-mid:#c7d0ff;
+  --green:#0d7a4e;--green-bg:#e6f5ee;
+  --amber:#b86e00;--amber-bg:#fef3e2;
+  --red:#c0392b;--red-bg:#fdecea;
+  --purple:#5b3fd4;--purple-bg:#f0edfd;
+  --radius:10px;--radius-lg:16px;
+  --font-display:'Syne',sans-serif;
+  --font-body:'Inter',sans-serif;
+}
+body{font-family:var(--font-body);background:var(--bg);color:var(--ink);font-size:14px;line-height:1.5;min-height:100vh;display:flex}
+
+/* SIDEBAR */
+.sidebar{width:220px;min-height:100vh;background:var(--ink);display:flex;flex-direction:column;flex-shrink:0;position:sticky;top:0;height:100vh}
+.sidebar-logo{padding:24px 20px 20px;font-family:var(--font-display);font-weight:800;font-size:17px;color:#fff;letter-spacing:-.3px;border-bottom:1px solid rgba(255,255,255,.08)}
+.sidebar-logo span{color:var(--blue-mid)}
+.sidebar-section{padding:20px 12px 8px;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.25);font-weight:600}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;color:rgba(255,255,255,.55);cursor:pointer;transition:all .15s;margin:1px 0;font-size:13px}
+.nav-item:hover{background:rgba(255,255,255,.07);color:rgba(255,255,255,.85)}
+.nav-item.active{background:rgba(22,73,255,.25);color:#fff}
+.nav-item .icon{font-size:15px;width:18px;text-align:center}
+.sidebar-bottom{margin-top:auto;padding:16px 12px;border-top:1px solid rgba(255,255,255,.08)}
+.user-chip{display:flex;align-items:center;gap:10px}
+.avatar{width:30px;height:30px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;color:#fff;font-family:var(--font-display);font-weight:700;font-size:12px;flex-shrink:0}
+.user-name{font-size:12px;color:#fff;font-weight:500}
+.user-role{font-size:10px;color:rgba(255,255,255,.35)}
+
+/* MAIN */
+.main{flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden}
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 28px;height:56px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.topbar-title{font-family:var(--font-display);font-weight:700;font-size:16px}
+.topbar-actions{display:flex;align-items:center;gap:10px}
+.btn{padding:7px 16px;border-radius:40px;font-size:13px;font-weight:500;border:none;cursor:pointer;font-family:var(--font-body);transition:opacity .15s}
+.btn:hover{opacity:.85}
+.btn-primary{background:var(--blue);color:#fff}
+.btn-ghost{background:transparent;border:1px solid var(--border-2);color:var(--ink-2)}
+.btn-green{background:var(--green);color:#fff}
+.btn-sm{padding:5px 12px;font-size:12px}
+.content{flex:1;overflow-y:auto;padding:28px}
+
+/* PAGES */
+.page{display:none}
+.page.active{display:block}
+
+/* KPI ROW */
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px}
+.kpi{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px 20px 18px;display:flex;flex-direction:column;gap:6px}
+.kpi-label{font-size:11px;color:var(--ink-3);text-transform:uppercase;letter-spacing:.8px;font-weight:600}
+.kpi-val{font-family:var(--font-display);font-size:32px;font-weight:800;letter-spacing:-1px;line-height:1}
+.kpi-sub{font-size:11px;display:flex;align-items:center;gap:4px}
+.delta-up{color:var(--green)}
+.delta-neutral{color:var(--ink-3)}
+
+/* CARDS */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden}
+.card-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.card-title{font-family:var(--font-display);font-size:14px;font-weight:700}
+.card-body{padding:20px}
+.card-action{font-size:12px;color:var(--blue);cursor:pointer;font-weight:500}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px}
+.grid-3{display:grid;grid-template-columns:2fr 1fr;gap:18px;margin-bottom:18px}
+.mb-18{margin-bottom:18px}
+
+/* TABLES */
+.table{width:100%;border-collapse:collapse}
+.table th{text-align:left;font-size:11px;color:var(--ink-3);text-transform:uppercase;letter-spacing:.8px;font-weight:600;padding:8px 12px;border-bottom:1px solid var(--border);background:var(--bg)}
+.table td{padding:11px 12px;border-bottom:1px solid var(--border);font-size:13px;vertical-align:middle}
+.table tr:last-child td{border-bottom:none}
+.table tr:hover td{background:var(--bg)}
+
+/* BADGES */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:500}
+.badge-green{background:var(--green-bg);color:var(--green)}
+.badge-amber{background:var(--amber-bg);color:var(--amber)}
+.badge-blue{background:var(--blue-bg);color:var(--blue)}
+.badge-red{background:var(--red-bg);color:var(--red)}
+.badge-gray{background:var(--bg);color:var(--ink-3);border:1px solid var(--border)}
+.badge-purple{background:var(--purple-bg);color:var(--purple)}
+
+/* FUNNEL */
+.funnel{display:flex;flex-direction:column;gap:8px;padding:4px 0}
+.funnel-step{display:flex;align-items:center;gap:12px}
+.funnel-bar-wrap{flex:1;background:var(--bg);border-radius:4px;height:28px;overflow:hidden}
+.funnel-bar{height:100%;border-radius:4px;display:flex;align-items:center;padding-left:10px}
+.funnel-label{font-size:12px;color:var(--ink-2);width:100px;text-align:right;flex-shrink:0}
+.funnel-count{font-family:var(--font-display);font-weight:700;font-size:13px;color:#fff}
+.funnel-pct{font-size:11px;color:var(--ink-3);width:40px;flex-shrink:0}
+
+/* PIPELINE */
+.pipeline{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.pipe-col{display:flex;flex-direction:column;gap:8px}
+.pipe-col-header{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--ink-3);padding:0 4px 6px;border-bottom:2px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.pipe-count{background:var(--bg);border-radius:10px;padding:1px 7px;font-size:11px;color:var(--ink-2);font-weight:600}
+.pipe-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px;display:flex;flex-direction:column;gap:6px;cursor:pointer;transition:box-shadow .15s}
+.pipe-card:hover{box-shadow:0 2px 12px rgba(0,0,0,.08)}
+.pipe-card-name{font-weight:600;font-size:13px}
+.pipe-card-sub{font-size:11px;color:var(--ink-3)}
+.pipe-card-footer{display:flex;justify-content:space-between;align-items:center;margin-top:2px}
+
+/* ACTION BUTTONS */
+.action-btn{background:none;border:1px solid var(--border);border-radius:6px;padding:4px 10px;font-size:11px;cursor:pointer;color:var(--ink-2);font-family:var(--font-body);transition:all .15s}
+.action-btn:hover{border-color:var(--blue);color:var(--blue)}
+.action-btn.primary{background:var(--blue-bg);border-color:var(--blue-mid);color:var(--blue)}
+
+/* PROGRESS */
+.progress-wrap{background:var(--bg);border-radius:4px;height:6px;overflow:hidden}
+.progress-bar{height:100%;border-radius:4px}
+
+/* BAR CHART */
+.bar-chart{display:flex;align-items:flex-end;gap:8px;height:120px;padding-top:10px}
+.bar-col{display:flex;flex-direction:column;align-items:center;gap:6px;flex:1}
+.bar{width:100%;border-radius:4px 4px 0 0;min-height:4px}
+.bar-lbl{font-size:10px;color:var(--ink-3)}
+.bar-val{font-size:10px;font-weight:600;color:var(--ink-2)}
+
+/* TABS */
+.tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:20px}
+.tab{padding:10px 18px;font-size:13px;font-weight:500;color:var(--ink-3);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;margin-bottom:-1px}
+.tab.active{color:var(--blue);border-bottom-color:var(--blue)}
+.tab:hover:not(.active){color:var(--ink-2)}
+
+/* SEARCH BAR */
+.search-bar{display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:7px 12px;width:220px}
+.search-bar input{border:none;background:transparent;outline:none;font-size:13px;color:var(--ink);width:100%;font-family:var(--font-body)}
+.search-bar input::placeholder{color:var(--ink-4)}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--surface);border-radius:var(--radius-lg);padding:28px;width:500px;max-width:92vw;display:flex;flex-direction:column;gap:18px;box-shadow:0 8px 40px rgba(0,0,0,.15);max-height:90vh;overflow-y:auto}
+.modal-title{font-family:var(--font-display);font-size:17px;font-weight:700}
+.form-group{display:flex;flex-direction:column;gap:6px}
+.form-label{font-size:12px;font-weight:600;color:var(--ink-2)}
+.form-input,.form-select{padding:9px 12px;border:1px solid var(--border-2);border-radius:8px;font-size:13px;font-family:var(--font-body);color:var(--ink);background:var(--surface);outline:none;transition:border-color .15s}
+.form-input:focus,.form-select:focus{border-color:var(--blue)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.modal-actions{display:flex;justify-content:flex-end;gap:10px;padding-top:4px;border-top:1px solid var(--border)}
+
+/* ══════════════════════════════════════════════════
+   SCRAPER MODULE — Google Places
+══════════════════════════════════════════════════ */
+.scraper-panel{
+  background:linear-gradient(135deg,#0f0f0f 0%,#1a1a2e 100%);
+  border-radius:var(--radius-lg);
+  padding:24px;
+  margin-bottom:18px;
+  position:relative;
+  overflow:hidden;
+}
+.scraper-panel::before{
+  content:'';position:absolute;top:-40px;right:-40px;
+  width:180px;height:180px;border-radius:50%;
+  background:rgba(22,73,255,.12);pointer-events:none;
+}
+.scraper-title{font-family:var(--font-display);font-weight:700;font-size:15px;color:#fff;margin-bottom:4px}
+.scraper-sub{font-size:12px;color:rgba(255,255,255,.4);margin-bottom:20px}
+.scraper-form{display:grid;grid-template-columns:1fr 180px 140px auto;gap:10px;align-items:end}
+.scraper-label{font-size:11px;font-weight:600;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:.8px;margin-bottom:5px}
+.scraper-input{
+  padding:10px 14px;border-radius:8px;font-size:13px;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);
+  color:#fff;outline:none;font-family:var(--font-body);width:100%;
+  transition:border-color .15s;
+}
+.scraper-input::placeholder{color:rgba(255,255,255,.25)}
+.scraper-input:focus{border-color:rgba(22,73,255,.6);background:rgba(255,255,255,.1)}
+.scraper-select{
+  padding:10px 14px;border-radius:8px;font-size:13px;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);
+  color:#fff;outline:none;font-family:var(--font-body);width:100%;cursor:pointer;
+}
+.scraper-select option{background:#1a1a2e;color:#fff}
+.btn-scrape{
+  background:var(--blue);color:#fff;border:none;border-radius:8px;
+  padding:10px 18px;font-size:13px;font-weight:600;cursor:pointer;
+  font-family:var(--font-body);white-space:nowrap;height:40px;
+  display:flex;align-items:center;gap:6px;transition:opacity .15s;
+}
+.btn-scrape:hover{opacity:.88}
+.btn-scrape:disabled{opacity:.4;cursor:not-allowed}
+.scraper-status{margin-top:12px;font-size:12px;color:rgba(255,255,255,.4);min-height:18px;display:flex;align-items:center;gap:8px}
+.spinner{width:12px;height:12px;border:2px solid rgba(255,255,255,.2);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+.api-key-row{display:flex;align-items:center;gap:10px;margin-bottom:20px;padding:12px 14px;background:rgba(255,255,255,.05);border-radius:8px;border:1px solid rgba(255,255,255,.08)}
+.api-key-icon{font-size:16px}
+.api-key-input{flex:1;background:transparent;border:none;outline:none;font-size:12px;color:rgba(255,255,255,.6);font-family:var(--font-mono,'monospace')}
+.api-key-input::placeholder{color:rgba(255,255,255,.2)}
+.api-key-label{font-size:11px;color:rgba(255,255,255,.3);white-space:nowrap}
+
+/* RESULTS PANEL */
+.results-panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:18px;display:none}
+.results-panel.visible{display:block}
+.results-header{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--bg)}
+.results-count{font-size:13px;font-weight:600}
+.results-actions{display:flex;gap:8px;align-items:center}
+.select-all-row{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--ink-2);cursor:pointer}
+.result-row{display:grid;grid-template-columns:36px 1fr 120px 100px 90px 90px 130px;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--border);transition:background .1s}
+.result-row:last-child{border-bottom:none}
+.result-row:hover{background:var(--bg)}
+.result-row.selected{background:var(--blue-bg)}
+.result-checkbox{width:16px;height:16px;cursor:pointer;accent-color:var(--blue)}
+.result-name{font-weight:600;font-size:13px}
+.result-addr{font-size:11px;color:var(--ink-3);margin-top:1px}
+.result-phone{font-size:12px;color:var(--ink-2)}
+.result-web{font-size:11px;color:var(--blue);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.stars{color:#f0a500;font-size:11px}
+.result-header-row{display:grid;grid-template-columns:36px 1fr 120px 100px 90px 90px 130px;gap:12px;padding:8px 16px;background:var(--bg);border-bottom:1px solid var(--border)}
+.result-header-row span{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--ink-3)}
+.hunter-btn{background:none;border:1px solid var(--border);border-radius:6px;padding:4px 8px;font-size:11px;cursor:pointer;color:var(--ink-2);transition:all .15s;display:flex;align-items:center;gap:4px;font-family:var(--font-body)}
+.hunter-btn:hover{border-color:var(--purple);color:var(--purple)}
+.hunter-btn.found{border-color:var(--green);color:var(--green);background:var(--green-bg)}
+.import-bar{padding:14px 20px;background:var(--blue-bg);border-top:2px solid var(--blue-mid);display:flex;align-items:center;justify-content:space-between;display:none}
+.import-bar.visible{display:flex}
+.import-info{font-size:13px;color:var(--blue);font-weight:500}
+
+/* EMPTY */
+.empty{display:flex;flex-direction:column;align-items:center;gap:10px;padding:40px;color:var(--ink-3);text-align:center}
+.empty-icon{font-size:32px;opacity:.4}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">immo<span>assistant</span></div>
+  <div class="sidebar-section">Vue d'ensemble</div>
+  <div class="nav-item active" onclick="showPage('dashboard',this)"><span class="icon">📊</span> Dashboard</div>
+  <div class="nav-item" onclick="showPage('prospection',this)"><span class="icon">🎯</span> Prospection</div>
+  <div class="nav-item" onclick="showPage('scraper',this)"><span class="icon">🗺️</span> Chercher agences</div>
+  <div class="nav-item" onclick="showPage('pipeline',this)"><span class="icon">🔄</span> Pipeline</div>
+  <div class="nav-item" onclick="showPage('clients',this)"><span class="icon">🏢</span> Clients actifs</div>
+  <div class="sidebar-section">Analyse</div>
+  <div class="nav-item" onclick="showPage('conversion',this)"><span class="icon">📈</span> Conversion</div>
+  <div class="nav-item" onclick="showPage('revenus',this)"><span class="icon">💶</span> Revenus</div>
+  <div class="sidebar-bottom">
+    <div class="user-chip">
+      <div class="avatar">JD</div>
+      <div style="display:flex;flex-direction:column">
+        <div class="user-name">Jean Dupont</div>
+        <div class="user-role">Admin</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-title" id="page-title">Dashboard</div>
+    <div class="topbar-actions">
+      <button class="btn btn-ghost" onclick="openModal()">+ Ajouter manuellement</button>
+      <button class="btn btn-primary" onclick="showPage('scraper',document.querySelector('[onclick*=scraper]'))">🗺️ Chercher agences</button>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ═══════ DASHBOARD ═══════ -->
+    <div class="page active" id="page-dashboard">
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-label">Agences contactées</div><div class="kpi-val" style="color:var(--blue)">47</div><div class="kpi-sub"><span class="delta-up">↑ +12</span><span class="delta-neutral"> cette semaine</span></div></div>
+        <div class="kpi"><div class="kpi-label">RDV obtenus</div><div class="kpi-val" style="color:var(--purple)">8</div><div class="kpi-sub"><span class="delta-up">17%</span><span class="delta-neutral"> taux de réponse</span></div></div>
+        <div class="kpi"><div class="kpi-label">Clients actifs</div><div class="kpi-val" style="color:var(--green)">3</div><div class="kpi-sub"><span class="delta-up">↑ +2</span><span class="delta-neutral"> ce mois</span></div></div>
+        <div class="kpi"><div class="kpi-label">MRR</div><div class="kpi-val" style="color:var(--amber)">847€</div><div class="kpi-sub"><span class="delta-up">↑ +349€</span><span class="delta-neutral"> vs M-1</span></div></div>
+      </div>
+      <div class="grid-3">
+        <div class="card">
+          <div class="card-header"><div class="card-title">Activité emails — 7 jours</div></div>
+          <div class="card-body"><div class="bar-chart" id="activity-chart"></div></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">Entonnoir global</div></div>
+          <div class="card-body">
+            <div class="funnel">
+              <div class="funnel-step"><div class="funnel-label">Contactées</div><div class="funnel-bar-wrap"><div class="funnel-bar" style="width:100%;background:var(--blue)"><span class="funnel-count">47</span></div></div><div class="funnel-pct">100%</div></div>
+              <div class="funnel-step"><div class="funnel-label">Ouvertures</div><div class="funnel-bar-wrap"><div class="funnel-bar" style="width:72%;background:#5b7fff"><span class="funnel-count">34</span></div></div><div class="funnel-pct">72%</div></div>
+              <div class="funnel-step"><div class="funnel-label">Réponses</div><div class="funnel-bar-wrap"><div class="funnel-bar" style="width:17%;background:var(--purple)"><span class="funnel-count">8</span></div></div><div class="funnel-pct">17%</div></div>
+              <div class="funnel-step"><div class="funnel-label">RDV</div><div class="funnel-bar-wrap"><div class="funnel-bar" style="width:13%;background:var(--green)"><span class="funnel-count">6</span></div></div><div class="funnel-pct">13%</div></div>
+              <div class="funnel-step"><div class="funnel-label">Signés</div><div class="funnel-bar-wrap"><div class="funnel-bar" style="width:6%;background:var(--amber)"><span class="funnel-count">3</span></div></div><div class="funnel-pct">6%</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">Dernières activités</div><span class="card-action" onclick="showPage('prospection',document.querySelector('[onclick*=prospection]'))">Voir tout →</span></div>
+        <table class="table">
+          <thead><tr><th>Agence</th><th>Ville</th><th>Statut</th><th>Dernière action</th><th>Prochain suivi</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Immobilier Fontaine</strong></td><td>Lyon</td><td><span class="badge badge-green">✓ Signé</span></td><td>Onboarding J3</td><td>—</td></tr>
+            <tr><td><strong>Chevalier & Associés</strong></td><td>Bordeaux</td><td><span class="badge badge-blue">RDV planifié</span></td><td>Email J1 ouvert</td><td>Demain 14h</td></tr>
+            <tr><td><strong>Cabinet Breton</strong></td><td>Nantes</td><td><span class="badge badge-purple">En démo</span></td><td>Démo en cours</td><td>Vendredi</td></tr>
+            <tr><td><strong>Agence Martin</strong></td><td>Toulouse</td><td><span class="badge badge-amber">Relance J5</span></td><td>Email J1 lu ×3</td><td>Aujourd'hui</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ═══════ SCRAPER GOOGLE PLACES ═══════ -->
+    <div class="page" id="page-scraper">
+
+      <!-- Panel de recherche -->
+      <div class="scraper-panel">
+        <div class="scraper-title">🗺️ Recherche d'agences — Google Places</div>
+        <div class="scraper-sub">Trouve des agences immobilières indépendantes et importe-les directement dans ta liste de prospection</div>
+
+        <!-- Proxy actif -->
+        <div class="api-key-row">
+          <div class="api-key-icon">✅</div>
+          <div class="api-key-label" style="color:rgba(13,122,78,.9);font-weight:600">Proxy Google Places actif</div>
+          <span style="font-size:11px;color:rgba(255,255,255,.3);margin-left:8px">Via Apps Script — aucune clé requise ici</span>
+        </div>
+
+        <!-- Formulaire de recherche -->
+        <div class="scraper-form">
+          <div>
+            <div class="scraper-label">Mot-clé</div>
+            <input class="scraper-input" id="search-keyword" type="text" placeholder="agence immobilière" value="agence immobilière"/>
+          </div>
+          <div>
+            <div class="scraper-label">Ville / Zone</div>
+            <input class="scraper-input" id="search-location" type="text" placeholder="Lyon, Bordeaux…"/>
+          </div>
+          <div>
+            <div class="scraper-label">Rayon</div>
+            <select class="scraper-select" id="search-radius">
+              <option value="2000">2 km</option>
+              <option value="5000" selected>5 km</option>
+              <option value="10000">10 km</option>
+              <option value="20000">20 km</option>
+              <option value="50000">50 km</option>
+            </select>
+          </div>
+          <div>
+            <div class="scraper-label" style="opacity:0">.</div>
+            <button class="btn-scrape" id="search-btn" onclick="searchPlaces()">
+              <span>🔍</span> Rechercher
+            </button>
+          </div>
+        </div>
+        <div class="scraper-status" id="scraper-status"></div>
+      </div>
+
+      <!-- Résultats -->
+      <div class="results-panel" id="results-panel">
+        <div class="results-header">
+          <div>
+            <div class="results-count" id="results-count">0 agences trouvées</div>
+            <div style="font-size:11px;color:var(--ink-3);margin-top:2px">Coche les agences à importer dans ta liste de prospection</div>
+          </div>
+          <div class="results-actions">
+            <label class="select-all-row">
+              <input type="checkbox" id="select-all" onchange="toggleSelectAll(this.checked)"/> Tout sélectionner
+            </label>
+            <button class="btn btn-ghost btn-sm" onclick="exportCSV()">⬇ Export CSV</button>
+          </div>
+        </div>
+        <div class="result-header-row">
+          <span></span><span>Agence</span><span>Téléphone</span><span>Note</span><span>Site web</span><span>Email</span><span>Action</span>
+        </div>
+        <div id="results-list"></div>
+        <div class="import-bar" id="import-bar">
+          <div class="import-info" id="import-info">0 agence sélectionnée</div>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-ghost btn-sm" onclick="clearSelection()">Désélectionner</button>
+            <button class="btn btn-green btn-sm" onclick="importSelected()">✓ Importer dans Prospection</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tip Hunter.io -->
+      <div style="background:var(--purple-bg);border:1px solid #d4cafc;border-radius:var(--radius-lg);padding:16px 20px;display:flex;gap:14px;align-items:flex-start">
+        <div style="font-size:20px">💡</div>
+        <div>
+          <div style="font-family:var(--font-display);font-weight:700;font-size:13px;color:var(--purple);margin-bottom:4px">Trouver les emails avec Hunter.io</div>
+          <div style="font-size:12px;color:var(--ink-2);line-height:1.6">Google Places donne le téléphone et le site web, pas l'email direct. Pour chaque agence, clique sur <strong>Trouver email</strong> — ça ouvre Hunter.io avec le nom de domaine pré-rempli. 50 recherches gratuites/mois, puis 49€/mois pour 500 recherches.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════ PROSPECTION ═══════ -->
+    <div class="page" id="page-prospection">
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-label">Total liste</div><div class="kpi-val" style="color:var(--blue)" id="kpi-total">10</div><div class="kpi-sub"><span class="delta-neutral">agences cibles</span></div></div>
+        <div class="kpi"><div class="kpi-label">Emails envoyés</div><div class="kpi-val">47</div><div class="kpi-sub"><span class="delta-neutral">sur 200 prévus</span></div></div>
+        <div class="kpi"><div class="kpi-label">Taux d'ouverture</div><div class="kpi-val" style="color:var(--green)">72%</div><div class="kpi-sub"><span class="delta-up">↑ Excellent</span></div></div>
+        <div class="kpi"><div class="kpi-label">À relancer</div><div class="kpi-val" style="color:var(--red)">6</div><div class="kpi-sub"><span class="delta-neutral">dont 2 urgents</span></div></div>
+      </div>
+      <div class="card mb-18">
+        <div class="card-header">
+          <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+            <div class="card-title">Liste de prospection</div>
+            <div class="tabs" style="margin-bottom:0;border:none">
+              <div class="tab active" onclick="filterProspects('tous',this)">Tous <span style="background:var(--bg);padding:1px 6px;border-radius:10px;font-size:11px;margin-left:4px" id="tab-tous">10</span></div>
+              <div class="tab" onclick="filterProspects('relance',this)">À relancer <span style="background:var(--red-bg);color:var(--red);padding:1px 6px;border-radius:10px;font-size:11px;margin-left:4px">3</span></div>
+              <div class="tab" onclick="filterProspects('rdv',this)">RDV <span style="background:var(--blue-bg);color:var(--blue);padding:1px 6px;border-radius:10px;font-size:11px;margin-left:4px">2</span></div>
+              <div class="tab" onclick="filterProspects('signe',this)">Signés <span style="background:var(--green-bg);color:var(--green);padding:1px 6px;border-radius:10px;font-size:11px;margin-left:4px">3</span></div>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <div class="search-bar"><span style="color:var(--ink-4)">🔍</span><input type="text" placeholder="Rechercher…" oninput="searchProspects(this.value)"/></div>
+            <button class="btn btn-ghost btn-sm" onclick="showPage('scraper',document.querySelector('[onclick*=scraper]'))">🗺️ Trouver agences</button>
+            <button class="btn btn-primary btn-sm" onclick="openModal()">+ Ajouter</button>
+          </div>
+        </div>
+        <table class="table" id="prospects-table">
+          <thead><tr><th>Agence</th><th>Contact</th><th>Ville</th><th>Statut</th><th>Séquence</th><th>Ouvert</th><th>Action</th></tr></thead>
+          <tbody id="prospects-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ═══════ PIPELINE ═══════ -->
+    <div class="page" id="page-pipeline">
+      <div style="margin-bottom:20px;display:flex;justify-content:space-between;align-items:center">
+        <div style="font-size:12px;color:var(--ink-3)">8 opportunités actives · Valeur potentielle <strong style="color:var(--ink)">12 380€/an</strong></div>
+        <button class="btn btn-primary btn-sm" onclick="openModal()">+ Nouvelle opportunité</button>
+      </div>
+      <div class="pipeline">
+        <div class="pipe-col">
+          <div class="pipe-col-header">Contacté <span class="pipe-count">3</span></div>
+          <div class="pipe-card"><div class="pipe-card-name">Agence Martin</div><div class="pipe-card-sub">Toulouse · Email J1</div><div class="pipe-card-footer"><span class="badge badge-gray">Froid</span><span style="font-size:11px;color:var(--ink-3)">J+1</span></div></div>
+          <div class="pipe-card"><div class="pipe-card-name">Immobilier Petit</div><div class="pipe-card-sub">Rennes · Email J1</div><div class="pipe-card-footer"><span class="badge badge-gray">Froid</span><span style="font-size:11px;color:var(--ink-3)">J+2</span></div></div>
+          <div class="pipe-card"><div class="pipe-card-name">Sud Immo</div><div class="pipe-card-sub">Montpellier · Lu ×2</div><div class="pipe-card-footer"><span class="badge badge-amber">Lu ×2</span><span style="font-size:11px;color:var(--ink-3)">J+3</span></div></div>
+        </div>
+        <div class="pipe-col">
+          <div class="pipe-col-header">Intéressé <span class="pipe-count">2</span></div>
+          <div class="pipe-card"><div class="pipe-card-name">Chevalier & Assoc.</div><div class="pipe-card-sub">Bordeaux · A répondu</div><div class="pipe-card-footer"><span class="badge badge-blue">Chaud</span><span style="font-size:11px;color:var(--ink-3)">Aujourd'hui</span></div></div>
+          <div class="pipe-card"><div class="pipe-card-name">Espace Habitat</div><div class="pipe-card-sub">Strasbourg · Lu ×4</div><div class="pipe-card-footer"><span class="badge badge-amber">Tiède</span><span style="font-size:11px;color:var(--ink-3)">J+1</span></div></div>
+        </div>
+        <div class="pipe-col">
+          <div class="pipe-col-header">RDV planifié <span class="pipe-count">2</span></div>
+          <div class="pipe-card"><div class="pipe-card-name">Cabinet Breton</div><div class="pipe-card-sub">Nantes · Vendredi 10h</div><div class="pipe-card-footer"><span class="badge badge-purple">RDV</span><span style="font-size:11px;color:var(--ink-3)">3 jours</span></div></div>
+          <div class="pipe-card"><div class="pipe-card-name">Immo Dupuis</div><div class="pipe-card-sub">Nice · Lundi 14h</div><div class="pipe-card-footer"><span class="badge badge-purple">RDV</span><span style="font-size:11px;color:var(--ink-3)">5 jours</span></div></div>
+        </div>
+        <div class="pipe-col">
+          <div class="pipe-col-header">Démo faite <span class="pipe-count">1</span></div>
+          <div class="pipe-card"><div class="pipe-card-name">Immo Leclerc</div><div class="pipe-card-sub">Marseille · Devis envoyé</div><div class="pipe-card-footer"><span class="badge badge-amber">En attente</span></div></div>
+        </div>
+        <div class="pipe-col">
+          <div class="pipe-col-header">Signé ✓ <span class="pipe-count">3</span></div>
+          <div class="pipe-card" style="border-left:3px solid var(--green)"><div class="pipe-card-name">Immo Fontaine</div><div class="pipe-card-sub">Lyon · Pro 349€/mois</div><div class="pipe-card-footer"><span class="badge badge-green">Actif</span><span style="font-size:11px;color:var(--green)">+349€</span></div></div>
+          <div class="pipe-card" style="border-left:3px solid var(--green)"><div class="pipe-card-name">Agence Moreau</div><div class="pipe-card-sub">Paris · Starter 149€</div><div class="pipe-card-footer"><span class="badge badge-green">Actif</span><span style="font-size:11px;color:var(--green)">+149€</span></div></div>
+          <div class="pipe-card" style="border-left:3px solid var(--green)"><div class="pipe-card-name">Sud Prestige</div><div class="pipe-card-sub">Cannes · Pro 349€/mois</div><div class="pipe-card-footer"><span class="badge badge-green">Actif</span><span style="font-size:11px;color:var(--green)">+349€</span></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════ CLIENTS ═══════ -->
+    <div class="page" id="page-clients">
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-label">MRR total</div><div class="kpi-val" style="color:var(--green)">847€</div><div class="kpi-sub"><span class="delta-neutral">mensuel récurrent</span></div></div>
+        <div class="kpi"><div class="kpi-label">ARR projeté</div><div class="kpi-val">10 164€</div><div class="kpi-sub"><span class="delta-neutral">annualisé</span></div></div>
+        <div class="kpi"><div class="kpi-label">Setup encaissé</div><div class="kpi-val" style="color:var(--amber)">1 500€</div><div class="kpi-sub"><span class="delta-neutral">3 × 500€</span></div></div>
+        <div class="kpi"><div class="kpi-label">Churn</div><div class="kpi-val" style="color:var(--green)">0%</div><div class="kpi-sub"><span class="delta-neutral">aucune résiliation</span></div></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">Clients actifs</div></div>
+        <table class="table">
+          <thead><tr><th>Agence</th><th>Offre</th><th>Depuis</th><th>Leads générés</th><th>RDV pris</th><th>Santé</th><th>MRR</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Immobilier Fontaine</strong><div style="font-size:11px;color:var(--ink-3)">Lyon · Marie-Laure Fontaine</div></td><td><span class="badge badge-blue">Pro</span></td><td>3 sem.</td><td><strong>28</strong></td><td><strong>6</strong></td><td><div class="progress-wrap" style="width:80px"><div class="progress-bar" style="width:90%;background:var(--green)"></div></div></td><td><strong>349€</strong></td></tr>
+            <tr><td><strong>Agence Moreau</strong><div style="font-size:11px;color:var(--ink-3)">Paris 15e · Éric Moreau</div></td><td><span class="badge badge-gray">Starter</span></td><td>2 sem.</td><td><strong>14</strong></td><td><strong>3</strong></td><td><div class="progress-wrap" style="width:80px"><div class="progress-bar" style="width:70%;background:var(--amber)"></div></div></td><td><strong>149€</strong></td></tr>
+            <tr><td><strong>Sud Prestige</strong><div style="font-size:11px;color:var(--ink-3)">Cannes · Claire Rossi</div></td><td><span class="badge badge-blue">Pro</span></td><td>1 sem.</td><td><strong>9</strong></td><td><strong>2</strong></td><td><div class="progress-wrap" style="width:80px"><div class="progress-bar" style="width:55%;background:var(--blue)"></div></div></td><td><strong>349€</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ═══════ CONVERSION ═══════ -->
+    <div class="page" id="page-conversion">
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-label">Emails → Réponse</div><div class="kpi-val" style="color:var(--blue)">17%</div><div class="kpi-sub"><span class="delta-up">↑ Bon</span><span class="delta-neutral"> (moy. 5-8%)</span></div></div>
+        <div class="kpi"><div class="kpi-label">Réponse → RDV</div><div class="kpi-val" style="color:var(--purple)">75%</div><div class="kpi-sub"><span class="delta-up">↑ Excellent</span></div></div>
+        <div class="kpi"><div class="kpi-label">RDV → Signé</div><div class="kpi-val" style="color:var(--green)">50%</div><div class="kpi-sub"><span class="delta-neutral">3 sur 6 RDV</span></div></div>
+        <div class="kpi"><div class="kpi-label">Email → Client</div><div class="kpi-val" style="color:var(--amber)">6.4%</div><div class="kpi-sub"><span class="delta-up">↑ Très fort</span></div></div>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><div class="card-title">Entonnoir détaillé</div></div>
+          <div class="card-body">
+            <div class="funnel">
+              <div class="funnel-step"><div class="funnel-label">Envoyés</div><div class="funnel-bar-wrap"><div class="funnel-bar" style="width:100%;background:var(--blue)"><span class="funnel-count">47</span></div></div><div class="funnel-pct">100%</div></div>
+              <div class="funnel-step"><div class="funnel-label">Ouverts</div><div class="funnel-bar-wrap"><div class="funnel-bar" style="width:72%;background:#5b7fff"><span class="funnel-count">34</span></div></div><div class="funnel-pct">72%</div></div>
+              <div class="funnel-step"><div class="funnel-label">Réponses</div><div class="funnel-bar-wrap"><div class="funnel-bar" style="width:17%;background:var(--purple)"><span class="funnel-count">8</span></div></div><div class="funnel-pct">17%</div></div>
+              <div class="funnel-step"><div class="funnel-label">RDV</div><div class="funnel-bar-wrap"><div class="funnel-bar" style="width:13%;background:var(--green)"><span class="funnel-count">6</span></div></div><div class="funnel-pct">13%</div></div>
+              <div class="funnel-step"><div class="funnel-label">Signés</div><div class="funnel-bar-wrap"><div class="funnel-bar" style="width:6%;background:var(--amber)"><span class="funnel-count">3</span></div></div><div class="funnel-pct">6%</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">Projection à 200 agences</div></div>
+          <div class="card-body" style="display:flex;flex-direction:column;gap:14px">
+            <div style="background:var(--bg);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:10px">
+              <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)"><span style="font-size:13px;color:var(--ink-2)">Réponses attendues</span><strong>34</strong></div>
+              <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)"><span style="font-size:13px;color:var(--ink-2)">RDV</span><strong>~26</strong></div>
+              <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)"><span style="font-size:13px;color:var(--ink-2)">Clients signés</span><strong style="color:var(--green)">~13</strong></div>
+              <div style="display:flex;justify-content:space-between;padding:8px 0"><span style="font-size:13px;color:var(--ink-2)">MRR projeté</span><strong style="color:var(--green);font-size:16px;font-family:var(--font-display)">~4 500€</strong></div>
+            </div>
+            <div style="background:var(--green-bg);border-radius:10px;padding:14px;font-size:13px;color:var(--green);line-height:1.6"><strong>Setup one-shot :</strong> 13 × 500€ = <strong>6 500€</strong><br/><strong>ARR :</strong> ~54 000€</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════ REVENUS ═══════ -->
+    <div class="page" id="page-revenus">
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-label">Revenus ce mois</div><div class="kpi-val" style="color:var(--green)">2 347€</div><div class="kpi-sub"><span class="delta-neutral">847€ abo + 1 500€ setup</span></div></div>
+        <div class="kpi"><div class="kpi-label">MRR</div><div class="kpi-val">847€</div><div class="kpi-sub"><span class="delta-up">↑ +349€</span><span class="delta-neutral"> vs M-1</span></div></div>
+        <div class="kpi"><div class="kpi-label">ARR</div><div class="kpi-val">10 164€</div></div>
+        <div class="kpi"><div class="kpi-label">CAC moyen</div><div class="kpi-val" style="color:var(--amber)">~8h</div><div class="kpi-sub"><span class="delta-neutral">de prospection</span></div></div>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><div class="card-title">Décomposition</div></div>
+          <div class="card-body" style="display:flex;flex-direction:column;gap:12px">
+            <div style="display:flex;justify-content:space-between;padding:12px;background:var(--blue-bg);border-radius:8px"><span style="font-size:13px;color:var(--blue)">Abonnements récurrents</span><strong style="color:var(--blue)">847€/mois</strong></div>
+            <div style="display:flex;justify-content:space-between;padding:12px;background:var(--amber-bg);border-radius:8px"><span style="font-size:13px;color:var(--amber)">Setup one-shot (ce mois)</span><strong style="color:var(--amber)">1 500€</strong></div>
+            <div style="display:flex;justify-content:space-between;padding:12px;background:var(--green-bg);border-radius:8px"><span style="font-size:13px;color:var(--green)">Total encaissé</span><strong style="color:var(--green);font-size:18px;font-family:var(--font-display)">2 347€</strong></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">Évolution MRR</div></div>
+          <div class="card-body"><div class="bar-chart" id="mrr-chart"></div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-title">Ajouter une agence</div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Nom de l'agence</label><input class="form-input" id="m-name" placeholder="Agence Dupont…"/></div>
+      <div class="form-group"><label class="form-label">Prénom gérant</label><input class="form-input" id="m-contact" placeholder="Jean"/></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="m-email" type="email" placeholder="jean@agence.fr"/></div>
+      <div class="form-group"><label class="form-label">Ville</label><input class="form-input" id="m-ville" placeholder="Lyon"/></div>
+    </div>
+    <div class="form-group"><label class="form-label">Site web</label><input class="form-input" id="m-site" placeholder="agence-dupont.fr"/></div>
+    <div class="form-group"><label class="form-label">Notes</label><input class="form-input" id="m-notes" placeholder="Ex : site sans chat, forte activité…"/></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModalDirect()">Annuler</button>
+      <button class="btn btn-primary" onclick="addProspectManual()">Ajouter</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── DATA ────────────────────────────────────────────────────────────────────
+let prospects = [
+  {id:1,name:'Immobilier Fontaine',contact:'Marie-Laure',email:'ml@fontaine-immo.fr',ville:'Lyon',status:'signe',seq:'J1+J5+J10',ouvert:true},
+  {id:2,name:'Chevalier & Associés',contact:'Thomas',email:'t@chevalier.fr',ville:'Bordeaux',status:'rdv',seq:'J1',ouvert:true},
+  {id:3,name:'Cabinet Breton',contact:'Sophie',email:'s@breton.fr',ville:'Nantes',status:'rdv',seq:'J1',ouvert:true},
+  {id:4,name:'Agence Martin',contact:'Jean-Luc',email:'jl@martin-immo.fr',ville:'Toulouse',status:'relance',seq:'J1',ouvert:true},
+  {id:5,name:'Pierre & Associés',contact:'Marc',email:'m@pierre.fr',ville:'Lille',status:'contacte',seq:'J1',ouvert:false},
+  {id:6,name:'Immobilier Petit',contact:'Claire',email:'c@petit-immo.fr',ville:'Rennes',status:'contacte',seq:'J1',ouvert:false},
+  {id:7,name:'Sud Immo',contact:'Paul',email:'p@sudimmo.fr',ville:'Montpellier',status:'relance',seq:'J1',ouvert:true},
+  {id:8,name:'Espace Habitat',contact:'Anne',email:'a@espacehabitat.fr',ville:'Strasbourg',status:'relance',seq:'J1+J5',ouvert:true},
+  {id:9,name:'Agence Moreau',contact:'Éric',email:'e@moreau.fr',ville:'Paris',status:'signe',seq:'J1+J5',ouvert:true},
+  {id:10,name:'Sud Prestige',contact:'Claire',email:'c@sudprestige.fr',ville:'Cannes',status:'signe',seq:'J1+J5+J10',ouvert:true},
+];
+let nextId = 11;
+let currentFilter = 'tous';
+let searchQuery = '';
+let apiKey = '';
+let searchResults = [];
+let selectedResults = new Set();
+
+const statusConfig = {
+  signe:{label:'Signé ✓',cls:'badge-green'},
+  rdv:{label:'RDV planifié',cls:'badge-blue'},
+  relance:{label:'À relancer',cls:'badge-amber'},
+  contacte:{label:'Contacté',cls:'badge-gray'},
+};
+const seqNext = {contacte:'Envoyer J5',relance:'Envoyer J10',rdv:'Préparer démo',signe:'Onboarding'};
+
+// ── NAVIGATION ───────────────────────────────────────────────────────────────
+const pageTitles = {dashboard:'Dashboard',prospection:'Prospection',scraper:'Chercher agences — Google Places',pipeline:'Pipeline CRM',clients:'Clients actifs',conversion:'Analyse conversion',revenus:'Revenus'};
+function showPage(name,el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  if(el) el.classList.add('active');
+  document.getElementById('page-title').textContent = pageTitles[name]||name;
+  if(name==='prospection') renderProspects();
+}
+
+// ── PROSPECTION ──────────────────────────────────────────────────────────────
+function renderProspects(){
+  const body = document.getElementById('prospects-body');
+  let data = prospects;
+  if(currentFilter!=='tous') data=data.filter(p=>p.status===currentFilter);
+  if(searchQuery) data=data.filter(p=>p.name.toLowerCase().includes(searchQuery)||p.ville.toLowerCase().includes(searchQuery));
+  document.getElementById('kpi-total').textContent = prospects.length;
+  document.getElementById('tab-tous').textContent = prospects.length;
+  if(!data.length){body.innerHTML=`<tr><td colspan="7"><div class="empty"><div class="empty-icon">📭</div><div class="empty-text">Aucune agence dans ce filtre</div></div></td></tr>`;return;}
+  body.innerHTML = data.map(p=>{
+    const s = statusConfig[p.status];
+    return `<tr>
+      <td><strong>${p.name}</strong>${p.source==='google'?'<span class="badge badge-purple" style="margin-left:6px;font-size:10px">Maps</span>':''}</td>
+      <td>${p.contact||'—'}<div style="font-size:11px;color:var(--ink-3)">${p.email||'—'}</div></td>
+      <td>${p.ville}</td>
+      <td><span class="badge ${s.cls}">${s.label}</span></td>
+      <td><span style="font-size:12px;color:var(--ink-3)">${p.seq}</span></td>
+      <td>${p.ouvert?'<span class="badge badge-green">✓</span>':'<span class="badge badge-gray">—</span>'}</td>
+      <td><button class="action-btn primary" onclick="nextAction(${p.id})">${seqNext[p.status]}</button></td>
+    </tr>`;
+  }).join('');
+}
+function filterProspects(f,el){
+  currentFilter=f;
+  document.querySelectorAll('#page-prospection .tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  renderProspects();
+}
+function searchProspects(v){searchQuery=v.toLowerCase();renderProspects();}
+function nextAction(id){
+  const p=prospects.find(x=>x.id===id);if(!p)return;
+  const next={contacte:'relance',relance:'rdv',rdv:'signe',signe:'signe'};
+  p.status=next[p.status];
+  if(p.status==='relance') p.seq+='+J5';
+  if(p.status==='rdv') p.seq+='+J10';
+  renderProspects();
+}
+
+// ── MODAL MANUEL ─────────────────────────────────────────────────────────────
+function openModal(){document.getElementById('modal-overlay').classList.add('open');}
+function closeModalDirect(){document.getElementById('modal-overlay').classList.remove('open');}
+function closeModal(e){if(e.target===document.getElementById('modal-overlay'))closeModalDirect();}
+function addProspectManual(){
+  const name=document.getElementById('m-name').value.trim();
+  const ville=document.getElementById('m-ville').value.trim();
+  if(!name||!ville){alert('Nom et ville requis');return;}
+  prospects.push({id:nextId++,name,contact:document.getElementById('m-contact').value.trim(),email:document.getElementById('m-email').value.trim(),ville,status:'contacte',seq:'À envoyer',ouvert:false,source:'manuel'});
+  closeModalDirect();
+  renderProspects();
+  document.querySelectorAll('#modal-overlay .form-input').forEach(i=>i.value='');
+}
+
+// ── GOOGLE PLACES SCRAPER ─────────────────────────────────────────────────────
+function saveApiKey(){
+  apiKey = document.getElementById('api-key-input').value.trim();
+  if(apiKey) setStatus('✅ Clé API enregistrée','rgba(13,122,78,.8)');
+  else setStatus('⚠️ Clé vide','rgba(192,57,43,.8)');
+}
+function toggleKeyVisibility(){
+  const inp=document.getElementById('api-key-input');
+  inp.type = inp.type==='password'?'text':'password';
+}
+function setStatus(msg,color='rgba(255,255,255,.4)'){
+  const el=document.getElementById('scraper-status');
+  el.style.color=color;
+  el.innerHTML=msg;
+}
+
+async function searchPlaces(){
+  const PROXY = "https://script.google.com/macros/s/AKfycbxxlqG12dyJ63Vl9c63k9-d59fkJnXWRe2QaUNi0YQ_kPqsVBOfxr-at20B7a_LykL-1g/exec";
+  const keyword = document.getElementById('search-keyword').value.trim()||'agence immobilière';
+  const location = document.getElementById('search-location').value.trim();
+  if(!location){alert('Entre une ville ou zone');return;}
+  const radius = document.getElementById('search-radius').value;
+
+  const btn = document.getElementById('search-btn');
+  btn.disabled=true;
+  btn.innerHTML='<div class="spinner"></div> Recherche…';
+  setStatus('<div class="spinner" style="border-color:rgba(255,255,255,.2);border-top-color:rgba(255,255,255,.7)"></div> Géolocalisation de '+location+'…');
+
+  try {
+    // 1. Géocoder la ville via proxy Apps Script
+    const geoRes = await fetch(`${PROXY}?action=geocode&address=${encodeURIComponent(location+', France')}`);
+    const geoData = await geoRes.json();
+    if(!geoData.results?.length) throw new Error('Ville introuvable. Essaie "Lyon" ou "Bordeaux".');
+    const {lat,lng} = geoData.results[0].geometry.location;
+    setStatus('<div class="spinner" style="border-color:rgba(255,255,255,.2);border-top-color:rgba(255,255,255,.7)"></div> Recherche des agences dans un rayon de '+radius/1000+'km…');
+
+    // 2. Places Nearby Search via proxy
+    const placesRes = await fetch(`${PROXY}?action=places&location=${lat},${lng}&radius=${radius}&keyword=${encodeURIComponent(keyword)}`);
+    const placesData = await placesRes.json();
+
+    if(placesData.status==='REQUEST_DENIED') throw new Error('Clé API refusée — vérifie qu\'elle est bien configurée dans le proxy Apps Script.');
+    if(placesData.status==='ZERO_RESULTS'){setStatus('Aucun résultat. Essaie un rayon plus grand ou une autre ville.');btn.disabled=false;btn.innerHTML='<span>🔍</span> Rechercher';return;}
+
+    searchResults = placesData.results.map(p=>({
+      place_id: p.place_id,
+      name: p.name,
+      address: p.vicinity||'',
+      phone: '',
+      website: '',
+      rating: p.rating||0,
+      user_ratings_total: p.user_ratings_total||0,
+      email: '',
+    }));
+
+    // 3. Détails (téléphone + site) pour chaque lieu via proxy
+    const toDetail = searchResults.slice(0,10);
+    setStatus(`<div class="spinner" style="border-color:rgba(255,255,255,.2);border-top-color:rgba(255,255,255,.7)"></div> Récupération des détails (${toDetail.length} agences)…`);
+    await Promise.all(toDetail.map(async (p)=>{
+      try{
+        const dRes = await fetch(`${PROXY}?action=details&place_id=${p.place_id}`);
+        const dData = await dRes.json();
+        if(dData.result){
+          p.phone = dData.result.formatted_phone_number||'';
+          p.website = dData.result.website ? dData.result.website.replace(/^https?:\/\//,'').replace(/\/$/,'') : '';
+        }
+      }catch(e){}
+    }));
+
+    renderResults(searchResults, location);
+    setStatus(`✅ ${searchResults.length} agences trouvées à ${location}. Coche celles à importer.`,'rgba(13,122,78,.9)');
+  } catch(err){
+    setStatus('❌ '+err.message,'rgba(192,57,43,.9)');
+  } finally {
+    btn.disabled=false;
+    btn.innerHTML='<span>🔍</span> Rechercher';
+  }
+}
+
+function renderResults(results, location){
+  const panel = document.getElementById('results-panel');
+  const list = document.getElementById('results-list');
+  const count = document.getElementById('results-count');
+  selectedResults.clear();
+  panel.classList.add('visible');
+  count.textContent = results.length+' agences trouvées à '+location;
+
+  list.innerHTML = results.map((r,i)=>{
+    const stars = r.rating ? '★'.repeat(Math.round(r.rating))+'☆'.repeat(5-Math.round(r.rating)) : '—';
+    const domain = r.website ? r.website.split('/')[0] : '';
+    return `<div class="result-row" id="rrow-${i}">
+      <input type="checkbox" class="result-checkbox" data-idx="${i}" onchange="toggleResult(${i},this.checked)"/>
+      <div>
+        <div class="result-name">${r.name}</div>
+        <div class="result-addr">${r.address}</div>
+      </div>
+      <div class="result-phone">${r.phone||'—'}</div>
+      <div><span class="stars">${stars}</span>${r.rating?`<span style="font-size:11px;color:var(--ink-3);margin-left:4px">${r.rating} (${r.user_ratings_total})</span>`:''}</div>
+      <div class="result-web" title="${r.website}">${r.website||'—'}</div>
+      <div>${r.email?`<span class="badge badge-green" style="font-size:10px">✓ ${r.email}</span>`:'<span style="font-size:11px;color:var(--ink-4)">—</span>'}</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        ${domain?`<button class="hunter-btn" id="hunter-${i}" onclick="findEmail(${i},'${domain}')">🔍 Email</button>`:''}
+        <button class="action-btn" onclick="quickImport(${i})">+ Importer</button>
+      </div>
+    </div>`;
+  }).join('');
+  updateImportBar();
+}
+
+function toggleResult(idx, checked){
+  checked ? selectedResults.add(idx) : selectedResults.delete(idx);
+  document.getElementById('rrow-'+idx).classList.toggle('selected',checked);
+  updateImportBar();
+}
+function toggleSelectAll(checked){
+  searchResults.forEach((_,i)=>{
+    const cb=document.querySelector(`[data-idx="${i}"]`);
+    if(cb){cb.checked=checked;toggleResult(i,checked);}
+  });
+}
+function updateImportBar(){
+  const bar=document.getElementById('import-bar');
+  const info=document.getElementById('import-info');
+  const n=selectedResults.size;
+  if(n>0){bar.classList.add('visible');info.textContent=n+' agence'+(n>1?'s':'')+' sélectionnée'+(n>1?'s':'');}
+  else bar.classList.remove('visible');
+}
+function clearSelection(){
+  selectedResults.clear();
+  document.querySelectorAll('.result-checkbox').forEach(cb=>cb.checked=false);
+  document.querySelectorAll('.result-row').forEach(r=>r.classList.remove('selected'));
+  document.getElementById('select-all').checked=false;
+  updateImportBar();
+}
+
+function findEmail(idx, domain){
+  const btn=document.getElementById('hunter-'+idx);
+  btn.innerHTML='⏳';
+  // Ouvre Hunter.io avec le domaine pré-rempli
+  setTimeout(()=>{
+    window.open(`https://hunter.io/domain-search?domain=${domain}`,'_blank');
+    btn.classList.add('found');
+    btn.innerHTML='🔗 Hunter';
+  },400);
+}
+
+function quickImport(idx){
+  const r = searchResults[idx];
+  importOneResult(r);
+  const row=document.getElementById('rrow-'+idx);
+  row.style.opacity='.4';
+  row.style.pointerEvents='none';
+  // mini feedback
+  const btn=row.querySelector('.action-btn');
+  if(btn){btn.textContent='✓ Importé';btn.classList.add('primary');}
+}
+
+function importSelected(){
+  selectedResults.forEach(idx=>importOneResult(searchResults[idx]));
+  const n=selectedResults.size;
+  clearSelection();
+  showPage('prospection',document.querySelector('[onclick*=prospection]'));
+  setTimeout(()=>alert(`✅ ${n} agence${n>1?'s':''} importée${n>1?'s':''} dans ta liste de prospection !`),100);
+}
+
+function importOneResult(r){
+  // Éviter les doublons
+  if(prospects.find(p=>p.name===r.name)) return;
+  prospects.push({
+    id:nextId++,
+    name:r.name,
+    contact:'—',
+    email:r.email||'',
+    phone:r.phone||'',
+    ville:r.address.split(',').pop().trim()||'—',
+    website:r.website||'',
+    status:'contacte',
+    seq:'À envoyer',
+    ouvert:false,
+    source:'google',
+    rating:r.rating,
+  });
+}
+
+function exportCSV(){
+  if(!searchResults.length) return;
+  const rows=[['Nom','Adresse','Téléphone','Site web','Note','Email'],...searchResults.map(r=>[r.name,r.address,r.phone,r.website,r.rating,r.email])];
+  const csv=rows.map(r=>r.map(v=>'"'+(v||'').toString().replace(/"/g,'""')+'"').join(',')).join('\n');
+  const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,'+encodeURIComponent('\uFEFF'+csv);a.download='agences-google-places.csv';a.click();
+}
+
+// ── CHARTS ────────────────────────────────────────────────────────────────────
+function renderBarChart(id,data,color){
+  const el=document.getElementById(id);if(!el)return;
+  const max=Math.max(...data.map(d=>d.val));
+  el.innerHTML=data.map(d=>{
+    const pct=max?Math.round((d.val/max)*100):0;
+    return `<div class="bar-col"><div class="bar-val">${d.val}</div><div class="bar" style="height:${Math.max(pct,4)}%;background:${color};opacity:${0.4+0.6*(d.val/(max||1))}"></div><div class="bar-lbl">${d.label}</div></div>`;
+  }).join('');
+}
+renderBarChart('activity-chart',[{label:'Lun',val:8},{label:'Mar',val:12},{label:'Mer',val:7},{label:'Jeu',val:15},{label:'Ven',val:5},{label:'Sam',val:0},{label:'Dim',val:0}],'var(--blue)');
+renderBarChart('mrr-chart',[{label:'M-4',val:0},{label:'M-3',val:0},{label:'M-2',val:149},{label:'M-1',val:498},{label:'Ce mois',val:847}],'var(--green)');
+
+// Init
+renderProspects();
+</script>
+</body>
+</html>
