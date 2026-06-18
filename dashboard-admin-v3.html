@@ -457,6 +457,41 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--ink);font-siz
           <tbody id="prospects-body"></tbody>
         </table>
       </div>
+
+      <!-- Panel Campagne Email -->
+      <div class="card mb-18">
+        <div class="card-header">
+          <div class="card-title">📧 Campagne email — Thée AI</div>
+          <span style="font-size:11px;color:var(--ink-3)">Connecté à Google Sheets / Gmail via Apps Script</span>
+        </div>
+        <div class="card-body">
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px" id="campaign-stats">
+            <div style="background:var(--bg);border-radius:8px;padding:12px;text-align:center">
+              <div style="font-family:var(--font-display);font-size:22px;font-weight:800" id="stat-total">—</div>
+              <div style="font-size:11px;color:var(--ink-3)">Total prospects</div>
+            </div>
+            <div style="background:var(--bg);border-radius:8px;padding:12px;text-align:center">
+              <div style="font-family:var(--font-display);font-size:22px;font-weight:800;color:var(--blue)" id="stat-sent">—</div>
+              <div style="font-size:11px;color:var(--ink-3)">Emails envoyés</div>
+            </div>
+            <div style="background:var(--bg);border-radius:8px;padding:12px;text-align:center">
+              <div style="font-family:var(--font-display);font-size:22px;font-weight:800;color:var(--green)" id="stat-rdv">—</div>
+              <div style="font-size:11px;color:var(--ink-3)">RDV pris</div>
+            </div>
+            <div style="background:var(--bg);border-radius:8px;padding:12px;text-align:center">
+              <div style="font-family:var(--font-display);font-size:22px;font-weight:800;color:var(--amber)" id="stat-todo">—</div>
+              <div style="font-size:11px;color:var(--ink-3)">À envoyer</div>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+            <button class="btn btn-ghost btn-sm" onclick="syncToAppsScript()">🔄 Synchroniser la liste</button>
+            <button class="btn btn-primary btn-sm" onclick="sendCampaignBatch()">📤 Envoyer un lot (25 max)</button>
+            <button class="btn btn-ghost btn-sm" onclick="refreshCampaignStatus()">↻ Actualiser les statuts</button>
+          </div>
+          <div id="campaign-status" style="font-size:12px;color:var(--ink-3);margin-top:10px;min-height:18px"></div>
+        </div>
+      </div>
     </div>
 
     <!-- ═══════ PIPELINE ═══════ -->
@@ -1031,6 +1066,97 @@ document.addEventListener('DOMContentLoaded', ()=>{
     if(file){ handleFileImport({target:{files:[file], value:''}}); }
   });
 });
+
+// ── CAMPAGNE EMAIL — Connexion Apps Script ───────────────────────────────────
+const CAMPAIGN_API = "https://script.google.com/macros/s/AKfycbwYUimK9EnHxBY3wCudAAF4LagLlBOVnZsMkM1JNjlBU0-3REUhiVv7WJihMFoUIOFl/exec";
+
+function setCampaignStatus(msg, color='var(--ink-3)'){
+  const el = document.getElementById('campaign-status');
+  if(el){ el.style.color = color; el.innerHTML = msg; }
+}
+
+async function campaignFetch(action, params={}, method='GET', body=null){
+  const url = new URL(CAMPAIGN_API);
+  url.searchParams.set('action', action);
+  Object.entries(params).forEach(([k,v])=>url.searchParams.set(k,v));
+
+  const opts = { method };
+  if(body){
+    opts.method = 'POST';
+    opts.headers = {'Content-Type':'text/plain'};
+    opts.body = JSON.stringify(body);
+  }
+  const res = await fetch(url.toString(), opts);
+  return res.json();
+}
+
+async function syncToAppsScript(){
+  setCampaignStatus('<div class="spinner" style="border-color:var(--border);border-top-color:var(--blue);width:12px;height:12px;display:inline-block;vertical-align:middle;margin-right:6px"></div> Synchronisation en cours…');
+  try {
+    const toSync = prospects.filter(p=>p.email).map(p=>({name:p.name, email:p.email, ville:p.ville}));
+    if(!toSync.length){ setCampaignStatus('⚠️ Aucun prospect avec email à synchroniser','var(--amber)'); return; }
+
+    const result = await campaignFetch('sync', {}, 'POST', {prospects: toSync});
+    if(result.success){
+      setCampaignStatus(`✅ ${result.added} nouveau(x) prospect(s) synchronisé(s). Total dans Apps Script : ${result.total}`,'var(--green)');
+      refreshCampaignStatus();
+    } else {
+      setCampaignStatus('❌ Erreur : '+(result.error||'inconnue'),'var(--red)');
+    }
+  } catch(e){
+    setCampaignStatus('❌ Erreur de connexion : '+e.message,'var(--red)');
+  }
+}
+
+async function sendCampaignBatch(){
+  if(!confirm('Envoyer un lot d\'emails maintenant (jusqu\'à 25) ?')) return;
+  setCampaignStatus('<div class="spinner" style="border-color:var(--border);border-top-color:var(--blue);width:12px;height:12px;display:inline-block;vertical-align:middle;margin-right:6px"></div> Envoi en cours… (peut prendre 30-60s)');
+  try {
+    const result = await campaignFetch('send', {batchSize:25, daysBetween:5});
+    if(result.success){
+      setCampaignStatus(`✅ ${result.sent} email(s) envoyé(s) dans ce lot`,'var(--green)');
+      refreshCampaignStatus();
+    } else {
+      setCampaignStatus('❌ Erreur : '+(result.error||'inconnue'),'var(--red)');
+    }
+  } catch(e){
+    setCampaignStatus('❌ Erreur de connexion : '+e.message,'var(--red)');
+  }
+}
+
+async function refreshCampaignStatus(){
+  try {
+    const result = await campaignFetch('status');
+    if(result.success){
+      const s = result.stats;
+      document.getElementById('stat-total').textContent = s.total;
+      document.getElementById('stat-sent').textContent = s.envoye1 + s.envoye2 + s.envoye3;
+      document.getElementById('stat-rdv').textContent = s.rdv;
+      document.getElementById('stat-todo').textContent = s.aEnvoyer;
+
+      // Met à jour les statuts des prospects locaux si match par email
+      result.prospects.forEach(rp=>{
+        const local = prospects.find(p=>p.email===rp.email);
+        if(local){
+          if(rp.status==='RDV pris') local.status='rdv';
+          else if(rp.status.startsWith('Envoyé')) local.status='relance';
+          local.seq = rp.status;
+          local.ouvert = rp.status.includes('Ouvert');
+        }
+      });
+      if(currentFilter) renderProspects();
+    }
+  } catch(e){
+    console.log('Refresh status error:', e);
+  }
+}
+
+// Charge le statut au démarrage de la page prospection
+const _origShowPage = showPage;
+showPage = function(name, el){
+  _origShowPage(name, el);
+  if(name === 'prospection') refreshCampaignStatus();
+};
 
 // Init
 renderProspects();
