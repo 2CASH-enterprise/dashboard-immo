@@ -270,10 +270,10 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--ink);font-siz
     <!-- ═══════ DASHBOARD ═══════ -->
     <div class="page active" id="page-dashboard">
       <div class="kpi-row">
-        <div class="kpi"><div class="kpi-label">Agences contactées</div><div class="kpi-val" style="color:var(--blue)">47</div><div class="kpi-sub"><span class="delta-up">↑ +12</span><span class="delta-neutral"> cette semaine</span></div></div>
-        <div class="kpi"><div class="kpi-label">RDV obtenus</div><div class="kpi-val" style="color:var(--purple)">8</div><div class="kpi-sub"><span class="delta-up">17%</span><span class="delta-neutral"> taux de réponse</span></div></div>
-        <div class="kpi"><div class="kpi-label">Clients actifs</div><div class="kpi-val" style="color:var(--green)">3</div><div class="kpi-sub"><span class="delta-up">↑ +2</span><span class="delta-neutral"> ce mois</span></div></div>
-        <div class="kpi"><div class="kpi-label">MRR</div><div class="kpi-val" style="color:var(--amber)">847€</div><div class="kpi-sub"><span class="delta-up">↑ +349€</span><span class="delta-neutral"> vs M-1</span></div></div>
+        <div class="kpi"><div class="kpi-label">Agences contactées</div><div class="kpi-val" style="color:var(--blue)" id="dash-kpi-contactees">0</div><div class="kpi-sub"><span class="delta-neutral">depuis le début</span></div></div>
+        <div class="kpi"><div class="kpi-label">RDV obtenus</div><div class="kpi-val" style="color:var(--purple)" id="dash-kpi-rdv">0</div><div class="kpi-sub"><span class="delta-neutral">total cumulé</span></div></div>
+        <div class="kpi"><div class="kpi-label">Clients actifs</div><div class="kpi-val" style="color:var(--green)" id="dash-kpi-clients">0</div><div class="kpi-sub"><span class="delta-neutral">aucun pour l'instant</span></div></div>
+        <div class="kpi"><div class="kpi-label">MRR</div><div class="kpi-val" style="color:var(--amber)" id="dash-kpi-mrr">0€</div><div class="kpi-sub"><span class="delta-neutral">aucun client signé</span></div></div>
       </div>
       <div class="grid-3">
         <div class="card">
@@ -283,12 +283,8 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--ink);font-siz
         <div class="card">
           <div class="card-header"><div class="card-title">Entonnoir global</div></div>
           <div class="card-body">
-            <div class="funnel">
-              <div class="funnel-step"><div class="funnel-label">Contactées</div><div class="funnel-bar-wrap"><div class="funnel-bar" style="width:100%;background:var(--blue)"><span class="funnel-count">47</span></div></div><div class="funnel-pct">100%</div></div>
-              <div class="funnel-step"><div class="funnel-label">Ouvertures</div><div class="funnel-bar-wrap"><div class="funnel-bar" style="width:72%;background:#5b7fff"><span class="funnel-count">34</span></div></div><div class="funnel-pct">72%</div></div>
-              <div class="funnel-step"><div class="funnel-label">Réponses</div><div class="funnel-bar-wrap"><div class="funnel-bar" style="width:17%;background:var(--purple)"><span class="funnel-count">8</span></div></div><div class="funnel-pct">17%</div></div>
-              <div class="funnel-step"><div class="funnel-label">RDV</div><div class="funnel-bar-wrap"><div class="funnel-bar" style="width:13%;background:var(--green)"><span class="funnel-count">6</span></div></div><div class="funnel-pct">13%</div></div>
-              <div class="funnel-step"><div class="funnel-label">Signés</div><div class="funnel-bar-wrap"><div class="funnel-bar" style="width:6%;background:var(--amber)"><span class="funnel-count">3</span></div></div><div class="funnel-pct">6%</div></div>
+            <div class="funnel" id="dash-funnel">
+              <div class="empty"><div class="empty-icon">📊</div><div class="empty-text">Synchronise et lance ta première campagne pour voir l'entonnoir</div></div>
             </div>
           </div>
         </div>
@@ -297,11 +293,8 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--ink);font-siz
         <div class="card-header"><div class="card-title">Dernières activités</div><span class="card-action" onclick="showPage('prospection',document.querySelector('[onclick*=prospection]'))">Voir tout →</span></div>
         <table class="table">
           <thead><tr><th>Agence</th><th>Ville</th><th>Statut</th><th>Dernière action</th><th>Prochain suivi</th></tr></thead>
-          <tbody>
-            <tr><td><strong>Immobilier Fontaine</strong></td><td>Lyon</td><td><span class="badge badge-green">✓ Signé</span></td><td>Onboarding J3</td><td>—</td></tr>
-            <tr><td><strong>Chevalier & Associés</strong></td><td>Bordeaux</td><td><span class="badge badge-blue">RDV planifié</span></td><td>Email J1 ouvert</td><td>Demain 14h</td></tr>
-            <tr><td><strong>Cabinet Breton</strong></td><td>Nantes</td><td><span class="badge badge-purple">En démo</span></td><td>Démo en cours</td><td>Vendredi</td></tr>
-            <tr><td><strong>Agence Martin</strong></td><td>Toulouse</td><td><span class="badge badge-amber">Relance J5</span></td><td>Email J1 lu ×3</td><td>Aujourd'hui</td></tr>
+          <tbody id="dashboard-recent-body">
+            <tr><td colspan="5"><div class="empty"><div class="empty-icon">📭</div><div class="empty-text">Lance ta première synchronisation depuis Prospection pour voir l'activité ici</div></div></td></tr>
           </tbody>
         </table>
       </div>
@@ -499,35 +492,24 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--ink);font-siz
     <!-- ═══════ PIPELINE ═══════ -->
     <div class="page" id="page-pipeline">
       <div style="margin-bottom:20px;display:flex;justify-content:space-between;align-items:center">
-        <div style="font-size:12px;color:var(--ink-3)">8 opportunités actives · Valeur potentielle <strong style="color:var(--ink)">12 380€/an</strong></div>
+        <div style="font-size:12px;color:var(--ink-3)">Pipeline alimenté par tes vrais statuts de prospection</div>
         <button class="btn btn-primary btn-sm" onclick="openModal()">+ Nouvelle opportunité</button>
       </div>
       <div class="pipeline">
         <div class="pipe-col">
-          <div class="pipe-col-header">Contacté <span class="pipe-count">3</span></div>
-          <div class="pipe-card"><div class="pipe-card-name">Agence Martin</div><div class="pipe-card-sub">Toulouse · Email J1</div><div class="pipe-card-footer"><span class="badge badge-gray">Froid</span><span style="font-size:11px;color:var(--ink-3)">J+1</span></div></div>
-          <div class="pipe-card"><div class="pipe-card-name">Immobilier Petit</div><div class="pipe-card-sub">Rennes · Email J1</div><div class="pipe-card-footer"><span class="badge badge-gray">Froid</span><span style="font-size:11px;color:var(--ink-3)">J+2</span></div></div>
-          <div class="pipe-card"><div class="pipe-card-name">Sud Immo</div><div class="pipe-card-sub">Montpellier · Lu ×2</div><div class="pipe-card-footer"><span class="badge badge-amber">Lu ×2</span><span style="font-size:11px;color:var(--ink-3)">J+3</span></div></div>
+          <div class="pipe-col-header">Contacté <span class="pipe-count">0</span></div>
         </div>
         <div class="pipe-col">
-          <div class="pipe-col-header">Intéressé <span class="pipe-count">2</span></div>
-          <div class="pipe-card"><div class="pipe-card-name">Chevalier & Assoc.</div><div class="pipe-card-sub">Bordeaux · A répondu</div><div class="pipe-card-footer"><span class="badge badge-blue">Chaud</span><span style="font-size:11px;color:var(--ink-3)">Aujourd'hui</span></div></div>
-          <div class="pipe-card"><div class="pipe-card-name">Espace Habitat</div><div class="pipe-card-sub">Strasbourg · Lu ×4</div><div class="pipe-card-footer"><span class="badge badge-amber">Tiède</span><span style="font-size:11px;color:var(--ink-3)">J+1</span></div></div>
+          <div class="pipe-col-header">Intéressé <span class="pipe-count">0</span></div>
         </div>
         <div class="pipe-col">
-          <div class="pipe-col-header">RDV planifié <span class="pipe-count">2</span></div>
-          <div class="pipe-card"><div class="pipe-card-name">Cabinet Breton</div><div class="pipe-card-sub">Nantes · Vendredi 10h</div><div class="pipe-card-footer"><span class="badge badge-purple">RDV</span><span style="font-size:11px;color:var(--ink-3)">3 jours</span></div></div>
-          <div class="pipe-card"><div class="pipe-card-name">Immo Dupuis</div><div class="pipe-card-sub">Nice · Lundi 14h</div><div class="pipe-card-footer"><span class="badge badge-purple">RDV</span><span style="font-size:11px;color:var(--ink-3)">5 jours</span></div></div>
+          <div class="pipe-col-header">RDV planifié <span class="pipe-count">0</span></div>
         </div>
         <div class="pipe-col">
-          <div class="pipe-col-header">Démo faite <span class="pipe-count">1</span></div>
-          <div class="pipe-card"><div class="pipe-card-name">Immo Leclerc</div><div class="pipe-card-sub">Marseille · Devis envoyé</div><div class="pipe-card-footer"><span class="badge badge-amber">En attente</span></div></div>
+          <div class="pipe-col-header">Démo faite <span class="pipe-count">0</span></div>
         </div>
         <div class="pipe-col">
-          <div class="pipe-col-header">Signé ✓ <span class="pipe-count">3</span></div>
-          <div class="pipe-card" style="border-left:3px solid var(--green)"><div class="pipe-card-name">Immo Fontaine</div><div class="pipe-card-sub">Lyon · Pro 349€/mois</div><div class="pipe-card-footer"><span class="badge badge-green">Actif</span><span style="font-size:11px;color:var(--green)">+349€</span></div></div>
-          <div class="pipe-card" style="border-left:3px solid var(--green)"><div class="pipe-card-name">Agence Moreau</div><div class="pipe-card-sub">Paris · Starter 149€</div><div class="pipe-card-footer"><span class="badge badge-green">Actif</span><span style="font-size:11px;color:var(--green)">+149€</span></div></div>
-          <div class="pipe-card" style="border-left:3px solid var(--green)"><div class="pipe-card-name">Sud Prestige</div><div class="pipe-card-sub">Cannes · Pro 349€/mois</div><div class="pipe-card-footer"><span class="badge badge-green">Actif</span><span style="font-size:11px;color:var(--green)">+349€</span></div></div>
+          <div class="pipe-col-header">Signé ✓ <span class="pipe-count">0</span></div>
         </div>
       </div>
     </div>
@@ -584,19 +566,17 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--ink);font-siz
     <!-- ═══════ CLIENTS ═══════ -->
     <div class="page" id="page-clients">
       <div class="kpi-row">
-        <div class="kpi"><div class="kpi-label">MRR total</div><div class="kpi-val" style="color:var(--green)">847€</div><div class="kpi-sub"><span class="delta-neutral">mensuel récurrent</span></div></div>
-        <div class="kpi"><div class="kpi-label">ARR projeté</div><div class="kpi-val">10 164€</div><div class="kpi-sub"><span class="delta-neutral">annualisé</span></div></div>
-        <div class="kpi"><div class="kpi-label">Setup encaissé</div><div class="kpi-val" style="color:var(--amber)">1 500€</div><div class="kpi-sub"><span class="delta-neutral">3 × 500€</span></div></div>
-        <div class="kpi"><div class="kpi-label">Churn</div><div class="kpi-val" style="color:var(--green)">0%</div><div class="kpi-sub"><span class="delta-neutral">aucune résiliation</span></div></div>
+        <div class="kpi"><div class="kpi-label">MRR total</div><div class="kpi-val" style="color:var(--green)">0€</div><div class="kpi-sub"><span class="delta-neutral">mensuel récurrent</span></div></div>
+        <div class="kpi"><div class="kpi-label">ARR projeté</div><div class="kpi-val">0€</div><div class="kpi-sub"><span class="delta-neutral">annualisé</span></div></div>
+        <div class="kpi"><div class="kpi-label">Setup encaissé</div><div class="kpi-val" style="color:var(--amber)">0€</div><div class="kpi-sub"><span class="delta-neutral">0 client</span></div></div>
+        <div class="kpi"><div class="kpi-label">Churn</div><div class="kpi-val" style="color:var(--green)">—</div><div class="kpi-sub"><span class="delta-neutral">aucune donnée</span></div></div>
       </div>
       <div class="card">
         <div class="card-header"><div class="card-title">Clients actifs</div></div>
         <table class="table">
           <thead><tr><th>Agence</th><th>Offre</th><th>Depuis</th><th>Leads générés</th><th>RDV pris</th><th>Santé</th><th>MRR</th></tr></thead>
           <tbody>
-            <tr><td><strong>Immobilier Fontaine</strong><div style="font-size:11px;color:var(--ink-3)">Lyon · Marie-Laure Fontaine</div></td><td><span class="badge badge-blue">Pro</span></td><td>3 sem.</td><td><strong>28</strong></td><td><strong>6</strong></td><td><div class="progress-wrap" style="width:80px"><div class="progress-bar" style="width:90%;background:var(--green)"></div></div></td><td><strong>349€</strong></td></tr>
-            <tr><td><strong>Agence Moreau</strong><div style="font-size:11px;color:var(--ink-3)">Paris 15e · Éric Moreau</div></td><td><span class="badge badge-gray">Starter</span></td><td>2 sem.</td><td><strong>14</strong></td><td><strong>3</strong></td><td><div class="progress-wrap" style="width:80px"><div class="progress-bar" style="width:70%;background:var(--amber)"></div></div></td><td><strong>149€</strong></td></tr>
-            <tr><td><strong>Sud Prestige</strong><div style="font-size:11px;color:var(--ink-3)">Cannes · Claire Rossi</div></td><td><span class="badge badge-blue">Pro</span></td><td>1 sem.</td><td><strong>9</strong></td><td><strong>2</strong></td><td><div class="progress-wrap" style="width:80px"><div class="progress-bar" style="width:55%;background:var(--blue)"></div></div></td><td><strong>349€</strong></td></tr>
+            <tr><td colspan="7"><div class="empty"><div class="empty-icon">🏢</div><div class="empty-text">Aucun client signé pour l'instant — ta première signature apparaîtra ici</div></div></td></tr>
           </tbody>
         </table>
       </div>
@@ -710,18 +690,7 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--ink);font-siz
 
 <script>
 // ── DATA ────────────────────────────────────────────────────────────────────
-let prospects = [
-  {id:1,name:'Immobilier Fontaine',contact:'Marie-Laure',email:'ml@fontaine-immo.fr',ville:'Lyon',status:'signe',seq:'J1+J5+J10',ouvert:true},
-  {id:2,name:'Chevalier & Associés',contact:'Thomas',email:'t@chevalier.fr',ville:'Bordeaux',status:'rdv',seq:'J1',ouvert:true},
-  {id:3,name:'Cabinet Breton',contact:'Sophie',email:'s@breton.fr',ville:'Nantes',status:'rdv',seq:'J1',ouvert:true},
-  {id:4,name:'Agence Martin',contact:'Jean-Luc',email:'jl@martin-immo.fr',ville:'Toulouse',status:'relance',seq:'J1',ouvert:true},
-  {id:5,name:'Pierre & Associés',contact:'Marc',email:'m@pierre.fr',ville:'Lille',status:'contacte',seq:'J1',ouvert:false},
-  {id:6,name:'Immobilier Petit',contact:'Claire',email:'c@petit-immo.fr',ville:'Rennes',status:'contacte',seq:'J1',ouvert:false},
-  {id:7,name:'Sud Immo',contact:'Paul',email:'p@sudimmo.fr',ville:'Montpellier',status:'relance',seq:'J1',ouvert:true},
-  {id:8,name:'Espace Habitat',contact:'Anne',email:'a@espacehabitat.fr',ville:'Strasbourg',status:'relance',seq:'J1+J5',ouvert:true},
-  {id:9,name:'Agence Moreau',contact:'Éric',email:'e@moreau.fr',ville:'Paris',status:'signe',seq:'J1+J5',ouvert:true},
-  {id:10,name:'Sud Prestige',contact:'Claire',email:'c@sudprestige.fr',ville:'Cannes',status:'signe',seq:'J1+J5+J10',ouvert:true},
-];
+let prospects = [];
 let nextId = 11;
 let currentFilter = 'tous';
 let searchQuery = '';
@@ -1028,8 +997,8 @@ function renderBarChart(id,data,color){
     return `<div class="bar-col"><div class="bar-val">${d.val}</div><div class="bar" style="height:${Math.max(pct,4)}%;background:${color};opacity:${0.4+0.6*(d.val/(max||1))}"></div><div class="bar-lbl">${d.label}</div></div>`;
   }).join('');
 }
-renderBarChart('activity-chart',[{label:'Lun',val:8},{label:'Mar',val:12},{label:'Mer',val:7},{label:'Jeu',val:15},{label:'Ven',val:5},{label:'Sam',val:0},{label:'Dim',val:0}],'var(--blue)');
-renderBarChart('mrr-chart',[{label:'M-4',val:0},{label:'M-3',val:0},{label:'M-2',val:149},{label:'M-1',val:498},{label:'Ce mois',val:847}],'var(--green)');
+renderBarChart('activity-chart',[{label:'Lun',val:0},{label:'Mar',val:0},{label:'Mer',val:0},{label:'Jeu',val:0},{label:'Ven',val:0},{label:'Sam',val:0},{label:'Dim',val:0}],'var(--blue)');
+renderBarChart('mrr-chart',[{label:'M-4',val:0},{label:'M-3',val:0},{label:'M-2',val:0},{label:'M-1',val:0},{label:'Ce mois',val:0}],'var(--green)');
 
 // ── IMPORT CSV / EXCEL / PASTE ───────────────────────────────────────────────
 function detectColumns(headerRow){
@@ -1246,6 +1215,22 @@ async function refreshCampaignStatus(){
       document.getElementById('stat-rdv').textContent = s.rdv;
       document.getElementById('stat-todo').textContent = s.aEnvoyer;
 
+      // Met à jour aussi les KPI du Dashboard principal
+      const dashContactees = document.getElementById('dash-kpi-contactees');
+      if(dashContactees){
+        dashContactees.textContent = s.envoye1 + s.envoye2 + s.envoye3;
+        document.getElementById('dash-kpi-rdv').textContent = s.rdv;
+        const totalSent = s.envoye1 + s.envoye2 + s.envoye3;
+        const funnelEl = document.getElementById('dash-funnel');
+        if(funnelEl && totalSent > 0){
+          funnelEl.innerHTML = `
+            <div class="funnel-step"><div class="funnel-label">Synchronisés</div><div class="funnel-bar-wrap"><div class="funnel-bar" style="width:100%;background:var(--blue)"><span class="funnel-count">${s.total}</span></div></div><div class="funnel-pct">100%</div></div>
+            <div class="funnel-step"><div class="funnel-label">Envoyés</div><div class="funnel-bar-wrap"><div class="funnel-bar" style="width:${Math.round(totalSent/s.total*100)}%;background:#5b7fff"><span class="funnel-count">${totalSent}</span></div></div><div class="funnel-pct">${Math.round(totalSent/s.total*100)}%</div></div>
+            <div class="funnel-step"><div class="funnel-label">RDV pris</div><div class="funnel-bar-wrap"><div class="funnel-bar" style="width:${s.total?Math.round(s.rdv/s.total*100):0}%;background:var(--green)"><span class="funnel-count">${s.rdv}</span></div></div><div class="funnel-pct">${s.total?Math.round(s.rdv/s.total*100):0}%</div></div>
+          `;
+        }
+      }
+
       // Met à jour les statuts des prospects locaux si match par email
       result.prospects.forEach(rp=>{
         const local = prospects.find(p=>p.email===rp.email);
@@ -1267,7 +1252,7 @@ async function refreshCampaignStatus(){
 const _origShowPage = showPage;
 showPage = function(name, el){
   _origShowPage(name, el);
-  if(name === 'prospection') refreshCampaignStatus();
+  if(name === 'prospection' || name === 'dashboard') refreshCampaignStatus();
   if(name === 'calendrier'){ renderCalendar(); renderRdvList(); }
 };
 
@@ -1471,6 +1456,7 @@ function checkRdvAlerts(){
 renderProspects();
 loadProspectsFromServer();
 checkRdvAlerts();
+refreshCampaignStatus();
 </script>
 </body>
 </html>
