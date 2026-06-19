@@ -453,7 +453,7 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--ink);font-siz
           </div>
         </div>
         <table class="table" id="prospects-table">
-          <thead><tr><th>Agence</th><th>Contact</th><th>Ville</th><th>Statut</th><th>Séquence</th><th>Ouvert</th><th>Action</th></tr></thead>
+          <thead><tr><th>Agence</th><th>Contact</th><th>Ville</th><th>Score</th><th>Statut</th><th>Séquence</th><th>Action</th></tr></thead>
           <tbody id="prospects-body"></tbody>
         </table>
       </div>
@@ -681,19 +681,27 @@ function renderProspects(){
   let data = prospects;
   if(currentFilter!=='tous') data=data.filter(p=>p.status===currentFilter);
   if(searchQuery) data=data.filter(p=>p.name.toLowerCase().includes(searchQuery)||p.ville.toLowerCase().includes(searchQuery));
+  data = [...data].sort((a,b)=>(b.score||0)-(a.score||0));
   document.getElementById('kpi-total').textContent = prospects.length;
   document.getElementById('tab-tous').textContent = prospects.length;
   if(!data.length){body.innerHTML=`<tr><td colspan="7"><div class="empty"><div class="empty-icon">📭</div><div class="empty-text">Aucune agence dans ce filtre</div></div></td></tr>`;return;}
   body.innerHTML = data.map(p=>{
     const s = statusConfig[p.status];
+    const score = p.score||0;
+    const scoreColor = score>=70?'var(--green)':score>=40?'var(--amber)':'var(--ink-3)';
+    const scoreBg = score>=70?'var(--green-bg)':score>=40?'var(--amber-bg)':'var(--bg)';
+    const domain = p.website ? p.website.replace(/^https?:\/\//,'').replace(/^www\./,'').split('/')[0] : '';
     return `<tr>
       <td><strong>${p.name}</strong>${p.source==='google'?'<span class="badge badge-purple" style="margin-left:6px;font-size:10px">Maps</span>':''}${p.address?`<div style="font-size:11px;color:var(--ink-3)">${p.address}</div>`:''}</td>
-      <td>${p.contact||'—'}<div style="font-size:11px;color:var(--ink-3)">${p.email||'—'}</div></td>
+      <td>${p.contact||'—'}<div style="font-size:11px;color:var(--ink-3)">${p.email||'<em style=\\'color:var(--ink-4)\\'>aucun</em>'}</div></td>
       <td>${p.ville}</td>
+      <td><span style="display:inline-flex;align-items:center;justify-content:center;min-width:32px;padding:3px 8px;border-radius:20px;font-size:12px;font-weight:700;color:${scoreColor};background:${scoreBg}">${score}</span></td>
       <td><span class="badge ${s.cls}">${s.label}</span></td>
       <td><span style="font-size:12px;color:var(--ink-3)">${p.seq}</span></td>
-      <td>${p.ouvert?'<span class="badge badge-green">✓</span>':'<span class="badge badge-gray">—</span>'}</td>
-      <td><button class="action-btn primary" onclick="nextAction(${p.id})">${seqNext[p.status]}</button></td>
+      <td style="display:flex;gap:6px;flex-wrap:wrap">
+        <button class="action-btn primary" onclick="nextAction(${p.id})">${seqNext[p.status]}</button>
+        ${domain?`<button class="action-btn" onclick="window.open('https://hunter.io/domain-search?domain=${domain}','_blank')" title="Chercher l'email sur Hunter.io">🔍 Hunter</button>`:''}
+      </td>
     </tr>`;
   }).join('');
 }
@@ -1197,7 +1205,7 @@ async function loadProspectsFromServer(){
           id: p.id, name: p.name, address: p.address||'', contact: p.contact||'—', email: p.email||'',
           phone: p.phone||'', ville: p.ville||'—', website: p.website||'',
           status: p.status||'contacte', seq: p.seq||'À envoyer', ouvert: p.ouvert||false,
-          source: p.source||'import', rating: p.rating||''
+          source: p.source||'import', rating: p.rating||'', score: p.score||0
         });
       });
       renderProspects();
