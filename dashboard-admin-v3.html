@@ -486,7 +486,8 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--ink);font-siz
           </div>
 
           <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
-            <button class="btn btn-ghost btn-sm" onclick="syncToAppsScript()">🔄 Synchroniser la liste</button>
+            <button class="btn btn-ghost btn-sm" onclick="syncToAppsScript(10)" title="Synchronise les 10 prospects au score le plus élevé">🧪 Tester avec 10</button>
+            <button class="btn btn-ghost btn-sm" onclick="syncToAppsScript()">🔄 Synchroniser tout</button>
             <button class="btn btn-primary btn-sm" onclick="sendCampaignBatch()">📤 Envoyer un lot (25 max)</button>
             <button class="btn btn-ghost btn-sm" onclick="refreshCampaignStatus()">↻ Actualiser les statuts</button>
           </div>
@@ -1196,15 +1197,20 @@ async function campaignFetch(action, params={}, method='GET', body=null){
   return res.json();
 }
 
-async function syncToAppsScript(){
+async function syncToAppsScript(limit){
   setCampaignStatus('<div class="spinner" style="border-color:var(--border);border-top-color:var(--blue);width:12px;height:12px;display:inline-block;vertical-align:middle;margin-right:6px"></div> Synchronisation en cours…');
   try {
-    const toSync = prospects.filter(p=>p.email).map(p=>({name:p.name, email:p.email, ville:p.ville}));
+    let toSync = prospects.filter(p=>p.email)
+      .sort((a,b)=>(b.score||0)-(a.score||0))
+      .map(p=>({name:p.name, email:p.email, ville:p.ville, score:p.score||0}));
+
+    if(limit && limit>0) toSync = toSync.slice(0, limit);
+
     if(!toSync.length){ setCampaignStatus('⚠️ Aucun prospect avec email à synchroniser','var(--amber)'); return; }
 
     const result = await campaignFetch('sync', {}, 'POST', {prospects: toSync});
     if(result.success){
-      setCampaignStatus(`✅ ${result.added} nouveau(x) prospect(s) synchronisé(s). Total dans Apps Script : ${result.total}`,'var(--green)');
+      setCampaignStatus(`✅ ${result.added} nouveau(x) prospect(s) synchronisé(s) (sur ${toSync.length} envoyés, triés par score). Total dans Apps Script : ${result.total}`,'var(--green)');
       refreshCampaignStatus();
     } else {
       setCampaignStatus('❌ Erreur : '+(result.error||'inconnue'),'var(--red)');
