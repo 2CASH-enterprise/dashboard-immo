@@ -967,7 +967,7 @@ function detectColumns(headerRow){
   return map;
 }
 
-function rowsToProspectsAndImport(rows){
+async function rowsToProspectsAndImport(rows){
   if(!rows.length){return 0;}
   const firstRow = rows[0].map(c=>(c||'').toString().toLowerCase());
   const looksLikeHeader = firstRow.some(c=>/nom|name|adresse|address|note|rating|place.?id/.test(c));
@@ -975,7 +975,7 @@ function rowsToProspectsAndImport(rows){
   const dataRows = looksLikeHeader ? rows.slice(1) : rows;
   const useMap = looksLikeHeader ? map : {name:0,address:1,rating:2,place_id:3,phone:-1,email:-1,ville:-1,site:-1};
 
-  let count = 0;
+  const toImport = [];
   dataRows.forEach(r=>{
     const name = useMap.name>=0 ? r[useMap.name] : '';
     if(!name || !name.toString().trim()) return;
@@ -984,7 +984,7 @@ function rowsToProspectsAndImport(rows){
     const address = useMap.address>=0 ? (r[useMap.address]||'') : '';
     const ville = useMap.ville>=0 ? (r[useMap.ville]||'') : (address.split(',').pop()||'').trim();
 
-    prospects.push({
+    const newP = {
       id:nextId++,
       name: name.toString().trim(),
       contact: '—',
@@ -997,9 +997,25 @@ function rowsToProspectsAndImport(rows){
       ouvert:false,
       source:'import',
       rating: useMap.rating>=0 ? (r[useMap.rating]||'') : '',
-    });
-    count++;
+    };
+    prospects.push(newP);
+    toImport.push(newP);
   });
+
+  // Sauvegarde en base PostgreSQL via l'API
+  if(toImport.length){
+    try{
+      await fetch(`${PROSPECTS_API}/import`, {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({prospects: toImport.map(p=>({
+          name:p.name, contact:p.contact, email:p.email, phone:p.phone,
+          ville:p.ville, website:p.website, rating:p.rating, source:p.source
+        }))})
+      });
+    }catch(e){ console.log('Erreur sauvegarde API:', e); }
+  }
+  const count = toImport.length;
   return count;
 }
 
@@ -1009,12 +1025,13 @@ function setImportStatus(msg, color='var(--ink-3)'){
   el.textContent = msg;
 }
 
-function parsePastedData(){
+async function parsePastedData(){
   const raw = document.getElementById('paste-area').value;
   if(!raw.trim()){setImportStatus('⚠️ Colle d\'abord des données dans la zone de texte','var(--amber)');return;}
   const sep = raw.includes('\t') ? '\t' : (raw.split('\n')[0].split(',').length>1 ? ',' : '\t');
   const rows = raw.trim().split('\n').map(line=>line.split(sep).map(c=>c.trim()));
-  const count = rowsToProspectsAndImport(rows);
+  setImportStatus('⏳ Import en cours…');
+  const count = await rowsToProspectsAndImport(rows);
   if(count>0){
     setImportStatus(`✅ ${count} agence${count>1?'s':''} importée${count>1?'s':''} dans ta liste de prospection !`,'var(--green)');
     document.getElementById('paste-area').value='';
@@ -1037,9 +1054,10 @@ function handleFileImport(event){
   const reader = new FileReader();
 
   if(ext === 'csv'){
-    reader.onload = (e)=>{
+    reader.onload = async (e)=>{
       const rows = parseCSV(e.target.result);
-      const count = rowsToProspectsAndImport(rows);
+      setImportStatus('⏳ Import en cours… (peut prendre du temps pour beaucoup de lignes)');
+      const count = await rowsToProspectsAndImport(rows);
       if(count>0){
         setImportStatus(`✅ ${count} agence${count>1?'s':''} importée${count>1?'s':''} depuis ${file.name} !`,'var(--green)');
         setTimeout(()=>showPage('prospection',document.querySelector('[onclick*=prospection]')),900);
@@ -1158,8 +1176,30 @@ showPage = function(name, el){
   if(name === 'prospection') refreshCampaignStatus();
 };
 
+const PROSPECTS_API = "https://agenc-ai.com/thee-api/prospects";
+
+async function loadProspectsFromServer(){
+  try{
+    const res = await fetch(`${PROSPECTS_API}?limit=500`);
+    const data = await res.json();
+    if(data.prospects && data.prospects.length){
+      prospects.length = 0;
+      data.prospects.forEach(p=>{
+        prospects.push({
+          id: p.id, name: p.name, contact: p.contact||'—', email: p.email||'',
+          phone: p.phone||'', ville: p.ville||'—', website: p.website||'',
+          status: p.status||'contacte', seq: p.seq||'À envoyer', ouvert: p.ouvert||false,
+          source: p.source||'import', rating: p.rating||''
+        });
+      });
+      renderProspects();
+    }
+  }catch(e){ console.log('Chargement serveur impossible, utilisation des données locales:', e); }
+}
+
 // Init
 renderProspects();
+loadProspectsFromServer();
 </script>
 </body>
 </html>
