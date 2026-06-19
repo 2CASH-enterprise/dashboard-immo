@@ -239,6 +239,7 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--ink);font-siz
   <div class="nav-item" onclick="showPage('prospection',this)"><span class="icon">🎯</span> Prospection</div>
   <div class="nav-item" onclick="showPage('scraper',this)"><span class="icon">🗺️</span> Chercher agences</div>
   <div class="nav-item" onclick="showPage('pipeline',this)"><span class="icon">🔄</span> Pipeline</div>
+  <div class="nav-item" onclick="showPage('calendrier',this)"><span class="icon">📅</span> Calendrier <span id="rdv-badge" style="display:none;background:var(--red);color:#fff;font-size:10px;padding:1px 6px;border-radius:10px;margin-left:4px"></span></div>
   <div class="nav-item" onclick="showPage('clients',this)"><span class="icon">🏢</span> Clients actifs</div>
   <div class="sidebar-section">Analyse</div>
   <div class="nav-item" onclick="showPage('conversion',this)"><span class="icon">📈</span> Conversion</div>
@@ -530,6 +531,55 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--ink);font-siz
       </div>
     </div>
 
+    <!-- ═══════ CALENDRIER ═══════ -->
+    <div class="page" id="page-calendrier">
+      <div id="rdv-alert-banner" style="display:none;background:var(--red-bg);border:1px solid #f5c6c6;border-radius:var(--radius-lg);padding:14px 18px;margin-bottom:18px;display:flex;align-items:center;gap:12px">
+        <span style="font-size:20px">🔔</span>
+        <div style="flex:1">
+          <div style="font-weight:600;color:var(--red);font-size:13px" id="rdv-alert-title">Tu as des RDV aujourd'hui</div>
+          <div style="font-size:12px;color:var(--ink-2)" id="rdv-alert-sub"></div>
+        </div>
+      </div>
+
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-label">RDV ce mois</div><div class="kpi-val" style="color:var(--blue)" id="cal-kpi-mois">0</div></div>
+        <div class="kpi"><div class="kpi-label">Aujourd'hui</div><div class="kpi-val" style="color:var(--red)" id="cal-kpi-today">0</div></div>
+        <div class="kpi"><div class="kpi-label">Cette semaine</div><div class="kpi-val" style="color:var(--amber)" id="cal-kpi-semaine">0</div></div>
+        <div class="kpi"><div class="kpi-label">RDV → Signé</div><div class="kpi-val" style="color:var(--green)" id="cal-kpi-taux">—</div></div>
+      </div>
+
+      <div class="card mb-18">
+        <div class="card-header">
+          <div style="display:flex;align-items:center;gap:12px">
+            <button class="btn btn-ghost btn-sm" onclick="changeMonth(-1)">←</button>
+            <div class="card-title" id="cal-month-label" style="min-width:160px;text-align:center">—</div>
+            <button class="btn btn-ghost btn-sm" onclick="changeMonth(1)">→</button>
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="openRdvModal()">+ Ajouter un RDV</button>
+        </div>
+        <div class="card-body">
+          <div id="cal-grid-headers" style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:8px">
+            <div class="ts" style="text-align:center;font-weight:600">Lun</div>
+            <div class="ts" style="text-align:center;font-weight:600">Mar</div>
+            <div class="ts" style="text-align:center;font-weight:600">Mer</div>
+            <div class="ts" style="text-align:center;font-weight:600">Jeu</div>
+            <div class="ts" style="text-align:center;font-weight:600">Ven</div>
+            <div class="ts" style="text-align:center;font-weight:600">Sam</div>
+            <div class="ts" style="text-align:center;font-weight:600">Dim</div>
+          </div>
+          <div id="cal-grid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-title">Prochains rendez-vous</div></div>
+        <table class="table">
+          <thead><tr><th>Date</th><th>Heure</th><th>Agence</th><th>Notes</th><th>Statut</th><th>Action</th></tr></thead>
+          <tbody id="rdv-list-body"></tbody>
+        </table>
+      </div>
+    </div>
+
     <!-- ═══════ CLIENTS ═══════ -->
     <div class="page" id="page-clients">
       <div class="kpi-row">
@@ -635,6 +685,28 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--ink);font-siz
   </div>
 </div>
 
+<!-- MODAL RDV -->
+<div class="modal-overlay" id="rdv-modal-overlay" onclick="closeRdvModal(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-title">Ajouter un rendez-vous</div>
+    <div class="form-group">
+      <label class="form-label">Agence</label>
+      <select class="form-select" id="rdv-prospect">
+        <option value="">— Sélectionner un prospect —</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Date</label><input class="form-input" id="rdv-date" type="date"/></div>
+      <div class="form-group"><label class="form-label">Heure</label><input class="form-input" id="rdv-heure" type="time" value="10:00"/></div>
+    </div>
+    <div class="form-group"><label class="form-label">Notes</label><input class="form-input" id="rdv-notes" placeholder="Ex : démo + présentation tarifs"/></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeRdvModal()">Annuler</button>
+      <button class="btn btn-primary" onclick="saveRdv()">Enregistrer le RDV</button>
+    </div>
+  </div>
+</div>
+
 <script>
 // ── DATA ────────────────────────────────────────────────────────────────────
 let prospects = [
@@ -665,7 +737,7 @@ const statusConfig = {
 const seqNext = {contacte:'Envoyer J5',relance:'Envoyer J10',rdv:'Préparer démo',signe:'Onboarding'};
 
 // ── NAVIGATION ───────────────────────────────────────────────────────────────
-const pageTitles = {dashboard:'Dashboard',prospection:'Prospection',scraper:'Chercher agences — Google Places',pipeline:'Pipeline CRM',clients:'Clients actifs',conversion:'Analyse conversion',revenus:'Revenus'};
+const pageTitles = {dashboard:'Dashboard',prospection:'Prospection',scraper:'Chercher agences — Google Places',pipeline:'Pipeline CRM',calendrier:'Calendrier des RDV',clients:'Clients actifs',conversion:'Analyse conversion',revenus:'Revenus'};
 function showPage(name,el){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById('page-'+name).classList.add('active');
@@ -693,7 +765,7 @@ function renderProspects(){
     const domain = p.website ? p.website.replace(/^https?:\/\//,'').replace(/^www\./,'').split('/')[0] : '';
     return `<tr>
       <td><strong>${p.name}</strong>${p.source==='google'?'<span class="badge badge-purple" style="margin-left:6px;font-size:10px">Maps</span>':''}${p.address?`<div style="font-size:11px;color:var(--ink-3)">${p.address}</div>`:''}</td>
-      <td>${p.contact||'—'}<div style="font-size:11px;color:var(--ink-3)">${p.email||'<em style=\\'color:var(--ink-4)\\'>aucun</em>'}</div></td>
+      <td>${p.contact||'—'}<div style="font-size:11px;color:var(--ink-3)">${p.email||'<em style="color:var(--ink-4)">aucun</em>'}</div></td>
       <td>${p.ville}</td>
       <td><span style="display:inline-flex;align-items:center;justify-content:center;min-width:32px;padding:3px 8px;border-radius:20px;font-size:12px;font-weight:700;color:${scoreColor};background:${scoreBg}">${score}</span></td>
       <td><span class="badge ${s.cls}">${s.label}</span></td>
@@ -1190,6 +1262,7 @@ const _origShowPage = showPage;
 showPage = function(name, el){
   _origShowPage(name, el);
   if(name === 'prospection') refreshCampaignStatus();
+  if(name === 'calendrier'){ renderCalendar(); renderRdvList(); }
 };
 
 const PROSPECTS_API = "https://agenc-ai.com/thee-api/prospects";
@@ -1213,9 +1286,185 @@ async function loadProspectsFromServer(){
   }catch(e){ console.log('Chargement serveur impossible, utilisation des données locales:', e); }
 }
 
-// Init
+// ── CALENDRIER RDV ────────────────────────────────────────────────────────────
+let rdvList = JSON.parse(localStorage.getItem('rdvList') || '[]');
+let calCurrentDate = new Date();
+
+function saveRdvList(){
+  localStorage.setItem('rdvList', JSON.stringify(rdvList));
+}
+
+function openRdvModal(){
+  const select = document.getElementById('rdv-prospect');
+  select.innerHTML = '<option value="">— Sélectionner un prospect —</option>' +
+    prospects.map(p=>`<option value="${p.id}">${p.name}${p.ville?' — '+p.ville:''}</option>`).join('');
+  document.getElementById('rdv-date').value = new Date().toISOString().split('T')[0];
+  document.getElementById('rdv-heure').value = '10:00';
+  document.getElementById('rdv-notes').value = '';
+  document.getElementById('rdv-modal-overlay').classList.add('open');
+}
+function closeRdvModal(e){
+  if(!e || e.target===document.getElementById('rdv-modal-overlay')){
+    document.getElementById('rdv-modal-overlay').classList.remove('open');
+  }
+}
+
+function saveRdv(){
+  const prospectId = document.getElementById('rdv-prospect').value;
+  const date = document.getElementById('rdv-date').value;
+  const heure = document.getElementById('rdv-heure').value;
+  const notes = document.getElementById('rdv-notes').value;
+
+  if(!prospectId || !date){ alert('Sélectionne un prospect et une date'); return; }
+
+  const prospect = prospects.find(p=>p.id==prospectId);
+  rdvList.push({
+    id: Date.now(),
+    prospectId: prospectId,
+    prospectName: prospect ? prospect.name : 'Inconnu',
+    date: date,
+    heure: heure,
+    notes: notes,
+    status: 'planifie' // planifie | fait | annule
+  });
+  saveRdvList();
+
+  // Met aussi à jour le statut du prospect en local
+  if(prospect){ prospect.status = 'rdv'; prospect.seq = (prospect.seq||'')+' +RDV'; }
+
+  closeRdvModal();
+  renderCalendar();
+  renderRdvList();
+  checkRdvAlerts();
+}
+
+function deleteRdv(id){
+  if(!confirm('Supprimer ce rendez-vous ?')) return;
+  rdvList = rdvList.filter(r=>r.id!==id);
+  saveRdvList();
+  renderCalendar();
+  renderRdvList();
+  checkRdvAlerts();
+}
+
+function markRdvDone(id){
+  const r = rdvList.find(x=>x.id===id);
+  if(r){ r.status = 'fait'; saveRdvList(); renderRdvList(); renderCalendar(); }
+}
+
+function changeMonth(delta){
+  calCurrentDate.setMonth(calCurrentDate.getMonth()+delta);
+  renderCalendar();
+}
+
+function renderCalendar(){
+  const year = calCurrentDate.getFullYear();
+  const month = calCurrentDate.getMonth();
+  const monthNames = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+  document.getElementById('cal-month-label').textContent = `${monthNames[month]} ${year}`;
+
+  const firstDay = new Date(year, month, 1);
+  const lastDay = new Date(year, month+1, 0);
+  let startWeekday = firstDay.getDay(); // 0=dim
+  startWeekday = startWeekday===0 ? 6 : startWeekday-1; // lundi=0
+
+  const grid = document.getElementById('cal-grid');
+  let html = '';
+
+  for(let i=0;i<startWeekday;i++) html += '<div></div>';
+
+  const todayStr = new Date().toISOString().split('T')[0];
+
+  for(let d=1; d<=lastDay.getDate(); d++){
+    const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const rdvsJour = rdvList.filter(r=>r.date===dateStr && r.status!=='annule');
+    const isToday = dateStr===todayStr;
+
+    html += `<div style="min-height:64px;border:1px solid var(--border);border-radius:8px;padding:6px;background:${isToday?'var(--blue-bg)':'var(--surface)'};${isToday?'border-color:var(--blue-mid)':''}">
+      <div style="font-size:11px;font-weight:${isToday?'700':'500'};color:${isToday?'var(--blue)':'var(--ink-2)'}">${d}</div>
+      ${rdvsJour.slice(0,2).map(r=>`<div style="font-size:9px;background:${r.status==='fait'?'var(--green-bg)':'var(--purple-bg)'};color:${r.status==='fait'?'var(--green)':'var(--purple)'};border-radius:4px;padding:1px 4px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${r.prospectName} ${r.heure}">${r.heure} ${r.prospectName}</div>`).join('')}
+      ${rdvsJour.length>2?`<div style="font-size:9px;color:var(--ink-3);margin-top:2px">+${rdvsJour.length-2}</div>`:''}
+    </div>`;
+  }
+
+  grid.innerHTML = html;
+
+  // KPIs
+  const thisMonthRdv = rdvList.filter(r=>{
+    const rd = new Date(r.date);
+    return rd.getFullYear()===year && rd.getMonth()===month && r.status!=='annule';
+  });
+  document.getElementById('cal-kpi-mois').textContent = thisMonthRdv.length;
+
+  const todayRdv = rdvList.filter(r=>r.date===todayStr && r.status!=='annule');
+  document.getElementById('cal-kpi-today').textContent = todayRdv.length;
+
+  const weekStart = new Date();
+  const weekEnd = new Date();
+  weekEnd.setDate(weekEnd.getDate()+7);
+  const weekRdv = rdvList.filter(r=>{
+    const rd = new Date(r.date);
+    return rd>=weekStart && rd<=weekEnd && r.status!=='annule';
+  });
+  document.getElementById('cal-kpi-semaine').textContent = weekRdv.length;
+
+  const faits = rdvList.filter(r=>r.status==='fait').length;
+  const signes = prospects.filter(p=>p.status==='signe').length;
+  document.getElementById('cal-kpi-taux').textContent = faits>0 ? Math.round((signes/faits)*100)+'%' : '—';
+}
+
+function renderRdvList(){
+  const body = document.getElementById('rdv-list-body');
+  const upcoming = [...rdvList]
+    .filter(r=>r.status!=='annule')
+    .sort((a,b)=>(a.date+a.heure).localeCompare(b.date+b.heure));
+
+  if(!upcoming.length){
+    body.innerHTML = `<tr><td colspan="6"><div class="empty"><div class="empty-icon">📅</div><div class="empty-text">Aucun rendez-vous planifié</div></div></td></tr>`;
+    return;
+  }
+
+  const todayStr = new Date().toISOString().split('T')[0];
+  body.innerHTML = upcoming.map(r=>{
+    const isPast = r.date < todayStr;
+    const isToday = r.date === todayStr;
+    const dateLabel = new Date(r.date+'T00:00').toLocaleDateString('fr-FR',{day:'2-digit',month:'short'});
+    return `<tr>
+      <td>${isToday?'<span class="badge badge-red">Aujourd\u2019hui</span> ':''}${dateLabel}</td>
+      <td>${r.heure}</td>
+      <td><strong>${r.prospectName}</strong></td>
+      <td style="font-size:12px;color:var(--ink-3)">${r.notes||'—'}</td>
+      <td><span class="badge ${r.status==='fait'?'badge-green':isPast?'badge-gray':'badge-purple'}">${r.status==='fait'?'Fait':isPast?'Passé':'Planifié'}</span></td>
+      <td style="display:flex;gap:6px">
+        ${r.status!=='fait'?`<button class="action-btn primary" onclick="markRdvDone(${r.id})">✓ Fait</button>`:''}
+        <button class="action-btn" onclick="deleteRdv(${r.id})">Suppr.</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function checkRdvAlerts(){
+  const todayStr = new Date().toISOString().split('T')[0];
+  const todayRdv = rdvList.filter(r=>r.date===todayStr && r.status==='planifie');
+  const badge = document.getElementById('rdv-badge');
+  const banner = document.getElementById('rdv-alert-banner');
+
+  if(todayRdv.length>0){
+    badge.textContent = todayRdv.length;
+    badge.style.display = 'inline-block';
+    banner.style.display = 'flex';
+    document.getElementById('rdv-alert-title').textContent = `Tu as ${todayRdv.length} RDV aujourd'hui`;
+    document.getElementById('rdv-alert-sub').textContent = todayRdv.map(r=>`${r.heure} — ${r.prospectName}`).join(' · ');
+  } else {
+    badge.style.display = 'none';
+    banner.style.display = 'none';
+  }
+}
+
+
 renderProspects();
 loadProspectsFromServer();
+checkRdvAlerts();
 </script>
 </body>
 </html>
