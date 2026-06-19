@@ -687,7 +687,7 @@ function renderProspects(){
   body.innerHTML = data.map(p=>{
     const s = statusConfig[p.status];
     return `<tr>
-      <td><strong>${p.name}</strong>${p.source==='google'?'<span class="badge badge-purple" style="margin-left:6px;font-size:10px">Maps</span>':''}</td>
+      <td><strong>${p.name}</strong>${p.source==='google'?'<span class="badge badge-purple" style="margin-left:6px;font-size:10px">Maps</span>':''}${p.address?`<div style="font-size:11px;color:var(--ink-3)">${p.address}</div>`:''}</td>
       <td>${p.contact||'—'}<div style="font-size:11px;color:var(--ink-3)">${p.email||'—'}</div></td>
       <td>${p.ville}</td>
       <td><span class="badge ${s.cls}">${s.label}</span></td>
@@ -979,14 +979,21 @@ async function rowsToProspectsAndImport(rows){
   dataRows.forEach(r=>{
     const name = useMap.name>=0 ? r[useMap.name] : '';
     if(!name || !name.toString().trim()) return;
-    if(prospects.find(p=>p.name===name)) return;
 
-    const address = useMap.address>=0 ? (r[useMap.address]||'') : '';
+    const address = (useMap.address>=0 ? (r[useMap.address]||'') : '').toString().trim();
     const ville = useMap.ville>=0 ? (r[useMap.ville]||'') : (address.split(',').pop()||'').trim();
+
+    // Déduplication précise : nom + adresse (deux agences au même nom mais
+    // adresses différentes restent distinctes). Sans adresse, on retombe sur nom+ville.
+    const isDuplicate = address
+      ? prospects.find(p=>p.name===name && p.address===address)
+      : prospects.find(p=>p.name===name && p.ville===ville);
+    if(isDuplicate) return;
 
     const newP = {
       id:nextId++,
       name: name.toString().trim(),
+      address: address,
       contact: '—',
       email: useMap.email>=0 ? (r[useMap.email]||'') : '',
       phone: useMap.phone>=0 ? (r[useMap.phone]||'') : '',
@@ -998,6 +1005,7 @@ async function rowsToProspectsAndImport(rows){
       source:'import',
       rating: useMap.rating>=0 ? (r[useMap.rating]||'') : '',
     };
+
     prospects.push(newP);
     toImport.push(newP);
   });
@@ -1009,7 +1017,7 @@ async function rowsToProspectsAndImport(rows){
         method:'POST',
         headers:{'Content-Type':'application/json'},
         body: JSON.stringify({prospects: toImport.map(p=>({
-          name:p.name, contact:p.contact, email:p.email, phone:p.phone,
+          name:p.name, address:p.address, contact:p.contact, email:p.email, phone:p.phone,
           ville:p.ville, website:p.website, rating:p.rating, source:p.source
         }))})
       });
@@ -1180,13 +1188,13 @@ const PROSPECTS_API = "https://agenc-ai.com/thee-api/prospects";
 
 async function loadProspectsFromServer(){
   try{
-    const res = await fetch(`${PROSPECTS_API}?limit=500`);
+    const res = await fetch(`${PROSPECTS_API}?limit=1000`);
     const data = await res.json();
     if(data.prospects && data.prospects.length){
       prospects.length = 0;
       data.prospects.forEach(p=>{
         prospects.push({
-          id: p.id, name: p.name, contact: p.contact||'—', email: p.email||'',
+          id: p.id, name: p.name, address: p.address||'', contact: p.contact||'—', email: p.email||'',
           phone: p.phone||'', ville: p.ville||'—', website: p.website||'',
           status: p.status||'contacte', seq: p.seq||'À envoyer', ouvert: p.ouvert||false,
           source: p.source||'import', rating: p.rating||''
