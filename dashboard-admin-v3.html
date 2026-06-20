@@ -240,10 +240,13 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--ink);font-siz
   <div class="nav-item" onclick="showPage('scraper',this)"><span class="icon">🗺️</span> Chercher agences</div>
   <div class="nav-item" onclick="showPage('pipeline',this)"><span class="icon">🔄</span> Pipeline</div>
   <div class="nav-item" onclick="showPage('calendrier',this)"><span class="icon">📅</span> Calendrier <span id="rdv-badge" style="display:none;background:var(--red);color:#fff;font-size:10px;padding:1px 6px;border-radius:10px;margin-left:4px"></span></div>
-  <div class="nav-item" onclick="showPage('clients',this)"><span class="icon">🏢</span> Clients actifs</div>
+  <div class="nav-item" onclick="showPage('clients',this)"><span class="icon">🏢</span> Plans & Abonnements</div>
   <div class="sidebar-section">Analyse</div>
   <div class="nav-item" onclick="showPage('conversion',this)"><span class="icon">📈</span> Conversion</div>
   <div class="nav-item" onclick="showPage('revenus',this)"><span class="icon">💶</span> Revenus</div>
+  <div class="nav-item" onclick="showPage('landingstats',this)"><span class="icon">🌐</span> Landing page</div>
+  <div class="sidebar-section">Système</div>
+  <div class="nav-item" onclick="showPage('monitoring',this)"><span class="icon">🩺</span> Monitoring <span id="health-badge" style="display:none;background:var(--red);color:#fff;font-size:10px;padding:1px 6px;border-radius:10px;margin-left:4px"></span></div>
   <div class="sidebar-bottom">
     <div class="user-chip">
       <div class="avatar">JD</div>
@@ -566,17 +569,92 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--ink);font-siz
     <!-- ═══════ CLIENTS ═══════ -->
     <div class="page" id="page-clients">
       <div class="kpi-row">
-        <div class="kpi"><div class="kpi-label">MRR total</div><div class="kpi-val" style="color:var(--green)">0€</div><div class="kpi-sub"><span class="delta-neutral">mensuel récurrent</span></div></div>
-        <div class="kpi"><div class="kpi-label">ARR projeté</div><div class="kpi-val">0€</div><div class="kpi-sub"><span class="delta-neutral">annualisé</span></div></div>
-        <div class="kpi"><div class="kpi-label">Setup encaissé</div><div class="kpi-val" style="color:var(--amber)">0€</div><div class="kpi-sub"><span class="delta-neutral">0 client</span></div></div>
-        <div class="kpi"><div class="kpi-label">Churn</div><div class="kpi-val" style="color:var(--green)">—</div><div class="kpi-sub"><span class="delta-neutral">aucune donnée</span></div></div>
+        <div class="kpi"><div class="kpi-label">MRR total</div><div class="kpi-val" style="color:var(--green)" id="sub-kpi-mrr">0€</div><div class="kpi-sub"><span class="delta-neutral">mensuel récurrent</span></div></div>
+        <div class="kpi"><div class="kpi-label">ARR projeté</div><div class="kpi-val" id="sub-kpi-arr">0€</div><div class="kpi-sub"><span class="delta-neutral">annualisé</span></div></div>
+        <div class="kpi"><div class="kpi-label">Plan Starter</div><div class="kpi-val" style="color:var(--blue)" id="sub-kpi-starter">0</div><div class="kpi-sub"><span class="delta-neutral">clients actifs</span></div></div>
+        <div class="kpi"><div class="kpi-label">Plan Pro</div><div class="kpi-val" style="color:var(--purple)" id="sub-kpi-pro">0</div><div class="kpi-sub"><span class="delta-neutral">clients actifs</span></div></div>
       </div>
-      <div class="card">
-        <div class="card-header"><div class="card-title">Clients actifs</div></div>
+      <div class="card mb-18">
+        <div class="card-header">
+          <div class="card-title">Clients actifs</div>
+          <button class="btn btn-primary btn-sm" onclick="openSubModal()">+ Nouveau client</button>
+        </div>
         <table class="table">
-          <thead><tr><th>Agence</th><th>Offre</th><th>Depuis</th><th>Leads générés</th><th>RDV pris</th><th>Santé</th><th>MRR</th></tr></thead>
-          <tbody>
-            <tr><td colspan="7"><div class="empty"><div class="empty-icon">🏢</div><div class="empty-text">Aucun client signé pour l'instant — ta première signature apparaîtra ici</div></div></td></tr>
+          <thead><tr><th>Agence</th><th>Plan</th><th>Depuis</th><th>Leads</th><th>RDV</th><th>Setup</th><th>MRR</th><th>Action</th></tr></thead>
+          <tbody id="subs-table-body">
+            <tr><td colspan="8"><div class="empty"><div class="empty-icon">🏢</div><div class="empty-text">Chargement…</div></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ═══════ LANDING PAGE STATS ═══════ -->
+    <div class="page" id="page-landingstats">
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-label">Visiteurs uniques</div><div class="kpi-val" style="color:var(--blue)" id="land-kpi-visitors">—</div><div class="kpi-sub"><span class="delta-neutral">total</span></div></div>
+        <div class="kpi"><div class="kpi-label">Vues totales</div><div class="kpi-val" id="land-kpi-views">—</div><div class="kpi-sub"><span class="delta-neutral">pages chargées</span></div></div>
+        <div class="kpi"><div class="kpi-label">Clics CTA</div><div class="kpi-val" style="color:var(--green)" id="land-kpi-cta">—</div><div class="kpi-sub" id="land-kpi-cta-rate">taux —</div></div>
+        <div class="kpi"><div class="kpi-label">Scroll profond (90%)</div><div class="kpi-val" style="color:var(--purple)" id="land-kpi-scroll">—</div><div class="kpi-sub" id="land-kpi-scroll-rate">taux —</div></div>
+      </div>
+      <div class="card mb-18">
+        <div class="card-header">
+          <div class="card-title">Engagement</div>
+          <button class="btn btn-ghost btn-sm" onclick="loadLandingStats()">↻ Actualiser</button>
+        </div>
+        <div class="card-body">
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+            <div style="background:var(--bg);border-radius:10px;padding:18px;text-align:center">
+              <div style="font-size:11px;color:var(--ink-3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">Démo widget lancée</div>
+              <div style="font-family:var(--font-display);font-size:28px;font-weight:800;color:var(--amber)" id="land-kpi-demo">—</div>
+            </div>
+            <div style="background:var(--bg);border-radius:10px;padding:18px;text-align:center">
+              <div style="font-size:11px;color:var(--ink-3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">Taux clic CTA</div>
+              <div style="font-family:var(--font-display);font-size:28px;font-weight:800;color:var(--green)" id="land-kpi-cta-rate-big">—</div>
+            </div>
+            <div style="background:var(--bg);border-radius:10px;padding:18px;text-align:center">
+              <div style="font-size:11px;color:var(--ink-3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">Taux engagement profond</div>
+              <div style="font-family:var(--font-display);font-size:28px;font-weight:800;color:var(--purple)" id="land-kpi-scroll-rate-big">—</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="background:var(--blue-bg);border-radius:var(--radius-lg);padding:16px 20px;font-size:13px;color:var(--blue)">
+        💡 Ces statistiques proviennent du tracking en temps réel de ta landing page <strong>landing-sarah-ai.html</strong>. Chaque visite, scroll et clic CTA est enregistré automatiquement.
+      </div>
+    </div>
+
+    <!-- ═══════ MONITORING ═══════ -->
+    <div class="page" id="page-monitoring">
+      <div id="monitoring-status-banner" style="border-radius:var(--radius-lg);padding:16px 20px;margin-bottom:18px;display:flex;align-items:center;gap:14px">
+        <span id="monitoring-status-icon" style="font-size:22px">⏳</span>
+        <div>
+          <div style="font-weight:700;font-size:14px" id="monitoring-status-title">Chargement du statut système…</div>
+          <div style="font-size:12px;color:var(--ink-2)" id="monitoring-status-sub"></div>
+        </div>
+      </div>
+
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-label">Erreurs non résolues</div><div class="kpi-val" style="color:var(--red)" id="mon-kpi-unresolved">—</div></div>
+        <div class="kpi"><div class="kpi-label">Dernière heure</div><div class="kpi-val" style="color:var(--amber)" id="mon-kpi-1h">—</div></div>
+        <div class="kpi"><div class="kpi-label">Dernières 24h</div><div class="kpi-val" id="mon-kpi-24h">—</div></div>
+        <div class="kpi"><div class="kpi-label">Leads captés (24h)</div><div class="kpi-val" style="color:var(--green)" id="mon-kpi-leads">—</div></div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div style="display:flex;align-items:center;gap:12px">
+            <div class="card-title">Erreurs récentes</div>
+            <div class="tabs" style="margin-bottom:0;border:none">
+              <div class="tab active" onclick="filterErrors('tous',this)">Toutes</div>
+              <div class="tab" onclick="filterErrors('non-resolues',this)">Non résolues</div>
+            </div>
+          </div>
+          <button class="btn btn-ghost btn-sm" onclick="loadMonitoring()">↻ Actualiser</button>
+        </div>
+        <table class="table">
+          <thead><tr><th>Source</th><th>Type</th><th>Message</th><th>Survenue</th><th>Statut</th><th>Action</th></tr></thead>
+          <tbody id="errors-table-body">
+            <tr><td colspan="6"><div class="empty"><div class="empty-icon">🩺</div><div class="empty-text">Chargement…</div></div></td></tr>
           </tbody>
         </table>
       </div>
@@ -660,8 +738,246 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--ink);font-siz
   </div>
 </div>
 
+<!-- MODAL ABONNEMENT -->
+<div class="modal-overlay" id="sub-modal-overlay" onclick="closeSubModal(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-title">Nouveau client</div>
+    <div class="form-group"><label class="form-label">Nom de l'agence</label><input class="form-input" id="sub-agency-name" placeholder="Agence Dupont"/></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Identifiant widget (slug)</label><input class="form-input" id="sub-agency-id" placeholder="agence-dupont"/></div>
+      <div class="form-group"><label class="form-label">Email contact</label><input class="form-input" id="sub-email" type="email" placeholder="contact@agence.fr"/></div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Plan</label>
+      <select class="form-select" id="sub-plan">
+        <option value="starter">Starter — 149€/mois</option>
+        <option value="pro">Pro — 349€/mois</option>
+      </select>
+    </div>
+    <div class="form-group"><label class="form-label">Notes</label><input class="form-input" id="sub-notes" placeholder="Optionnel"/></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeSubModal()">Annuler</button>
+      <button class="btn btn-primary" onclick="saveSubscription()">Créer le client</button>
+    </div>
+  </div>
+</div>
+
 <script>
-// ── DATA ────────────────────────────────────────────────────────────────────
+// ── SUBSCRIPTIONS (Plans & Abonnements) ──────────────────────────────────────
+const SUBSCRIPTIONS_API = "https://agenc-ai.com/thee-api/subscriptions";
+
+function openSubModal(){
+  document.getElementById('sub-agency-name').value = '';
+  document.getElementById('sub-agency-id').value = '';
+  document.getElementById('sub-email').value = '';
+  document.getElementById('sub-plan').value = 'starter';
+  document.getElementById('sub-notes').value = '';
+  document.getElementById('sub-modal-overlay').classList.add('open');
+}
+function closeSubModal(e){
+  if(!e || e.target===document.getElementById('sub-modal-overlay')){
+    document.getElementById('sub-modal-overlay').classList.remove('open');
+  }
+}
+
+async function saveSubscription(){
+  const agencyName = document.getElementById('sub-agency-name').value.trim();
+  const agencyId = document.getElementById('sub-agency-id').value.trim();
+  if(!agencyName || !agencyId){ alert('Le nom et l\'identifiant sont obligatoires'); return; }
+
+  try{
+    const res = await fetch(SUBSCRIPTIONS_API, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        agency_id: agencyId,
+        agency_name: agencyName,
+        contact_email: document.getElementById('sub-email').value.trim() || null,
+        plan: document.getElementById('sub-plan').value,
+        notes: document.getElementById('sub-notes').value.trim() || null,
+      })
+    });
+    const result = await res.json();
+    if(result.success){
+      closeSubModal();
+      loadSubscriptions();
+    } else {
+      alert('Erreur : '+(result.error||'inconnue'));
+    }
+  }catch(e){
+    alert('Erreur de connexion : '+e.message);
+  }
+}
+
+async function loadSubscriptions(){
+  try{
+    const [listRes, summaryRes] = await Promise.all([
+      fetch(SUBSCRIPTIONS_API),
+      fetch(SUBSCRIPTIONS_API+'/summary')
+    ]);
+    const listData = await listRes.json();
+    const summary = await summaryRes.json();
+
+    document.getElementById('sub-kpi-mrr').textContent = Math.round(summary.mrr)+'€';
+    document.getElementById('sub-kpi-arr').textContent = Math.round(summary.arr)+'€';
+    document.getElementById('sub-kpi-starter').textContent = summary.starter_count;
+    document.getElementById('sub-kpi-pro').textContent = summary.pro_count;
+
+    const body = document.getElementById('subs-table-body');
+    if(!listData.subscriptions || !listData.subscriptions.length){
+      body.innerHTML = `<tr><td colspan="8"><div class="empty"><div class="empty-icon">🏢</div><div class="empty-text">Aucun client signé pour l'instant — ta première signature apparaîtra ici</div></div></td></tr>`;
+      return;
+    }
+
+    body.innerHTML = listData.subscriptions.map(s=>{
+      const planBadge = s.plan==='pro' ? '<span class="badge badge-purple">Pro</span>' : '<span class="badge badge-blue">Starter</span>';
+      const since = s.started_at ? new Date(s.started_at).toLocaleDateString('fr-FR',{day:'2-digit',month:'short',year:'numeric'}) : '—';
+      const setupBadge = s.setup_fee_paid ? '<span class="badge badge-green">✓ Payé</span>' : '<span class="badge badge-amber">En attente</span>';
+      return `<tr>
+        <td><strong>${s.agency_name}</strong><div style="font-size:11px;color:var(--ink-3)">${s.contact_email||'—'}</div></td>
+        <td>${planBadge}</td>
+        <td style="font-size:12px;color:var(--ink-3)">${since}</td>
+        <td><strong>${s.leads_count}</strong></td>
+        <td><strong>${s.rdv_count}</strong></td>
+        <td>${setupBadge}</td>
+        <td><strong>${Math.round(s.monthly_price)}€</strong></td>
+        <td><button class="action-btn" onclick="toggleSetupPaid('${s.id}', ${!s.setup_fee_paid})">${s.setup_fee_paid?'Annuler setup':'Marquer setup payé'}</button></td>
+      </tr>`;
+    }).join('');
+  }catch(e){
+    console.log('Erreur chargement abonnements:', e);
+  }
+}
+
+async function toggleSetupPaid(subId, newValue){
+  try{
+    await fetch(`${SUBSCRIPTIONS_API}/${subId}`, {
+      method:'PATCH',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({setup_fee_paid: newValue})
+    });
+    loadSubscriptions();
+  }catch(e){ console.log('Erreur update setup:', e); }
+}
+
+// ── LANDING PAGE STATS ────────────────────────────────────────────────────────
+const TRACK_STATS_API = "https://agenc-ai.com/thee-api/track/stats";
+
+async function loadLandingStats(){
+  try{
+    const res = await fetch(TRACK_STATS_API);
+    const s = await res.json();
+
+    document.getElementById('land-kpi-visitors').textContent = s.unique_visitors;
+    document.getElementById('land-kpi-views').textContent = s.total_views;
+    document.getElementById('land-kpi-cta').textContent = s.cta_clicks;
+    document.getElementById('land-kpi-cta-rate').textContent = `taux ${s.cta_rate}%`;
+    document.getElementById('land-kpi-scroll').textContent = s.deep_scroll;
+    document.getElementById('land-kpi-scroll-rate').textContent = `taux ${s.deep_scroll_rate}%`;
+    document.getElementById('land-kpi-demo').textContent = s.demo_started;
+    document.getElementById('land-kpi-cta-rate-big').textContent = s.cta_rate+'%';
+    document.getElementById('land-kpi-scroll-rate-big').textContent = s.deep_scroll_rate+'%';
+  }catch(e){
+    console.log('Erreur chargement stats landing:', e);
+  }
+}
+
+// ── MONITORING ────────────────────────────────────────────────────────────────
+const MONITORING_API = "https://agenc-ai.com/thee-api/monitoring";
+let currentErrorFilter = 'tous';
+
+async function loadMonitoring(){
+  try{
+    const [healthRes, errorsRes] = await Promise.all([
+      fetch(`${MONITORING_API}/health-summary`),
+      fetch(`${MONITORING_API}/errors`)
+    ]);
+    const health = await healthRes.json();
+    const errorsData = await errorsRes.json();
+
+    document.getElementById('mon-kpi-unresolved').textContent = health.unresolved_errors;
+    document.getElementById('mon-kpi-1h').textContent = health.errors_last_hour;
+    document.getElementById('mon-kpi-24h').textContent = health.errors_last_24h;
+    document.getElementById('mon-kpi-leads').textContent = health.leads_last_24h;
+
+    const banner = document.getElementById('monitoring-status-banner');
+    const icon = document.getElementById('monitoring-status-icon');
+    const title = document.getElementById('monitoring-status-title');
+    const sub = document.getElementById('monitoring-status-sub');
+
+    if(health.status === 'ok'){
+      banner.style.background = 'var(--green-bg)';
+      icon.textContent = '✅';
+      title.textContent = 'Tout fonctionne normalement';
+      title.style.color = 'var(--green)';
+      sub.textContent = `${health.pageviews_last_24h} vues landing et ${health.leads_last_24h} leads captés sur les dernières 24h`;
+    } else if(health.status === 'attention'){
+      banner.style.background = 'var(--amber-bg)';
+      icon.textContent = '⚠️';
+      title.textContent = 'Quelques erreurs détectées';
+      title.style.color = 'var(--amber)';
+      sub.textContent = `${health.unresolved_errors} erreur(s) non résolue(s) à vérifier`;
+    } else {
+      banner.style.background = 'var(--red-bg)';
+      icon.textContent = '🔴';
+      title.textContent = 'Attention — activité d\'erreurs élevée';
+      title.style.color = 'var(--red)';
+      sub.textContent = `${health.errors_last_hour} erreur(s) dans la dernière heure`;
+    }
+
+    // Badge dans le menu
+    const badge = document.getElementById('health-badge');
+    if(health.unresolved_errors > 0){
+      badge.textContent = health.unresolved_errors;
+      badge.style.display = 'inline-block';
+    } else {
+      badge.style.display = 'none';
+    }
+
+    window._allErrors = errorsData.errors || [];
+    renderErrors();
+  }catch(e){
+    console.log('Erreur chargement monitoring:', e);
+  }
+}
+
+function renderErrors(){
+  const body = document.getElementById('errors-table-body');
+  let errors = window._allErrors || [];
+  if(currentErrorFilter === 'non-resolues') errors = errors.filter(e=>!e.resolved);
+
+  if(!errors.length){
+    body.innerHTML = `<tr><td colspan="6"><div class="empty"><div class="empty-icon">✅</div><div class="empty-text">Aucune erreur — tout va bien</div></div></td></tr>`;
+    return;
+  }
+
+  body.innerHTML = errors.map(e=>{
+    const date = e.created_at ? new Date(e.created_at).toLocaleString('fr-FR',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}) : '—';
+    return `<tr>
+      <td><span class="badge badge-gray">${e.source}</span></td>
+      <td style="font-size:12px;font-weight:600">${e.error_type}</td>
+      <td style="font-size:12px;color:var(--ink-2);max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${e.message}">${e.message}</td>
+      <td style="font-size:11px;color:var(--ink-3)">${date}</td>
+      <td>${e.resolved?'<span class="badge badge-green">Résolu</span>':'<span class="badge badge-red">Ouvert</span>'}</td>
+      <td>${!e.resolved?`<button class="action-btn" onclick="resolveError('${e.id}')">Marquer résolu</button>`:'—'}</td>
+    </tr>`;
+  }).join('');
+}
+
+function filterErrors(filter, el){
+  currentErrorFilter = filter;
+  document.querySelectorAll('#page-monitoring .tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  renderErrors();
+}
+
+async function resolveError(errorId){
+  try{
+    await fetch(`${MONITORING_API}/errors/${errorId}/resolve`, {method:'PATCH'});
+    loadMonitoring();
+  }catch(e){ console.log('Erreur résolution:', e); }
+}
+
 let prospects = [];
 let nextId = 11;
 let currentFilter = 'tous';
@@ -679,7 +995,7 @@ const statusConfig = {
 const seqNext = {contacte:'Envoyer J5',relance:'Envoyer J10',rdv:'Préparer démo',signe:'Onboarding'};
 
 // ── NAVIGATION ───────────────────────────────────────────────────────────────
-const pageTitles = {dashboard:'Dashboard',prospection:'Prospection',scraper:'Chercher agences — Google Places',pipeline:'Pipeline CRM',calendrier:'Calendrier des RDV',clients:'Clients actifs',conversion:'Analyse conversion',revenus:'Revenus'};
+const pageTitles = {dashboard:'Dashboard',prospection:'Prospection',scraper:'Chercher agences — Google Places',pipeline:'Pipeline CRM',calendrier:'Calendrier des RDV',clients:'Plans & Abonnements',conversion:'Analyse conversion',revenus:'Revenus',landingstats:'Landing page — Fréquentation',monitoring:'Monitoring système'};
 function showPage(name,el){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById('page-'+name).classList.add('active');
@@ -1234,6 +1550,9 @@ showPage = function(name, el){
   _origShowPage(name, el);
   if(name === 'prospection' || name === 'dashboard') refreshCampaignStatus();
   if(name === 'calendrier'){ renderCalendar(); renderRdvList(); }
+  if(name === 'clients') loadSubscriptions();
+  if(name === 'landingstats') loadLandingStats();
+  if(name === 'monitoring') loadMonitoring();
 };
 
 const PROSPECTS_API = "https://agenc-ai.com/thee-api/prospects";
@@ -1437,6 +1756,7 @@ renderProspects();
 loadProspectsFromServer();
 checkRdvAlerts();
 refreshCampaignStatus();
+loadMonitoring();
 </script>
 </body>
 </html>
