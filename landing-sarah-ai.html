@@ -154,6 +154,13 @@ nav{
 .plans-eyebrow{font-size:12px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--brass);margin-bottom:20px}
 .plans-head h2{font-family:var(--font-display);font-weight:300;font-size:clamp(28px,4vw,44px);letter-spacing:-1px;line-height:1.15}
 .plans-head h2 em{font-style:italic;color:var(--sage)}
+.launch-badge{
+  display:inline-flex;align-items:center;gap:8px;margin-top:28px;
+  font-size:12.5px;font-weight:500;color:var(--sage);
+  background:rgba(47,69,56,.07);border:1px solid rgba(47,69,56,.18);
+  padding:9px 18px;border-radius:100px;
+}
+.launch-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--brass);flex-shrink:0}
 .plans-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);max-width:900px;margin:0 auto}
 @media (max-width:760px){.plans-grid{grid-template-columns:1fr}}
 .plan-card{background:var(--paper);padding:52px 44px;display:flex;flex-direction:column;gap:28px}
@@ -173,6 +180,8 @@ nav{
 .plan-cta:hover{background:var(--ink);color:var(--paper)}
 .plan-card.featured .plan-cta{border-color:var(--paper);color:var(--paper)}
 .plan-card.featured .plan-cta:hover{background:var(--paper);color:var(--ink)}
+.plan-fine{font-size:12px;color:var(--muted);text-align:center;margin-top:-12px}
+.plan-fine.featured{color:rgba(250,247,240,.45)}
 
 /* ===== FINAL ===== */
 .final-section{padding:160px 24px;text-align:center}
@@ -211,7 +220,7 @@ footer{border-top:1px solid var(--line);padding:36px 0}
 <nav>
   <div class="nav-inner">
     <div class="logo">Sarah</div>
-    <button class="nav-link" id="nav-cta-btn">Essai gratuit</button>
+    <button class="nav-link" id="nav-cta-btn">Réserver une démo</button>
   </div>
 </nav>
 
@@ -223,7 +232,7 @@ footer{border-top:1px solid var(--line);padding:36px 0}
   </h1>
   <p class="hero-sub">Sarah qualifie vos visiteurs et propose une visite — pendant que vous dormez.</p>
   <div class="hero-actions">
-    <button class="btn-primary" id="hero-cta-btn">Démarrer l'essai gratuit</button>
+    <button class="btn-primary" id="hero-cta-btn">Réserver une démo gratuite</button>
     <button class="btn-ghost" id="hero-demo-btn">
       Voir une conversation
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
@@ -303,6 +312,7 @@ footer{border-top:1px solid var(--line);padding:36px 0}
     <div class="plans-head reveal">
       <div class="plans-eyebrow">Les offres</div>
       <h2>Une seule promesse : <em>ne plus perdre un contact.</em></h2>
+      <div class="launch-badge">Offre de lancement — installation à 199€ au lieu de 499€ pour les 25 premières agences</div>
     </div>
     <div class="plans-grid reveal">
       <div class="plan-card">
@@ -318,7 +328,8 @@ footer{border-top:1px solid var(--line);padding:36px 0}
           <div class="plan-feat">Notification immédiate par email</div>
           <div class="plan-feat">Rendez-vous intégré</div>
         </div>
-        <button class="plan-cta cta-trigger">Commencer</button>
+        <button class="plan-cta cta-trigger">Réserver une démo</button>
+        <p class="plan-fine">Aucun paiement avant votre accord</p>
       </div>
       <div class="plan-card featured">
         <div>
@@ -333,7 +344,8 @@ footer{border-top:1px solid var(--line);padding:36px 0}
           <div class="plan-feat">Fiche imprimable avant rendez-vous</div>
           <div class="plan-feat">Annonces modifiables en autonomie</div>
         </div>
-        <button class="plan-cta cta-trigger">Commencer</button>
+        <button class="plan-cta cta-trigger">Réserver une démo</button>
+        <p class="plan-fine featured">Aucun paiement avant votre accord</p>
       </div>
     </div>
   </div>
@@ -343,7 +355,7 @@ footer{border-top:1px solid var(--line);padding:36px 0}
   <h2>Votre prochain client cherche <em>peut-être ce soir.</em></h2>
   <p>Installez Sarah en cinq minutes et laissez-la travailler.</p>
   <div class="final-actions">
-    <button class="btn-primary cta-trigger">Démarrer l'essai gratuit</button>
+    <button class="btn-primary cta-trigger">Réserver une démo gratuite</button>
   </div>
 </section>
 
