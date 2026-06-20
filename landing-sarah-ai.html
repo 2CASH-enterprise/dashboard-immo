@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Sarah — L'assistante qui ne dort jamais pour votre agence</title>
+<meta name="description" content="Sarah répond à vos visiteurs 24h/24, qualifie leur projet et organise des visites. Installée en 5 minutes sur votre site."/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1C1B19;
+  --paper:#F7F3EC;
+  --sand:#EDE6D6;
+  --brass:#B5824C;
+  --brass-light:#D9B07E;
+  --sage:#3A5A40;
+  --sage-light:#5C7C5F;
+  --line:#DDD4C0;
+  --muted:#766E5C;
+  --font-display:'Fraunces', serif;
+  --font-body:'Inter', sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--font-body);
+  background:var(--paper);
+  color:var(--ink);
+  line-height:1.6;
+  font-size:16px;
+  -webkit-font-smoothing:antialiased;
+}
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;scroll-behavior:auto !important}
+}
+a{color:inherit}
+img{max-width:100%;display:block}
+.wrap{max-width:1120px;margin:0 auto;padding:0 32px}
+@media (max-width:640px){.wrap{padding:0 20px}}
+
+/* ===== NAV ===== */
+nav{
+  position:sticky;top:0;z-index:100;
+  background:rgba(247,243,236,.88);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);
+}
+.nav-inner{
+  max-width:1120px;margin:0 auto;padding:18px 32px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+@media (max-width:640px){.nav-inner{padding:16px 20px}}
+.logo{
+  font-family:var(--font-display);font-size:22px;font-weight:600;
+  letter-spacing:-.3px;display:flex;align-items:center;gap:8px;
+}
+.logo .dot{width:8px;height:8px;border-radius:50%;background:var(--sage);display:inline-block;animation:pulse 2.4s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+.nav-cta{
+  font-family:var(--font-body);font-size:14px;font-weight:600;
+  background:var(--ink);color:var(--paper);
+  padding:10px 22px;border-radius:2px;border:none;cursor:pointer;
+  transition:background .2s ease;
+}
+.nav-cta:hover{background:var(--sage)}
+
+/* ===== HERO ===== */
+.hero{
+  padding:96px 0 80px;
+  display:grid;grid-template-columns:1.1fr .9fr;gap:64px;align-items:center;
+}
+@media (max-width:880px){.hero{grid-template-columns:1fr;padding:56px 0 48px;gap:48px}}
+.eyebrow{
+  font-family:var(--font-body);font-size:12px;font-weight:600;
+  letter-spacing:1.6px;text-transform:uppercase;color:var(--brass);
+  margin-bottom:20px;display:flex;align-items:center;gap:10px;
+}
+.eyebrow::before{content:'';width:24px;height:1px;background:var(--brass)}
+.hero h1{
+  font-family:var(--font-display);
+  font-size:clamp(38px,5.4vw,64px);
+  font-weight:500;line-height:1.04;letter-spacing:-1.5px;
+  margin-bottom:24px;
+}
+.hero h1 em{font-style:italic;color:var(--sage);font-weight:500}
+.hero-sub{
+  font-size:18px;color:var(--muted);max-width:460px;line-height:1.65;margin-bottom:36px;
+}
+.hero-actions{display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.btn-primary{
+  font-family:var(--font-body);font-size:15px;font-weight:600;
+  background:var(--ink);color:var(--paper);
+  padding:16px 32px;border-radius:2px;border:none;cursor:pointer;
+  transition:background .2s ease, transform .2s ease;
+}
+.btn-primary:hover{background:var(--sage);transform:translateY(-1px)}
+.btn-text{
+  font-size:14px;font-weight:600;color:var(--ink);
+  display:flex;align-items:center;gap:8px;cursor:pointer;
+  background:none;border:none;padding:8px 0;border-bottom:1px solid var(--ink);
+}
+.btn-text:hover{color:var(--sage);border-color:var(--sage)}
+
+/* ===== HERO DEMO (signature element) ===== */
+.demo-frame{
+  background:var(--ink);
+  border-radius:4px;
+  overflow:hidden;
+  box-shadow:0 30px 60px -20px rgba(28,27,25,.35);
+}
+.demo-topbar{
+  padding:14px 18px;display:flex;align-items:center;gap:8px;
+  border-bottom:1px solid rgba(247,243,236,.1);
+}
+.demo-dot{width:8px;height:8px;border-radius:50%;background:rgba(247,243,236,.2)}
+.demo-url{
+  flex:1;text-align:center;font-size:11px;color:rgba(247,243,236,.4);
+  font-family:var(--font-body);letter-spacing:.3px;
+}
+.demo-body{padding:24px;min-height:380px;display:flex;flex-direction:column;gap:14px;justify-content:flex-end}
+.demo-msg{
+  max-width:82%;padding:13px 17px;border-radius:3px;
+  font-size:14px;line-height:1.55;opacity:0;transform:translateY(8px);
+  animation:msgIn .5s ease forwards;
+}
+.demo-msg.sarah{
+  align-self:flex-start;background:rgba(247,243,236,.07);color:var(--paper);
+  border-left:2px solid var(--brass);
+}
+.demo-msg.visitor{
+  align-self:flex-end;background:var(--sage);color:var(--paper);
+}
+@keyframes msgIn{to{opacity:1;transform:translateY(0)}}
+.demo-typing{
+  align-self:flex-start;display:flex;gap:4px;padding:13px 17px;opacity:0;animation:msgIn .4s ease forwards;
+}
+.demo-typing span{width:5px;height:5px;border-radius:50%;background:rgba(247,243,236,.4);animation:bounce 1.3s infinite}
+.demo-typing span:nth-child(2){animation-delay:.15s}
+.demo-typing span:nth-child(3){animation-delay:.3s}
+@keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
+.demo-foot{
+  padding:12px 18px;border-top:1px solid rgba(247,243,236,.1);
+  font-size:11px;color:rgba(247,243,236,.35);text-align:center;
+  font-family:var(--font-body);letter-spacing:.3px;
+}
+
+/* ===== TRUST STRIP ===== */
+.trust-strip{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:28px 0}
+.trust-row{display:flex;justify-content:space-between;flex-wrap:wrap;gap:24px;align-items:center}
+.trust-item{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:8px}
+.trust-item strong{color:var(--ink);font-weight:600}
+
+/* ===== PROBLEM ===== */
+.section{padding:96px 0}
+@media (max-width:640px){.section{padding:64px 0}}
+.section-head{max-width:600px;margin-bottom:56px}
+.section-eyebrow{
+  font-size:12px;font-weight:600;letter-spacing:1.6px;text-transform:uppercase;
+  color:var(--brass);margin-bottom:16px;
+}
+.section h2{
+  font-family:var(--font-display);font-size:clamp(28px,4vw,42px);
+  font-weight:500;letter-spacing:-1px;line-height:1.12;
+}
+.section h2 em{font-style:italic;color:var(--sage)}
+
+.problem-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
+@media (max-width:760px){.problem-grid{grid-template-columns:1fr}}
+.problem-card{background:var(--paper);padding:36px 32px}
+.problem-num{font-family:var(--font-display);font-size:13px;color:var(--brass);font-weight:600;margin-bottom:18px;letter-spacing:.5px}
+.problem-card h3{font-family:var(--font-display);font-size:21px;font-weight:500;margin-bottom:12px;letter-spacing:-.3px}
+.problem-card p{font-size:14.5px;color:var(--muted);line-height:1.65}
+
+/* ===== HOW ===== */
+.how-section{background:var(--ink);color:var(--paper)}
+.how-section .section-eyebrow{color:var(--brass-light)}
+.how-section h2 em{color:var(--sage-light)}
+.how-list{display:flex;flex-direction:column}
+.how-row{
+  display:grid;grid-template-columns:80px 1fr;gap:32px;
+  padding:32px 0;border-top:1px solid rgba(247,243,236,.12);
+  align-items:start;
+}
+.how-list .how-row:last-child{border-bottom:1px solid rgba(247,243,236,.12)}
+.how-step{font-family:var(--font-display);font-size:15px;color:var(--brass-light);font-weight:500;padding-top:4px}
+.how-content h3{font-family:var(--font-display);font-size:23px;font-weight:500;margin-bottom:10px;letter-spacing:-.3px}
+.how-content p{font-size:15px;color:rgba(247,243,236,.6);max-width:540px;line-height:1.65}
+
+/* ===== PLANS ===== */
+.plans-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+@media (max-width:760px){.plans-grid{grid-template-columns:1fr}}
+.plan-card{
+  border:1px solid var(--line);background:var(--paper);padding:40px 36px;
+  display:flex;flex-direction:column;gap:24px;position:relative;
+}
+.plan-card.featured{border-color:var(--ink);border-width:2px}
+.plan-tag{
+  position:absolute;top:-13px;left:34px;background:var(--ink);color:var(--paper);
+  font-size:11px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;
+  padding:5px 14px;
+}
+.plan-name{font-family:var(--font-display);font-size:26px;font-weight:500;letter-spacing:-.5px}
+.plan-desc{font-size:14.5px;color:var(--muted);line-height:1.6;margin-top:-12px}
+.plan-feats{display:flex;flex-direction:column;gap:13px}
+.plan-feat{display:flex;gap:12px;font-size:14.5px;align-items:flex-start}
+.plan-feat::before{content:'—';color:var(--brass);font-weight:600;flex-shrink:0}
+.plan-cta{
+  margin-top:8px;padding:14px;text-align:center;font-size:14px;font-weight:600;
+  border:1px solid var(--ink);background:none;cursor:pointer;transition:all .2s ease;
+}
+.plan-cta:hover{background:var(--ink);color:var(--paper)}
+.plan-card.featured .plan-cta{background:var(--ink);color:var(--paper)}
+.plan-card.featured .plan-cta:hover{background:var(--sage);border-color:var(--sage)}
+
+/* ===== CTA FINAL ===== */
+.final-cta{
+  background:var(--sage);color:var(--paper);text-align:center;padding:100px 0;
+}
+.final-cta h2{
+  font-family:var(--font-display);font-size:clamp(30px,5vw,52px);
+  font-weight:500;letter-spacing:-1.2px;margin-bottom:20px;line-height:1.08;
+}
+.final-cta h2 em{font-style:italic}
+.final-cta p{font-size:17px;color:rgba(247,243,236,.75);max-width:440px;margin:0 auto 40px}
+.final-cta .btn-primary{background:var(--paper);color:var(--ink)}
+.final-cta .btn-primary:hover{background:var(--brass-light)}
+
+/* ===== FOOTER ===== */
+footer{padding:40px 0;border-top:1px solid var(--line)}
+.footer-row{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+.footer-logo{font-family:var(--font-display);font-size:16px;font-weight:600}
+.footer-meta{font-size:13px;color:var(--muted)}
+
+/* reveal on scroll */
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .7s ease, transform .7s ease}
+.reveal.in{opacity:1;transform:translateY(0)}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="logo"><span class="dot"></span>Sarah</div>
+    <button class="nav-cta" id="nav-cta-btn">Essai gratuit</button>
+  </div>
+</nav>
+
+<header class="wrap hero">
+  <div>
+    <div class="eyebrow">Assistante immobilière intelligente</div>
+    <h1>Votre site répond à <em>chaque visiteur,</em> même à 23h un dimanche.</h1>
+    <p class="hero-sub">Sarah qualifie le projet de vos visiteurs et leur propose une visite — pendant que vous dormez, déjeunez, ou êtes en rendez-vous.</p>
+    <div class="hero-actions">
+      <button class="btn-primary" id="hero-cta-btn">Démarrer l'essai gratuit</button>
+      <button class="btn-text" id="hero-demo-btn">Voir une conversation ↓</button>
+    </div>
+  </div>
+
+  <div class="demo-frame">
+    <div class="demo-topbar">
+      <div class="demo-dot"></div><div class="demo-dot"></div><div class="demo-dot"></div>
+      <div class="demo-url">votre-agence.fr</div>
+    </div>
+    <div class="demo-body" id="demo-body"></div>
+    <div class="demo-foot">Conversation réelle, non scriptée par un humain</div>
+  </div>
+</header>
+
+<div class="trust-strip">
+  <div class="wrap trust-row">
+    <div class="trust-item"><strong>24h/24</strong> disponible</div>
+    <div class="trust-item"><strong>5 min</strong> d'installation</div>
+    <div class="trust-item"><strong>0</strong> ligne de code à écrire</div>
+    <div class="trust-item"><strong>RGPD</strong> compatible</div>
+  </div>
+</div>
+
+<section class="section wrap">
+  <div class="section-head reveal">
+    <div class="section-eyebrow">Le constat</div>
+    <h2>97% des visiteurs repartent <em>sans laisser de trace.</em></h2>
+  </div>
+  <div class="problem-grid reveal">
+    <div class="problem-card">
+      <div class="problem-num">01</div>
+      <h3>La nuit, le silence</h3>
+      <p>Un acheteur cherche son futur T3 un dimanche soir. Personne ne répond. Il appelle l'agence d'à côté le lendemain matin.</p>
+    </div>
+    <div class="problem-card">
+      <div class="problem-num">02</div>
+      <h3>Le temps perdu</h3>
+      <p>Un appel de 20 minutes pour découvrir que le budget ne correspond à aucun bien du secteur. Ce temps n'est plus disponible pour un vrai dossier.</p>
+    </div>
+    <div class="problem-card">
+      <div class="problem-num">03</div>
+      <h3>Le suivi qui se perd</h3>
+      <p>Un email, un SMS, un appel manqué — sans système, les contacts sérieux se noient dans la pile du lundi matin.</p>
+    </div>
+  </div>
+</section>
+
+<section class="how-section section">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="section-eyebrow">Le fonctionnement</div>
+      <h2>Une présence <em>continue</em>, sans recruter.</h2>
+    </div>
+    <div class="how-list reveal">
+      <div class="how-row">
+        <div class="how-step">01</div>
+        <div class="how-content">
+          <h3>Sarah s'installe sur votre site</h3>
+          <p>Une ligne de code à coller, configurée avec vos annonces et votre identité d'agence. Aucune compétence technique requise de votre côté.</p>
+        </div>
+      </div>
+      <div class="how-row">
+        <div class="how-step">02</div>
+        <div class="how-content">
+          <h3>Elle qualifie chaque conversation</h3>
+          <p>Type de projet, budget, secteur, type de bien, délai — recueillis naturellement, sans questionnaire rigide qui ferait fuir le visiteur.</p>
+        </div>
+      </div>
+      <div class="how-row">
+        <div class="how-step">03</div>
+        <div class="how-content">
+          <h3>Vous recevez une fiche prête à l'emploi</h3>
+          <p>Un résumé clair arrive dans votre boîte mail, avec un rendez-vous déjà proposé. Vous n'avez plus qu'à confirmer.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section wrap" id="plans">
+  <div class="section-head reveal">
+    <div class="section-eyebrow">Les offres</div>
+    <h2>Deux niveaux, <em>une seule promesse :</em> ne plus perdre un contact.</h2>
+  </div>
+  <div class="plans-grid reveal">
+    <div class="plan-card">
+      <div class="plan-name">Starter</div>
+      <p class="plan-desc">Pour ne plus jamais laisser un visiteur reparti sans solution.</p>
+      <div class="plan-feats">
+        <div class="plan-feat">Sarah active 24h/24 sur votre site</div>
+        <div class="plan-feat">Réponses aux questions sur vos annonces</div>
+        <div class="plan-feat">Capture nom, email, téléphone</div>
+        <div class="plan-feat">Notification immédiate par email</div>
+        <div class="plan-feat">Lien de rendez-vous intégré</div>
+      </div>
+      <button class="plan-cta cta-trigger">Commencer avec Starter</button>
+    </div>
+    <div class="plan-card featured">
+      <div class="plan-tag">Recommandé</div>
+      <div class="plan-name">Pro</div>
+      <p class="plan-desc">Pour transformer chaque conversation en dossier exploitable.</p>
+      <div class="plan-feats">
+        <div class="plan-feat">Tout Starter, et :</div>
+        <div class="plan-feat">Qualification du projet, budget, secteur, délai</div>
+        <div class="plan-feat">Résumé structuré envoyé à chaque échange qualifié</div>
+        <div class="plan-feat">Fiche imprimable avant rendez-vous</div>
+        <div class="plan-feat">Mise à jour de vos annonces en autonomie</div>
+      </div>
+      <button class="plan-cta cta-trigger">Commencer avec Pro</button>
+    </div>
+  </div>
+</section>
+
+<section class="final-cta">
+  <div class="wrap">
+    <h2>Votre prochain client cherche <em>peut-être ce soir.</em></h2>
+    <p>Installez Sarah en 5 minutes et laissez-la travailler pendant que vous vous occupez du reste.</p>
+    <button class="btn-primary cta-trigger">Démarrer l'essai gratuit</button>
+  </div>
+</section>
+
+<footer class="wrap">
+  <div class="footer-row">
+    <div class="footer-logo">Sarah</div>
+    <div class="footer-meta">contact@agenc-ai.com · Propulsé par Sarah AI</div>
+  </div>
+</footer>
+
+<script>
+// ── TRACKING ──────────────────────────────────────────────────────────────
+const TRACK_API = "https://agenc-ai.com/thee-api/track";
+const sessionId = "land_" + Date.now() + "_" + Math.random().toString(36).slice(2,9);
+const startTime = Date.now();
+let scrollFlags = { s50: false, s90: false };
+
+function track(event, extra = {}) {
+  const payload = {
+    session_id: sessionId,
+    page: "landing",
+    event: event,
+    referrer: document.referrer || null,
+    user_agent: navigator.userAgent,
+    ...extra
+  };
+  try {
+    navigator.sendBeacon(TRACK_API, new Blob([JSON.stringify(payload)], { type: 'application/json' }));
+  } catch(e) {
+    fetch(TRACK_API, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload), keepalive: true }).catch(()=>{});
+  }
+}
+
+track('pageview');
+
+window.addEventListener('scroll', () => {
+  const scrolled = (window.scrollY + window.innerHeight) / document.body.scrollHeight;
+  if (scrolled > 0.5 && !scrollFlags.s50) { scrollFlags.s50 = true; track('scroll_50'); }
+  if (scrolled > 0.9 && !scrollFlags.s90) { scrollFlags.s90 = true; track('scroll_90'); }
+});
+
+window.addEventListener('beforeunload', () => {
+  const duration = Math.round((Date.now() - startTime) / 1000);
+  track('time_on_page', { duration_seconds: duration });
+});
+
+document.querySelectorAll('.cta-trigger, #hero-cta-btn, #nav-cta-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    track('cta_click');
+    window.open('https://calendly.com/thee-ai/30min', '_blank');
+  });
+});
+
+document.getElementById('hero-demo-btn')?.addEventListener('click', () => {
+  document.querySelector('.demo-frame').scrollIntoView({behavior:'smooth', block:'center'});
+});
+
+// ── REVEAL ON SCROLL ─────────────────────────────────────────────────────
+const revealEls = document.querySelectorAll('.reveal');
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+}, { threshold: 0.15 });
+revealEls.forEach(el => io.observe(el));
+
+// ── HERO DEMO CONVERSATION ───────────────────────────────────────────────
+const conversation = [
+  { role: 'sarah', text: "Bonjour ! Je suis Sarah, l'assistante de l'agence. Vous cherchez à acheter, louer, ou une question sur un bien ?" },
+  { role: 'visitor', text: "Je cherche un T3 à louer, plutôt centre-ville" },
+  { role: 'sarah', text: "Très bien ! Vous avez un budget en tête, et un délai pour emménager ?" },
+  { role: 'visitor', text: "Autour de 850€, idéalement avant fin du mois" },
+  { role: 'sarah', text: "J'ai justement un T3 de 62m² disponible, 820€/mois, à 5 min à pied du centre. Je vous propose une visite demain à 14h ?" },
+];
+
+let demoStarted = false;
+function startDemo() {
+  if (demoStarted) return;
+  demoStarted = true;
+  track('demo_started');
+  const body = document.getElementById('demo-body');
+  let i = 0;
+
+  function next() {
+    if (i >= conversation.length) return;
+    const msg = conversation[i];
+    const delay = msg.role === 'sarah' ? 1100 : 700;
+
+    setTimeout(() => {
+      if (msg.role === 'sarah') {
+        const typing = document.createElement('div');
+        typing.className = 'demo-typing';
+        typing.innerHTML = '<span></span><span></span><span></span>';
+        body.appendChild(typing);
+        setTimeout(() => {
+          typing.remove();
+          const el = document.createElement('div');
+          el.className = 'demo-msg sarah';
+          el.textContent = msg.text;
+          body.appendChild(el);
+          i++;
+          next();
+        }, 900);
+      } else {
+        const el = document.createElement('div');
+        el.className = 'demo-msg visitor';
+        el.textContent = msg.text;
+        body.appendChild(el);
+        i++;
+        next();
+      }
+    }, delay);
+  }
+  next();
+}
+
+const demoObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { startDemo(); demoObserver.disconnect(); } });
+}, { threshold: 0.3 });
+demoObserver.observe(document.querySelector('.demo-frame'));
+</script>
+</body>
+</html>
