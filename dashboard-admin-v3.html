@@ -1132,9 +1132,9 @@ function renderProspects(){
       <td><span class="badge ${s.cls}">${s.label}</span></td>
       <td><span style="font-size:12px;color:var(--ink-3)">${p.seq}</span></td>
       <td style="display:flex;gap:6px;flex-wrap:wrap">
-        <button class="action-btn primary" onclick="nextAction(${p.id})">${seqNext[p.status]}</button>
+        <button class="action-btn primary" onclick="nextAction('${p.id}')">${seqNext[p.status]}</button>
         ${domain?`<button class="action-btn" onclick="window.open('https://hunter.io/domain-search?domain=${domain}','_blank')" title="Chercher l'email sur Hunter.io">🔍 Hunter</button>`:''}
-        <button class="action-btn" onclick='openEditProspectModal(${p.id})' title="Corriger les informations">✏️ Corriger</button>
+        <button class="action-btn" onclick='openEditProspectModal("${p.id}")' title="Corriger les informations">✏️ Corriger</button>
       </td>
     </tr>`;
   }).join('');
