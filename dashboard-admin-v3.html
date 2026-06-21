@@ -432,6 +432,40 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--ink);font-siz
         <div class="kpi"><div class="kpi-label">Taux d'ouverture</div><div class="kpi-val" style="color:var(--green)" id="kpi-taux-ouverture">—</div><div class="kpi-sub"><span class="delta-neutral">pas encore de donnée</span></div></div>
         <div class="kpi"><div class="kpi-label">À relancer</div><div class="kpi-val" style="color:var(--red)" id="kpi-a-relancer">0</div><div class="kpi-sub"><span class="delta-neutral">aucun pour l'instant</span></div></div>
       </div>
+
+      <!-- Segmentation par canal de contact -->
+      <div class="card mb-18">
+        <div class="card-header">
+          <div class="card-title">📊 Segmentation par canal de contact</div>
+          <button class="btn btn-ghost btn-sm" onclick="loadSegments()">↻ Actualiser</button>
+        </div>
+        <div class="card-body">
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px">
+            <div style="background:var(--blue-bg);border-radius:10px;padding:16px;cursor:pointer" onclick="filterByChannel('email')">
+              <div style="font-size:11px;color:var(--blue);text-transform:uppercase;letter-spacing:.8px;font-weight:600;margin-bottom:6px">📧 Canal Email</div>
+              <div style="font-family:var(--font-display);font-size:26px;font-weight:800;color:var(--blue)" id="seg-email-count">—</div>
+              <div style="font-size:12px;color:var(--ink-2)" id="seg-email-pct">— du total</div>
+              <div style="font-size:11px;color:var(--ink-3);margin-top:6px">Séquence Sarah AI (Mail 1/2/3)</div>
+            </div>
+            <div style="background:var(--green-bg);border-radius:10px;padding:16px;cursor:pointer" onclick="filterByChannel('phone')">
+              <div style="font-size:11px;color:var(--green);text-transform:uppercase;letter-spacing:.8px;font-weight:600;margin-bottom:6px">📞 Canal Téléphone</div>
+              <div style="font-family:var(--font-display);font-size:26px;font-weight:800;color:var(--green)" id="seg-phone-count">—</div>
+              <div style="font-size:12px;color:var(--ink-2)" id="seg-phone-pct">— du total</div>
+              <div style="font-size:11px;color:var(--ink-3);margin-top:6px">Appel ou WhatsApp direct</div>
+            </div>
+            <div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px">
+              <div style="font-size:11px;color:var(--ink-3);text-transform:uppercase;letter-spacing:.8px;font-weight:600;margin-bottom:6px">⚠️ Sans contact</div>
+              <div style="font-family:var(--font-display);font-size:26px;font-weight:800;color:var(--ink-3)" id="seg-none-count">—</div>
+              <div style="font-size:12px;color:var(--ink-2)" id="seg-none-pct">— du total</div>
+              <div style="font-size:11px;color:var(--ink-3);margin-top:6px">À enrichir manuellement</div>
+            </div>
+          </div>
+          <div id="channel-filter-active" style="display:none;margin-top:14px;padding:10px 14px;background:var(--amber-bg);border-radius:8px;font-size:12px;color:var(--amber);display:flex;justify-content:space-between;align-items:center">
+            <span id="channel-filter-label"></span>
+            <button class="action-btn" onclick="clearChannelFilter()">✕ Retirer le filtre</button>
+          </div>
+        </div>
+      </div>
       <div class="card mb-18">
         <div class="card-header">
           <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
@@ -982,6 +1016,7 @@ let prospects = [];
 let nextId = 11;
 let currentFilter = 'tous';
 let searchQuery = '';
+let currentChannelFilter = null; // null | 'email' | 'phone'
 let apiKey = '';
 let searchResults = [];
 let selectedResults = new Set();
@@ -1011,6 +1046,8 @@ function renderProspects(){
   let data = prospects;
   if(currentFilter!=='tous') data=data.filter(p=>p.status===currentFilter);
   if(searchQuery) data=data.filter(p=>p.name.toLowerCase().includes(searchQuery)||p.ville.toLowerCase().includes(searchQuery));
+  if(currentChannelFilter==='email') data=data.filter(p=>p.email && p.email.trim());
+  if(currentChannelFilter==='phone') data=data.filter(p=>(!p.email || !p.email.trim()) && p.phone && p.phone.trim());
   data = [...data].sort((a,b)=>(b.score||0)-(a.score||0));
   document.getElementById('kpi-total').textContent = prospects.length;
   document.getElementById('tab-tous').textContent = prospects.length;
@@ -1549,6 +1586,7 @@ const _origShowPage = showPage;
 showPage = function(name, el){
   _origShowPage(name, el);
   if(name === 'prospection' || name === 'dashboard') refreshCampaignStatus();
+  if(name === 'prospection') loadSegments();
   if(name === 'calendrier'){ renderCalendar(); renderRdvList(); }
   if(name === 'clients') loadSubscriptions();
   if(name === 'landingstats') loadLandingStats();
@@ -1752,11 +1790,48 @@ function checkRdvAlerts(){
 }
 
 
+// ── SEGMENTATION PAR CANAL DE CONTACT ────────────────────────────────────────
+const SEGMENTS_API = "https://agenc-ai.com/thee-api/prospects/segments";
+
+async function loadSegments(){
+  try{
+    const res = await fetch(SEGMENTS_API);
+    const s = await res.json();
+
+    document.getElementById('seg-email-count').textContent = s.canal_email;
+    document.getElementById('seg-email-pct').textContent = s.pct_email + '% du total';
+    document.getElementById('seg-phone-count').textContent = s.canal_telephone;
+    document.getElementById('seg-phone-pct').textContent = s.pct_telephone + '% du total';
+    document.getElementById('seg-none-count').textContent = s.sans_contact;
+    document.getElementById('seg-none-pct').textContent = s.pct_sans_contact + '% du total';
+  }catch(e){
+    console.log('Erreur chargement segments:', e);
+  }
+}
+
+function filterByChannel(channel){
+  currentChannelFilter = channel;
+  const banner = document.getElementById('channel-filter-active');
+  const label = document.getElementById('channel-filter-label');
+  banner.style.display = 'flex';
+  label.textContent = channel === 'email'
+    ? '📧 Affichage filtré : prospects avec email exploitable'
+    : '📞 Affichage filtré : prospects sans email, contactables par téléphone';
+  renderProspects();
+}
+
+function clearChannelFilter(){
+  currentChannelFilter = null;
+  document.getElementById('channel-filter-active').style.display = 'none';
+  renderProspects();
+}
+
 renderProspects();
 loadProspectsFromServer();
 checkRdvAlerts();
 refreshCampaignStatus();
 loadMonitoring();
+loadSegments();
 </script>
 </body>
 </html>
