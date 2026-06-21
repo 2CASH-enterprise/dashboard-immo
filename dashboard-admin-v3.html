@@ -484,7 +484,7 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--ink);font-siz
           </div>
         </div>
         <table class="table" id="prospects-table">
-          <thead><tr><th>Agence</th><th>Contact</th><th>Ville</th><th>Score</th><th>Statut</th><th>Séquence</th><th>Action</th></tr></thead>
+          <thead><tr><th>Agence</th><th>Contact</th><th>Téléphone</th><th>Ville</th><th>Score</th><th>Statut</th><th>Séquence</th><th>Action</th></tr></thead>
           <tbody id="prospects-body"></tbody>
         </table>
       </div>
@@ -1041,6 +1041,17 @@ function showPage(name,el){
 }
 
 // ── PROSPECTION ──────────────────────────────────────────────────────────────
+// Nettoie un numéro de téléphone et le formate pour un lien wa.me (format international sans + ni espaces)
+function formatPhoneForWhatsApp(phone){
+  if(!phone) return '';
+  let cleaned = phone.replace(/[\s.\-()]/g, '');
+  // Numéros français commençant par 0 → préfixe 33
+  if(cleaned.startsWith('0')) cleaned = '33' + cleaned.slice(1);
+  // Retire un + initial s'il existe déjà
+  cleaned = cleaned.replace(/^\+/, '');
+  return cleaned;
+}
+
 function renderProspects(){
   const body = document.getElementById('prospects-body');
   let data = prospects;
@@ -1061,6 +1072,7 @@ function renderProspects(){
     return `<tr>
       <td><strong>${p.name}</strong>${p.source==='google'?'<span class="badge badge-purple" style="margin-left:6px;font-size:10px">Maps</span>':''}${p.address?`<div style="font-size:11px;color:var(--ink-3)">${p.address}</div>`:''}</td>
       <td>${p.contact||'—'}<div style="font-size:11px;color:var(--ink-3)">${p.email||'<em style="color:var(--ink-4)">aucun</em>'}</div></td>
+      <td>${p.phone?`<div style="font-size:12px">${p.phone}</div><a href="https://wa.me/${formatPhoneForWhatsApp(p.phone)}" target="_blank" style="font-size:11px;color:var(--green);text-decoration:none">💬 WhatsApp</a>`:'<span style="color:var(--ink-4)">—</span>'}</td>
       <td>${p.ville}</td>
       <td><span style="display:inline-flex;align-items:center;justify-content:center;min-width:32px;padding:3px 8px;border-radius:20px;font-size:12px;font-weight:700;color:${scoreColor};background:${scoreBg}">${score}</span></td>
       <td><span class="badge ${s.cls}">${s.label}</span></td>
