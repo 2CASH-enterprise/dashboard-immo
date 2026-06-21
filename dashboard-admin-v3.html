@@ -796,6 +796,39 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--ink);font-siz
   </div>
 </div>
 
+<!-- MODAL CORRECTION PROSPECT -->
+<div class="modal-overlay" id="edit-prospect-modal-overlay" onclick="closeEditProspectModal(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-title">Corriger les informations</div>
+    <input type="hidden" id="edit-prospect-id"/>
+    <div class="form-group">
+      <label class="form-label">Nom de l'agence</label>
+      <input class="form-input" id="edit-prospect-name" disabled style="opacity:.6;cursor:not-allowed"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Adresse</label>
+      <input class="form-input" id="edit-prospect-address" placeholder="12 rue de la Paix, Rennes"/>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Ville</label><input class="form-input" id="edit-prospect-ville" placeholder="Rennes"/></div>
+      <div class="form-group"><label class="form-label">Téléphone</label><input class="form-input" id="edit-prospect-phone" placeholder="06 12 34 56 78"/></div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Email</label>
+      <input class="form-input" id="edit-prospect-email" type="email" placeholder="contact@agence.fr"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Site web</label>
+      <input class="form-input" id="edit-prospect-website" placeholder="https://agence.fr"/>
+    </div>
+    <div id="edit-prospect-feedback" style="display:none;font-size:13px;padding:10px 14px;border-radius:8px;margin-top:-8px"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeEditProspectModal()">Annuler</button>
+      <button class="btn btn-primary" onclick="saveProspectEdit()">Enregistrer la correction</button>
+    </div>
+  </div>
+</div>
+
 <script>
 // ── SUBSCRIPTIONS (Plans & Abonnements) ──────────────────────────────────────
 const SUBSCRIPTIONS_API = "https://agenc-ai.com/thee-api/subscriptions";
@@ -1101,6 +1134,7 @@ function renderProspects(){
       <td style="display:flex;gap:6px;flex-wrap:wrap">
         <button class="action-btn primary" onclick="nextAction(${p.id})">${seqNext[p.status]}</button>
         ${domain?`<button class="action-btn" onclick="window.open('https://hunter.io/domain-search?domain=${domain}','_blank')" title="Chercher l'email sur Hunter.io">🔍 Hunter</button>`:''}
+        <button class="action-btn" onclick='openEditProspectModal(${p.id})' title="Corriger les informations">✏️ Corriger</button>
       </td>
     </tr>`;
   }).join('');
@@ -1119,6 +1153,79 @@ function nextAction(id){
   if(p.status==='relance') p.seq+='+J5';
   if(p.status==='rdv') p.seq+='+J10';
   renderProspects();
+}
+
+// ── CORRECTION MANUELLE DES INFORMATIONS PROSPECT ────────────────────────────
+function openEditProspectModal(id){
+  const p = prospects.find(x=>x.id===id);
+  if(!p){ alert('Prospect introuvable'); return; }
+
+  document.getElementById('edit-prospect-id').value = p.id;
+  document.getElementById('edit-prospect-name').value = p.name || '';
+  document.getElementById('edit-prospect-address').value = p.address || '';
+  document.getElementById('edit-prospect-ville').value = p.ville || '';
+  document.getElementById('edit-prospect-phone').value = p.phone || '';
+  document.getElementById('edit-prospect-email').value = p.email || '';
+  document.getElementById('edit-prospect-website').value = p.website || '';
+  document.getElementById('edit-prospect-feedback').style.display = 'none';
+  document.getElementById('edit-prospect-modal-overlay').classList.add('open');
+}
+
+function closeEditProspectModal(e){
+  if(!e || e.target===document.getElementById('edit-prospect-modal-overlay')){
+    document.getElementById('edit-prospect-modal-overlay').classList.remove('open');
+  }
+}
+
+async function saveProspectEdit(){
+  const id = document.getElementById('edit-prospect-id').value;
+  const feedback = document.getElementById('edit-prospect-feedback');
+
+  const payload = {
+    address: document.getElementById('edit-prospect-address').value.trim() || null,
+    ville: document.getElementById('edit-prospect-ville').value.trim() || null,
+    phone: document.getElementById('edit-prospect-phone').value.trim() || null,
+    email: document.getElementById('edit-prospect-email').value.trim() || null,
+    website: document.getElementById('edit-prospect-website').value.trim() || null,
+  };
+  // Retire les champs vides pour ne pas écraser une donnée existante par du vide involontairement
+  Object.keys(payload).forEach(k => { if(!payload[k]) delete payload[k]; });
+
+  try{
+    const res = await fetch(`${PROSPECTS_API}/${id}`, {
+      method: 'PATCH',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify(payload)
+    });
+    const result = await res.json();
+
+    if(result.success){
+      feedback.style.display = 'block';
+      feedback.style.background = 'var(--green-bg)';
+      feedback.style.color = 'var(--green)';
+      feedback.textContent = '✅ Informations mises à jour';
+
+      // Met à jour aussi la donnée locale pour un rafraîchissement immédiat sans rechargement
+      const p = prospects.find(x=>x.id===id);
+      if(p){ Object.assign(p, payload); }
+
+      setTimeout(()=>{
+        closeEditProspectModal();
+        renderProspects();
+        loadSegments();
+      }, 700);
+    } else {
+      feedback.style.display = 'block';
+      feedback.style.background = 'var(--red-bg)';
+      feedback.style.color = 'var(--red)';
+      feedback.textContent = '❌ Erreur : ' + (result.error || 'inconnue');
+    }
+  }catch(e){
+    feedback.style.display = 'block';
+    feedback.style.background = 'var(--red-bg)';
+    feedback.style.color = 'var(--red)';
+    feedback.textContent = '❌ Erreur de connexion : ' + e.message;
+  }
 }
 
 // ── MODAL MANUEL ─────────────────────────────────────────────────────────────
