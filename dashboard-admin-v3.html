@@ -1042,14 +1042,35 @@ function showPage(name,el){
 
 // ── PROSPECTION ──────────────────────────────────────────────────────────────
 // Nettoie un numéro de téléphone et le formate pour un lien wa.me (format international sans + ni espaces)
-function formatPhoneForWhatsApp(phone){
+// Villes marocaines connues — sert à déterminer l'indicatif pays
+const VILLES_MAROC = ['casablanca', 'rabat', 'marrakech', 'tanger', 'fès', 'fes', 'agadir', 'meknès', 'meknes', 'oujda', 'kenitra', 'tétouan', 'tetouan'];
+
+function detecterIndicatifPays(ville){
+  if(!ville) return '33'; // France par défaut
+  const villeNorm = ville.toLowerCase().trim();
+  if(VILLES_MAROC.some(v => villeNorm.includes(v))) return '212'; // Maroc
+  return '33'; // France par défaut
+}
+
+function formatPhoneForWhatsApp(phone, ville){
   if(!phone) return '';
   let cleaned = phone.replace(/[\s.\-()]/g, '');
-  // Numéros français commençant par 0 → préfixe 33
-  if(cleaned.startsWith('0')) cleaned = '33' + cleaned.slice(1);
-  // Retire un + initial s'il existe déjà
-  cleaned = cleaned.replace(/^\+/, '');
-  return cleaned;
+
+  // Si le numéro a déjà un indicatif international (+33, +212, etc.), on le garde tel quel
+  if(cleaned.startsWith('+')){
+    return cleaned.replace(/^\+/, '');
+  }
+  if(cleaned.startsWith('00')){
+    return cleaned.slice(2);
+  }
+
+  // Sinon, on déduit l'indicatif depuis la ville du prospect
+  const indicatif = detecterIndicatifPays(ville);
+
+  // Retire le 0 initial (format national) avant d'ajouter l'indicatif
+  if(cleaned.startsWith('0')) cleaned = cleaned.slice(1);
+
+  return indicatif + cleaned;
 }
 
 function renderProspects(){
@@ -1072,7 +1093,7 @@ function renderProspects(){
     return `<tr>
       <td><strong>${p.name}</strong>${p.source==='google'?'<span class="badge badge-purple" style="margin-left:6px;font-size:10px">Maps</span>':''}${p.address?`<div style="font-size:11px;color:var(--ink-3)">${p.address}</div>`:''}</td>
       <td>${p.contact||'—'}<div style="font-size:11px;color:var(--ink-3)">${p.email||'<em style="color:var(--ink-4)">aucun</em>'}</div></td>
-      <td>${p.phone?`<div style="font-size:12px">${p.phone}</div><a href="https://wa.me/${formatPhoneForWhatsApp(p.phone)}" target="_blank" style="font-size:11px;color:var(--green);text-decoration:none">💬 WhatsApp</a>`:'<span style="color:var(--ink-4)">—</span>'}</td>
+      <td>${p.phone?`<div style="font-size:12px">${p.phone}</div><a href="https://wa.me/${formatPhoneForWhatsApp(p.phone, p.ville)}" target="_blank" style="font-size:11px;color:var(--green);text-decoration:none">💬 WhatsApp</a>`:'<span style="color:var(--ink-4)">—</span>'}</td>
       <td>${p.ville}</td>
       <td><span style="display:inline-flex;align-items:center;justify-content:center;min-width:32px;padding:3px 8px;border-radius:20px;font-size:12px;font-weight:700;color:${scoreColor};background:${scoreBg}">${score}</span></td>
       <td><span class="badge ${s.cls}">${s.label}</span></td>
