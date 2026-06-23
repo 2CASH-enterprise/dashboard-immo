@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<!-- ═══ META PAR DÉFAUT (remplacées dynamiquement par article) ═══ -->
+<title>Blog — Sarah AI | Conseils immobilier & IA</title>
+<meta name="description" content="Conseils, actualités et insights sur l'intelligence artificielle dans l'immobilier indépendant. Par l'équipe Sarah AI."/>
+<meta property="og:type" content="website"/>
+<meta property="og:site_name" content="Sarah AI"/>
+<meta property="og:title" content="Blog Sarah AI — Conseils immobilier & IA"/>
+<meta property="og:description" content="Conseils, actualités et insights sur l'IA dans l'immobilier indépendant."/>
+<meta property="og:image" content="https://agenc-ai.com/sarah/og-blog.jpg"/>
+<meta property="og:url" content="https://agenc-ai.com/sarah/blog.html"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Blog Sarah AI"/>
+<meta name="twitter:description" content="Conseils, actualités et insights sur l'IA dans l'immobilier indépendant."/>
+<meta name="twitter:image" content="https://agenc-ai.com/sarah/og-blog.jpg"/>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+/* ══════════════════════════════════════════════════
+   CHARTE SARAH AI — Ivoire · Bleu marine · Or
+══════════════════════════════════════════════════ */
+:root{
+  --ivory:        #F8F5EF;
+  --ivory-2:      #F4F1EA;
+  --ivory-3:      #EDE9E0;
+  --navy:         #1E2358;
+  --navy-2:       #232B6C;
+  --navy-light:   #2E3780;
+  --gold:         #D9A62E;
+  --gold-2:       #C9941E;
+  --gold-light:   #E0B347;
+  --gold-pale:    #F0D188;
+  --gray:         #7A7A7A;
+  --gray-2:       #9A9A9A;
+  --white:        #FFFFFF;
+  --line:         rgba(30,35,88,.1);
+  --line-gold:    rgba(217,166,46,.25);
+  --shadow-sm:    0 2px 12px rgba(30,35,88,.07);
+  --shadow-md:    0 8px 32px rgba(30,35,88,.10);
+  --shadow-lg:    0 20px 60px rgba(30,35,88,.12);
+  --radius:       14px;
+  --radius-lg:    20px;
+  --font-display: 'Manrope', sans-serif;
+  --font-body:    'Inter', sans-serif;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--font-body);
+  background:var(--ivory);
+  color:var(--navy);
+  font-size:16px;
+  line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms !important;transition-duration:.01ms !important}}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+.wrap{max-width:1160px;margin:0 auto;padding:0 32px}
+@media(max-width:640px){.wrap{padding:0 20px}}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+
+/* ══ NAV ══════════════════════════════════════════ */
+.nav{
+  background:rgba(248,245,239,.92);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);
+  position:sticky;top:0;z-index:100;
+}
+.nav-inner{
+  max-width:1160px;margin:0 auto;padding:0 32px;
+  height:64px;display:flex;align-items:center;justify-content:space-between;gap:24px;
+}
+@media(max-width:640px){.nav-inner{padding:0 20px}}
+.nav-logo{display:flex;align-items:center;gap:10px;font-family:var(--font-display);font-weight:800;font-size:18px;color:var(--gold)}
+.nav-logo-icon{width:28px;height:28px;color:var(--gold)}
+.nav-links{display:flex;gap:28px;font-size:14px;font-weight:500;color:var(--gray)}
+@media(max-width:860px){.nav-links{display:none}}
+.nav-links a{transition:color .2s}
+.nav-links a:hover{color:var(--navy)}
+.nav-links a.active{color:var(--navy);font-weight:700}
+.nav-cta{
+  font-family:var(--font-body);font-size:13.5px;font-weight:700;
+  background:var(--gold);color:var(--white);
+  padding:10px 20px;border-radius:8px;border:none;cursor:pointer;
+  transition:background .2s,transform .2s;white-space:nowrap;
+}
+.nav-cta:hover{background:var(--gold-2);transform:translateY(-1px)}
+
+/* ══ HERO BLOG ════════════════════════════════════ */
+.blog-hero{
+  padding:64px 0 52px;
+  border-bottom:1px solid var(--line);
+  position:relative;overflow:hidden;
+}
+.blog-hero::before{
+  content:'';position:absolute;top:-60px;right:-80px;
+  width:400px;height:400px;border-radius:50%;
+  background:radial-gradient(circle,rgba(217,166,46,.08) 0%,transparent 70%);
+  pointer-events:none;
+}
+.blog-hero-inner{max-width:640px}
+.blog-hero-eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--ivory-3);border:1px solid var(--line-gold);border-radius:100px;
+  padding:6px 16px;font-size:12px;font-weight:700;letter-spacing:.8px;
+  text-transform:uppercase;color:var(--gold-2);margin-bottom:24px;
+}
+.blog-hero h1{
+  font-family:var(--font-display);
+  font-size:clamp(34px,5vw,54px);
+  font-weight:800;
+  line-height:1.08;
+  letter-spacing:-1.5px;
+  color:var(--navy);
+  margin-bottom:20px;
+}
+.blog-hero h1 em{
+  font-style:normal;
+  color:var(--gold);
+  position:relative;
+}
+.blog-hero p{font-size:17px;color:var(--gray);line-height:1.65;max-width:500px}
+
+/* ══ FILTERS ══════════════════════════════════════ */
+.filters-bar{
+  padding:28px 0;
+  border-bottom:1px solid var(--line);
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+}
+.filter-chip{
+  font-family:var(--font-body);font-size:13px;font-weight:600;
+  padding:7px 18px;border-radius:100px;border:1.5px solid var(--line);
+  background:transparent;color:var(--gray);cursor:pointer;
+  transition:all .2s;
+}
+.filter-chip:hover{border-color:var(--navy);color:var(--navy)}
+.filter-chip.active{background:var(--navy);color:var(--white);border-color:var(--navy)}
+
+/* ══ GRID ARTICLES ════════════════════════════════ */
+.articles-section{padding:52px 0 80px}
+.articles-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:24px;
+  margin-bottom:48px;
+}
+@media(max-width:960px){.articles-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:580px){.articles-grid{grid-template-columns:1fr}}
+
+/* Article card */
+.article-card{
+  background:var(--white);
+  border-radius:var(--radius-lg);
+  border:1px solid var(--line);
+  overflow:hidden;
+  transition:box-shadow .25s,transform .25s;
+  cursor:pointer;
+  display:flex;flex-direction:column;
+}
+.article-card:hover{box-shadow:var(--shadow-md);transform:translateY(-4px)}
+.article-card:hover .card-arrow{transform:translateX(4px)}
+
+.card-top{
+  background:linear-gradient(135deg,var(--navy) 0%,var(--navy-2) 100%);
+  padding:28px 24px 22px;
+  min-height:140px;
+  display:flex;flex-direction:column;justify-content:space-between;
+  position:relative;overflow:hidden;
+}
+.card-top::after{
+  content:'';position:absolute;bottom:-30px;right:-30px;
+  width:100px;height:100px;border-radius:50%;
+  background:rgba(217,166,46,.12);pointer-events:none;
+}
+.card-category{
+  display:inline-flex;align-items:center;gap:5px;
+  background:rgba(217,166,46,.18);border:1px solid rgba(217,166,46,.35);
+  border-radius:100px;padding:4px 12px;
+  font-size:10.5px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;
+  color:var(--gold-pale);width:fit-content;
+}
+.card-icon{font-size:28px;margin-top:8px}
+
+.card-body{padding:22px 22px 18px;flex:1;display:flex;flex-direction:column;gap:10px}
+.card-title{
+  font-family:var(--font-display);font-size:17px;font-weight:700;
+  color:var(--navy);line-height:1.35;
+}
+.card-excerpt{font-size:13.5px;color:var(--gray);line-height:1.6;flex:1}
+
+.card-footer{
+  padding:14px 22px 18px;
+  display:flex;align-items:center;justify-content:space-between;
+  border-top:1px solid var(--line);margin-top:auto;
+}
+.card-date{font-size:11.5px;color:var(--gray-2)}
+.card-arrow{
+  width:30px;height:30px;border-radius:50%;
+  background:var(--ivory-2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;color:var(--gold);
+  transition:transform .2s;
+}
+
+/* Featured card (first article) */
+.article-card.featured{grid-column:1/-1}
+@media(max-width:580px){.article-card.featured{grid-column:auto}}
+.article-card.featured .card-top{min-height:200px;padding:36px 32px 28px}
+.article-card.featured .card-title{font-size:22px}
+.article-card.featured .card-icon{font-size:38px}
+
+/* ══ EMPTY STATE ══════════════════════════════════ */
+.empty-state{
+  grid-column:1/-1;
+  text-align:center;padding:80px 32px;
+  display:flex;flex-direction:column;align-items:center;gap:16px;
+}
+.empty-icon{font-size:48px;opacity:.3}
+.empty-title{font-family:var(--font-display);font-size:22px;font-weight:700;color:var(--navy)}
+.empty-sub{font-size:15px;color:var(--gray);max-width:360px;line-height:1.6}
+
+/* ══ ARTICLE VIEW ═════════════════════════════════ */
+#article-view{display:none}
+.article-view-nav{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:24px 0;border-bottom:1px solid var(--line);margin-bottom:40px;
+}
+.back-btn{
+  display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600;
+  color:var(--gray);cursor:pointer;transition:color .2s;border:none;background:none;
+  font-family:var(--font-body);
+}
+.back-btn:hover{color:var(--navy)}
+.back-btn svg{width:16px;height:16px}
+
+/* Share bar */
+.share-bar{
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+}
+.share-label{font-size:12px;font-weight:600;color:var(--gray);text-transform:uppercase;letter-spacing:.6px}
+.share-btn{
+  display:flex;align-items:center;gap:6px;
+  font-size:12.5px;font-weight:600;
+  padding:7px 14px;border-radius:8px;border:1.5px solid var(--line);
+  background:var(--white);color:var(--navy);cursor:pointer;
+  transition:all .2s;font-family:var(--font-body);
+}
+.share-btn:hover{transform:translateY(-1px);box-shadow:var(--shadow-sm)}
+.share-btn.facebook:hover{background:#1877f2;border-color:#1877f2;color:#fff}
+.share-btn.linkedin:hover{background:#0a66c2;border-color:#0a66c2;color:#fff}
+.share-btn.twitter:hover{background:#000;border-color:#000;color:#fff}
+.share-btn.whatsapp:hover{background:#25d366;border-color:#25d366;color:#fff}
+.share-btn.copy-link.copied{background:var(--navy);border-color:var(--navy);color:var(--white)}
+
+/* Article header */
+.article-header{margin-bottom:40px}
+.article-cat-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(217,166,46,.12);border:1px solid var(--line-gold);
+  border-radius:100px;padding:6px 16px;
+  font-size:11px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;
+  color:var(--gold-2);margin-bottom:20px;
+}
+.article-title{
+  font-family:var(--font-display);
+  font-size:clamp(28px,4.5vw,46px);
+  font-weight:800;line-height:1.1;letter-spacing:-1.2px;
+  color:var(--navy);margin-bottom:20px;
+}
+.article-meta{
+  display:flex;align-items:center;gap:20px;flex-wrap:wrap;
+  font-size:13px;color:var(--gray);padding-bottom:28px;border-bottom:1px solid var(--line);
+}
+.article-meta-item{display:flex;align-items:center;gap:6px}
+.meta-dot{width:4px;height:4px;border-radius:50%;background:var(--gray-2)}
+
+/* Article body */
+.article-body{
+  max-width:720px;margin:0 auto;
+  font-size:17px;line-height:1.8;color:var(--navy);
+}
+.article-body h2{
+  font-family:var(--font-display);font-size:26px;font-weight:700;
+  color:var(--navy);margin:40px 0 16px;letter-spacing:-.5px;
+}
+.article-body h3{
+  font-family:var(--font-display);font-size:20px;font-weight:700;
+  color:var(--navy);margin:32px 0 12px;
+}
+.article-body p{margin:0 0 22px}
+.article-body ul,.article-body ol{margin:0 0 22px 24px}
+.article-body li{margin-bottom:8px}
+.article-body strong{font-weight:700;color:var(--navy-2)}
+.article-body em{font-style:italic}
+.article-body a{color:var(--gold);border-bottom:1px solid var(--line-gold);transition:border-color .2s}
+.article-body a:hover{border-color:var(--gold)}
+.article-body blockquote{
+  border-left:3px solid var(--gold);
+  margin:28px 0;padding:16px 24px;
+  background:rgba(217,166,46,.06);border-radius:0 8px 8px 0;
+  font-style:italic;color:var(--gray);
+}
+
+/* CTA in article */
+.article-cta-block{
+  background:linear-gradient(135deg,var(--navy) 0%,var(--navy-2) 100%);
+  border-radius:var(--radius-lg);padding:36px 40px;margin:44px 0;
+  text-align:center;position:relative;overflow:hidden;
+}
+.article-cta-block::before{
+  content:'';position:absolute;top:-40px;right:-40px;
+  width:160px;height:160px;border-radius:50%;
+  background:rgba(217,166,46,.1);pointer-events:none;
+}
+.article-cta-block h3{
+  font-family:var(--font-display);font-size:22px;font-weight:700;
+  color:var(--white);margin-bottom:10px;
+}
+.article-cta-block p{font-size:15px;color:rgba(255,255,255,.65);margin-bottom:22px}
+.btn-gold-art{
+  display:inline-block;font-family:var(--font-body);font-size:15px;font-weight:700;
+  background:var(--gold);color:var(--navy);
+  padding:13px 28px;border-radius:9px;border:none;cursor:pointer;
+  transition:background .2s,transform .2s;text-decoration:none;
+}
+.btn-gold-art:hover{background:var(--gold-light);transform:translateY(-1px)}
+
+/* ══ BOTTOM SHARE ═════════════════════════════════ */
+.article-bottom{
+  margin-top:56px;padding:32px 0;border-top:1px solid var(--line);
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px;
+}
+.article-bottom-left{font-family:var(--font-display);font-size:17px;font-weight:700;color:var(--navy)}
+
+/* ══ MORE ARTICLES ════════════════════════════════ */
+.more-section{background:var(--ivory-2);border-top:1px solid var(--line);padding:56px 0 64px;margin-top:56px}
+.more-title{font-family:var(--font-display);font-size:22px;font-weight:700;color:var(--navy);margin-bottom:28px}
+.more-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+@media(max-width:860px){.more-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:540px){.more-grid{grid-template-columns:1fr}}
+.more-card{
+  background:var(--white);border-radius:var(--radius);border:1px solid var(--line);
+  padding:20px;cursor:pointer;transition:box-shadow .2s,transform .2s;
+}
+.more-card:hover{box-shadow:var(--shadow-sm);transform:translateY(-2px)}
+.more-card-cat{font-size:10px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:var(--gold-2);margin-bottom:8px}
+.more-card-title{font-family:var(--font-display);font-size:15px;font-weight:700;color:var(--navy);line-height:1.35}
+
+/* ══ NEWSLETTER BAND ══════════════════════════════ */
+.nl-band{
+  background:var(--navy);
+  padding:56px 0;
+}
+.nl-band-inner{
+  max-width:620px;margin:0 auto;text-align:center;
+}
+.nl-band h2{
+  font-family:var(--font-display);font-size:clamp(22px,3.5vw,32px);font-weight:700;
+  color:var(--white);margin-bottom:12px;letter-spacing:-.5px;
+}
+.nl-band p{font-size:15px;color:rgba(255,255,255,.6);margin-bottom:28px;line-height:1.6}
+.nl-form{display:flex;gap:10px;max-width:440px;margin:0 auto}
+@media(max-width:480px){.nl-form{flex-direction:column}}
+.nl-input{
+  flex:1;padding:13px 16px;border-radius:9px;border:1.5px solid rgba(255,255,255,.15);
+  background:rgba(255,255,255,.08);color:var(--white);font-size:14px;
+  font-family:var(--font-body);outline:none;transition:border-color .2s;
+}
+.nl-input::placeholder{color:rgba(255,255,255,.35)}
+.nl-input:focus{border-color:var(--gold)}
+.nl-submit{
+  font-family:var(--font-body);font-size:14px;font-weight:700;
+  background:var(--gold);color:var(--navy);
+  padding:13px 22px;border-radius:9px;border:none;cursor:pointer;
+  white-space:nowrap;transition:background .2s;
+}
+.nl-submit:hover{background:var(--gold-light)}
+.nl-fine{font-size:11.5px;color:rgba(255,255,255,.3);margin-top:14px}
+
+/* ══ FOOTER ═══════════════════════════════════════ */
+.footer{background:var(--ivory-2);border-top:1px solid var(--line);padding:40px 0 28px}
+.footer-inner{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:20px}
+.footer-brand{font-family:var(--font-display);font-size:18px;font-weight:800;color:var(--gold);display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.footer-brand svg{width:22px;height:22px;color:var(--gold)}
+.footer-legal{font-size:11.5px;color:var(--gray);line-height:1.7;max-width:440px}
+.footer-links{display:flex;gap:20px;flex-wrap:wrap}
+.footer-links a{font-size:13px;color:var(--gray);transition:color .2s}
+.footer-links a:hover{color:var(--navy)}
+
+/* ══ ANIMATIONS ═══════════════════════════════════ */
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}
+.reveal.in{opacity:1;transform:translateY(0)}
+.stagger .article-card:nth-child(1){transition-delay:.05s}
+.stagger .article-card:nth-child(2){transition-delay:.12s}
+.stagger .article-card:nth-child(3){transition-delay:.19s}
+.stagger .article-card:nth-child(4){transition-delay:.08s}
+.stagger .article-card:nth-child(5){transition-delay:.16s}
+.stagger .article-card:nth-child(6){transition-delay:.24s}
+</style>
+</head>
+<body>
+
+<!-- ══ NAV ══ -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <svg class="nav-logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+        <path d="M2 17l10 5 10-5"/>
+        <path d="M2 12l10 5 10-5"/>
+      </svg>
+      Sarah AI
+    </a>
+    <div class="nav-links">
+      <a href="index.html#features">Fonctionnalités</a>
+      <a href="index.html#plans">Tarifs</a>
+      <a href="blog.html" class="active">Blog</a>
+      <a href="mailto:contact@agenc-ai.com">Contact</a>
+    </div>
+    <button class="nav-cta" onclick="window.open('https://calendly.com/thee-ai/30min','_blank')">Demander une Démo</button>
+  </div>
+</nav>
+
+<!-- ══ VUE LISTE (défaut) ══ -->
+<div id="list-view">
+
+  <!-- Hero -->
+  <div class="blog-hero">
+    <div class="wrap">
+      <div class="blog-hero-inner">
+        <div class="blog-hero-eyebrow">✦ Ressources & Conseils</div>
+        <h1>L'immobilier à l'ère de l'<em>intelligence</em></h1>
+        <p>Conseils pratiques, actualités du marché et insights sur l'IA pour les agents immobiliers indépendants.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filtres -->
+  <div class="wrap">
+    <div class="filters-bar reveal">
+      <button class="filter-chip active" onclick="filterArticles('tous',this)">Tous</button>
+      <button class="filter-chip" onclick="filterArticles('conseils',this)">Conseils immobilier</button>
+      <button class="filter-chip" onclick="filterArticles('ia',this)">IA & Innovation</button>
+      <button class="filter-chip" onclick="filterArticles('prospection',this)">Prospection</button>
+      <button class="filter-chip" onclick="filterArticles('temoignage',this)">Témoignages</button>
+      <button class="filter-chip" onclick="filterArticles('actu',this)">Actualité</button>
+    </div>
+  </div>
+
+  <!-- Grille articles -->
+  <section class="articles-section">
+    <div class="wrap">
+      <div class="articles-grid stagger reveal" id="articles-grid">
+        <!-- Injecté par JS -->
+        <div class="empty-state">
+          <div class="empty-icon">⏳</div>
+          <div class="empty-title">Chargement des articles…</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Bande newsletter -->
+  <section class="nl-band">
+    <div class="wrap">
+      <div class="nl-band-inner reveal">
+        <h2>Restez informé, sans bruit</h2>
+        <p>Un email par mois. Les meilleurs articles, les actualités immobilières qui comptent, les nouvelles fonctionnalités de Sarah AI.</p>
+        <div class="nl-form">
+          <input class="nl-input" type="email" id="nl-email" placeholder="votre@agence.fr"/>
+          <button class="nl-submit" onclick="subscribeNewsletter()">S'abonner</button>
+        </div>
+        <p class="nl-fine">Aucun spam. Désinscription en un clic.</p>
+      </div>
+    </div>
+  </section>
+
+</div><!-- /#list-view -->
+
+<!-- ══ VUE ARTICLE ══ -->
+<div id="article-view">
+  <div class="wrap">
+
+    <!-- Navigation haut -->
+    <div class="article-view-nav">
+      <button class="back-btn" onclick="backToList()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+        Retour au blog
+      </button>
+      <div class="share-bar" id="share-bar-top"></div>
+    </div>
+
+    <!-- Header article -->
+    <div class="article-header">
+      <div class="article-cat-badge" id="art-cat-badge">Catégorie</div>
+      <h1 class="article-title" id="art-title">Titre de l'article</h1>
+      <div class="article-meta">
+        <div class="article-meta-item">
+          <span>✦ Sarah AI</span>
+        </div>
+        <div class="meta-dot"></div>
+        <div class="article-meta-item" id="art-date">—</div>
+        <div class="meta-dot"></div>
+        <div class="article-meta-item" id="art-read-time">— min de lecture</div>
+      </div>
+    </div>
+
+    <!-- Corps de l'article -->
+    <div class="article-body" id="art-body"></div>
+
+    <!-- CTA bas d'article -->
+    <div class="article-cta-block">
+      <h3>Prête à travailler pour votre agence</h3>
+      <p>Démo gratuite, sans engagement. Votre première conversation qualifiée en moins de 5 minutes.</p>
+      <a href="https://calendly.com/thee-ai/30min" target="_blank" class="btn-gold-art">📅 Réserver une démo gratuite</a>
+    </div>
+
+    <!-- Partage bas -->
+    <div class="article-bottom">
+      <div class="article-bottom-left">Cet article vous a été utile ?<br><span style="font-weight:400;font-size:15px;color:var(--gray)">Partagez-le avec vos collègues agents.</span></div>
+      <div class="share-bar" id="share-bar-bottom"></div>
+    </div>
+
+  </div>
+
+  <!-- Articles similaires -->
+  <div class="more-section" id="more-section">
+    <div class="wrap">
+      <div class="more-title">Continuer la lecture</div>
+      <div class="more-grid" id="more-grid"></div>
+    </div>
+  </div>
+
+</div><!-- /#article-view -->
+
+<!-- FOOTER (toujours visible) -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-inner">
+      <div>
+        <div class="footer-brand">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+          </svg>
+          Sarah AI
+        </div>
+        <div class="footer-legal">
+          <p>© 2026 SAS 2 Cash Enterprise (Holding) — 1 Rue Hartz Huel, 22500 Kerfot, France</p>
+          <p>Exploitation : Agen'C AI · contact@agenc-ai.com</p>
+        </div>
+      </div>
+      <div class="footer-links">
+        <a href="index.html">Accueil</a>
+        <a href="index.html#plans">Tarifs</a>
+        <a href="blog.html">Blog</a>
+        <a href="privacy.html">Confidentialité</a>
+        <a href="terms.html">CGU</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ══════════════════════════════════════════════════
+// CONFIG
+// ══════════════════════════════════════════════════
+const ARTICLES_API  = 'https://agenc-ai.com/thee-api/articles';
+const BASE_URL      = 'https://agenc-ai.com/sarah/blog.html';
+const OG_IMAGE_DEFAULT = 'https://agenc-ai.com/sarah/og-blog.jpg';
+
+const CAT_LABELS = {
+  conseils:    { label:'Conseils immobilier', icon:'🏠' },
+  ia:          { label:'IA & Innovation',     icon:'🤖' },
+  prospection: { label:'Prospection',         icon:'🎯' },
+  temoignage:  { label:'Témoignage',          icon:'💬' },
+  actu:        { label:'Actualité du marché', icon:'📈' },
+};
+
+let allArticles    = [];
+let currentFilter  = 'tous';
+let currentArticleId = null;
+
+// ══════════════════════════════════════════════════
+// CHARGEMENT DES ARTICLES
+// ══════════════════════════════════════════════════
+async function loadArticles() {
+  try {
+    const res = await fetch(ARTICLES_API + '?status=publie&limit=50');
+    const data = await res.json();
+    allArticles = data.articles || [];
+  } catch(e) {
+    // Fallback localStorage (même clé que le dashboard admin)
+    const local = JSON.parse(localStorage.getItem('sarah_articles') || '[]');
+    allArticles = local.filter(a => a.status === 'publie');
+  }
+  // Trier par date décroissante
+  allArticles.sort((a,b) => new Date(b.updated_at) - new Date(a.updated_at));
+
+  // Lire l'URL pour afficher directement un article
+  const params = new URLSearchParams(window.location.search);
+  const idFromUrl = params.get('id');
+  if (idFromUrl) {
+    const art = allArticles.find(a => a.id === idFromUrl);
+    if (art) { showArticle(art); return; }
+  }
+  renderGrid(allArticles);
+}
+
+// ══════════════════════════════════════════════════
+// RENDU LISTE
+// ══════════════════════════════════════════════════
+function renderGrid(articles) {
+  document.getElementById('list-view').style.display = 'block';
+  document.getElementById('article-view').style.display = 'none';
+  window.scrollTo({top:0,behavior:'smooth'});
+
+  const grid = document.getElementById('articles-grid');
+  if (!articles.length) {
+    grid.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">✍️</div>
+        <div class="empty-title">Les articles arrivent bientôt</div>
+        <div class="empty-sub">Notre équipe prépare des contenus sur l'IA et l'immobilier. Abonnez-vous pour être notifié.</div>
+      </div>`;
+    return;
+  }
+
+  grid.innerHTML = articles.map((art, i) => {
+    const cat = CAT_LABELS[art.category] || { label: art.category, icon:'📄' };
+    const date = new Date(art.updated_at).toLocaleDateString('fr-FR', {day:'2-digit',month:'long',year:'numeric'});
+    const isFeatured = i === 0 && articles.length >= 3;
+    return `
+      <div class="article-card ${isFeatured ? 'featured' : ''}" onclick="showArticle(${JSON.stringify(art).replace(/"/g,'&quot;')})">
+        <div class="card-top">
+          <span class="card-category">${cat.icon} ${cat.label}</span>
+          <div class="card-icon">${cat.icon}</div>
+        </div>
+        <div class="card-body">
+          <div class="card-title">${art.title}</div>
+          <div class="card-excerpt">${art.excerpt || ''}</div>
+        </div>
+        <div class="card-footer">
+          <span class="card-date">${date}</span>
+          <span class="card-arrow">→</span>
+        </div>
+      </div>`;
+  }).join('');
+
+  // Scroll animations
+  const io = new IntersectionObserver(entries => entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('in'); }), {threshold:0.1});
+  grid.querySelectorAll('.article-card').forEach(el => { el.style.opacity='0'; el.style.transform='translateY(18px)'; el.style.transition='opacity .5s ease, transform .5s ease'; io.observe(el); });
+  setTimeout(() => grid.querySelectorAll('.article-card').forEach(el => el.classList.add('in')), 80);
+}
+
+function filterArticles(cat, el) {
+  currentFilter = cat;
+  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  const filtered = cat === 'tous' ? allArticles : allArticles.filter(a => a.category === cat);
+  renderGrid(filtered);
+}
+
+// ══════════════════════════════════════════════════
+// AFFICHAGE ARTICLE
+// ══════════════════════════════════════════════════
+function showArticle(art) {
+  currentArticleId = art.id;
+  document.getElementById('list-view').style.display = 'none';
+  document.getElementById('article-view').style.display = 'block';
+  window.scrollTo({top:0,behavior:'smooth'});
+
+  // Meta tags dynamiques (Open Graph)
+  updateOGMeta(art);
+
+  // URL propre
+  const newUrl = `${window.location.pathname}?id=${art.id}`;
+  window.history.pushState({articleId: art.id}, art.title, newUrl);
+
+  // Header
+  const cat = CAT_LABELS[art.category] || { label:art.category, icon:'📄' };
+  document.getElementById('art-cat-badge').textContent = `${cat.icon} ${cat.label}`;
+  document.getElementById('art-title').textContent = art.title;
+  const date = new Date(art.updated_at).toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'});
+  document.getElementById('art-date').textContent = date;
+
+  // Temps de lecture (environ 200 mots/min)
+  const wordCount = art.content.replace(/<[^>]+>/g,'').split(/\s+/).length;
+  const readMin = Math.max(1, Math.round(wordCount / 200));
+  document.getElementById('art-read-time').textContent = `${readMin} min de lecture`;
+
+  // Corps
+  document.getElementById('art-body').innerHTML = art.content;
+
+  // Boutons de partage
+  const shareUrl = `${BASE_URL}?id=${art.id}`;
+  const shareTitle = encodeURIComponent(art.title);
+  const shareDesc = encodeURIComponent(art.excerpt || art.title);
+  const shareHTML = buildShareButtons(shareUrl, shareTitle, shareDesc);
+  document.getElementById('share-bar-top').innerHTML = shareHTML;
+  document.getElementById('share-bar-bottom').innerHTML = shareHTML;
+
+  // Articles similaires
+  renderMoreArticles(art);
+}
+
+function backToList() {
+  currentArticleId = null;
+  window.history.pushState({}, 'Blog Sarah AI', window.location.pathname);
+  resetOGMeta();
+  renderGrid(currentFilter === 'tous' ? allArticles : allArticles.filter(a => a.category === currentFilter));
+}
+
+// Gérer le bouton retour du navigateur
+window.addEventListener('popstate', (e) => {
+  if (e.state && e.state.articleId) {
+    const art = allArticles.find(a => a.id === e.state.articleId);
+    if (art) { showArticle(art); return; }
+  }
+  document.getElementById('list-view').style.display = 'block';
+  document.getElementById('article-view').style.display = 'none';
+  resetOGMeta();
+});
+
+// ══════════════════════════════════════════════════
+// OPEN GRAPH META — Partage réseaux sociaux
+// ══════════════════════════════════════════════════
+function updateOGMeta(art) {
+  const shareUrl = `${BASE_URL}?id=${art.id}`;
+  const img = art.og_image || OG_IMAGE_DEFAULT;
+
+  setMeta('og:title', art.title);
+  setMeta('og:description', art.excerpt || art.title);
+  setMeta('og:url', shareUrl);
+  setMeta('og:image', img);
+  setMeta('og:type', 'article');
+  setMeta('twitter:title', art.title);
+  setMeta('twitter:description', art.excerpt || art.title);
+  setMeta('twitter:image', img);
+  document.title = `${art.title} — Blog Sarah AI`;
+
+  // Canonical
+  let canonical = document.querySelector('link[rel="canonical"]');
+  if (!canonical) { canonical = document.createElement('link'); canonical.rel='canonical'; document.head.appendChild(canonical); }
+  canonical.href = shareUrl;
+}
+
+function resetOGMeta() {
+  document.title = 'Blog — Sarah AI | Conseils immobilier & IA';
+  setMeta('og:title','Blog Sarah AI — Conseils immobilier & IA');
+  setMeta('og:description','Conseils, actualités et insights sur l\'IA dans l\'immobilier indépendant.');
+  setMeta('og:url', BASE_URL);
+  setMeta('og:type','website');
+}
+
+function setMeta(property, content) {
+  let el = document.querySelector(`meta[property="${property}"]`) || document.querySelector(`meta[name="${property}"]`);
+  if (el) el.setAttribute('content', content);
+}
+
+// ══════════════════════════════════════════════════
+// BOUTONS DE PARTAGE
+// ══════════════════════════════════════════════════
+function buildShareButtons(url, title, desc) {
+  const encodedUrl = encodeURIComponent(url);
+  return `
+    <span class="share-label">Partager</span>
+    <button class="share-btn facebook" onclick="shareOn('facebook','${encodedUrl}','${title}')">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+      Facebook
+    </button>
+    <button class="share-btn linkedin" onclick="shareOn('linkedin','${encodedUrl}','${title}','${desc}')">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+      LinkedIn
+    </button>
+    <button class="share-btn twitter" onclick="shareOn('twitter','${encodedUrl}','${title}')">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M4 4l16 16M4 20L20 4"/></svg>
+      X / Twitter
+    </button>
+    <button class="share-btn whatsapp" onclick="shareOn('whatsapp','${encodedUrl}','${title}')">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+      WhatsApp
+    </button>
+    <button class="share-btn copy-link" onclick="copyLink('${url}',this)">
+      🔗 Copier le lien
+    </button>`;
+}
+
+function shareOn(platform, url, title, desc='') {
+  const links = {
+    facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
+    linkedin:  `https://www.linkedin.com/shareArticle?mini=true&url=${url}&title=${title}&summary=${desc}&source=Sarah+AI`,
+    twitter:   `https://twitter.com/intent/tweet?url=${url}&text=${title}+%E2%80%94+Blog+Sarah+AI`,
+    whatsapp:  `https://wa.me/?text=${title}+${url}`,
+  };
+  window.open(links[platform], '_blank', 'width=600,height=450');
+}
+
+function copyLink(url, btn) {
+  navigator.clipboard.writeText(url).then(() => {
+    btn.classList.add('copied');
+    btn.textContent = '✓ Copié !';
+    setTimeout(() => { btn.classList.remove('copied'); btn.textContent = '🔗 Copier le lien'; }, 2200);
+  });
+}
+
+// ══════════════════════════════════════════════════
+// ARTICLES SIMILAIRES
+// ══════════════════════════════════════════════════
+function renderMoreArticles(currentArt) {
+  const others = allArticles
+    .filter(a => a.id !== currentArt.id)
+    .sort((a,b) => a.category === currentArt.category ? -1 : 1)
+    .slice(0, 3);
+
+  const grid = document.getElementById('more-grid');
+  const section = document.getElementById('more-section');
+  if (!others.length) { section.style.display='none'; return; }
+  section.style.display = 'block';
+  grid.innerHTML = others.map(art => {
+    const cat = CAT_LABELS[art.category] || {label:art.category,icon:'📄'};
+    return `
+      <div class="more-card" onclick="showArticle(${JSON.stringify(art).replace(/"/g,'&quot;')})">
+        <div class="more-card-cat">${cat.icon} ${cat.label}</div>
+        <div class="more-card-title">${art.title}</div>
+      </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════════
+// NEWSLETTER
+// ══════════════════════════════════════════════════
+async function subscribeNewsletter() {
+  const email = document.getElementById('nl-email').value.trim();
+  if (!email || !email.includes('@')) { alert('Adresse email invalide'); return; }
+  try {
+    await fetch('https://agenc-ai.com/thee-api/newsletter/subscribe', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({email, source:'blog'})
+    });
+  } catch(e) {}
+  document.getElementById('nl-email').value = '';
+  const btn = document.querySelector('.nl-submit');
+  btn.textContent = '✓ Abonné !'; btn.style.background='#0d7a4e';
+  setTimeout(()=>{ btn.textContent='S\'abonner'; btn.style.background=''; }, 3000);
+}
+
+// ══════════════════════════════════════════════════
+// REVEAL ANIMATIONS
+// ══════════════════════════════════════════════════
+const io = new IntersectionObserver(entries => entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('in'); }), {threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+// ══════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════
+loadArticles();
+</script>
+</body>
+</html>
