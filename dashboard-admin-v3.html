@@ -1826,7 +1826,7 @@ async function saveArticle(forcedStatus = null) {
   // Tentative sauvegarde API
   try {
     await fetch(ARTICLES_API, {
-      method: id ? 'PUT' : 'POST',
+      method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(articleData)
     });
