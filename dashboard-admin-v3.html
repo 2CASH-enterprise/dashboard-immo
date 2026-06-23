@@ -937,6 +937,12 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--ink);font-siz
       <input class="form-input" id="article-excerpt" placeholder="Résumé en 1-2 phrases affiché sur la page blog"/>
     </div>
     <div class="form-group">
+      <label class="form-label">Image de couverture (URL)</label>
+      <input class="form-input" id="article-image" placeholder="https://images.unsplash.com/photo-xxx" oninput="previewArticleImage(this.value)"/>
+      <div style="font-size:11px;color:var(--ink-3);margin-top:4px">&#128161; Unsplash, Pexels ou toute URL publique. Id&#233;al : 1200&#215;630px pour le partage r&#233;seaux sociaux.</div>
+      <div id="article-image-preview" style="display:none;margin-top:8px;border-radius:8px;overflow:hidden"><img id="article-image-preview-img" style="width:100%;height:140px;object-fit:cover" src=""/></div>
+    </div>
+    <div class="form-group">
       <label class="form-label">Contenu</label>
       <div class="editor-toolbar">
         <button onclick="fmt('bold')" title="Gras"><strong>B</strong></button>
@@ -1770,11 +1776,15 @@ function openArticleModal(id = null) {
       document.getElementById('article-category').value = art.category;
       document.getElementById('article-status').value = art.status;
       document.getElementById('article-excerpt').value = art.excerpt || '';
+      document.getElementById('article-image').value = art.og_image || '';
+      previewArticleImage(art.og_image || '');
       document.getElementById('article-editor').innerHTML = art.content || '';
     }
   } else {
     document.getElementById('article-title').value = '';
     document.getElementById('article-excerpt').value = '';
+    document.getElementById('article-image').value = '';
+    document.getElementById('article-image-preview').style.display = 'none';
     document.getElementById('article-editor').innerHTML = '';
     document.getElementById('article-status').value = 'brouillon';
   }
@@ -1795,6 +1805,17 @@ function insertCTA() {
   document.execCommand('insertHTML', false, `<div style="text-align:center;margin:20px 0"><a href="https://calendly.com/thee-ai/30min" style="background:#1649ff;color:#fff;padding:12px 28px;border-radius:40px;text-decoration:none;font-weight:600;font-size:14px;display:inline-block">📅 Réserver une démo gratuite</a></div>`);
 }
 
+function previewArticleImage(url) {
+  const preview = document.getElementById('article-image-preview');
+  const img = document.getElementById('article-image-preview-img');
+  if (url && url.startsWith('http')) {
+    img.src = url;
+    preview.style.display = 'block';
+  } else {
+    preview.style.display = 'none';
+  }
+}
+
 async function saveArticle(forcedStatus = null) {
   const title = document.getElementById('article-title').value.trim();
   if (!title) { alert('Le titre est obligatoire'); return; }
@@ -1808,6 +1829,7 @@ async function saveArticle(forcedStatus = null) {
     title,
     category: document.getElementById('article-category').value,
     excerpt: document.getElementById('article-excerpt').value.trim(),
+    og_image: document.getElementById('article-image').value.trim() || null,
     content,
     status,
     created_at: id ? (articles.find(a => a.id === id)?.created_at || new Date().toISOString()) : new Date().toISOString(),
@@ -1826,7 +1848,7 @@ async function saveArticle(forcedStatus = null) {
   // Tentative sauvegarde API
   try {
     await fetch(ARTICLES_API, {
-      method: 'POST',
+      method: id ? 'PUT' : 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(articleData)
     });
