@@ -22,7 +22,7 @@
 body{font-family:var(--font-body);background:var(--bg);color:var(--ink);font-size:14px;line-height:1.5;min-height:100vh;display:flex}
 
 /* SIDEBAR */
-.sidebar{width:220px;min-height:100vh;background:var(--ink);display:flex;flex-direction:column;flex-shrink:0;position:sticky;top:0;height:100vh}
+.sidebar{width:220px;min-height:100vh;background:var(--ink);display:flex;flex-direction:column;flex-shrink:0;position:sticky;top:0;height:100vh;overflow-y:auto}
 .sidebar-logo{padding:24px 20px 20px;font-family:var(--font-display);font-weight:800;font-size:17px;color:#fff;letter-spacing:-.3px;border-bottom:1px solid rgba(255,255,255,.08)}
 .sidebar-logo span{color:var(--blue-mid)}
 .sidebar-section{padding:20px 12px 8px;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.25);font-weight:600}
@@ -112,6 +112,7 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--ink);font-siz
 .action-btn{background:none;border:1px solid var(--border);border-radius:6px;padding:4px 10px;font-size:11px;cursor:pointer;color:var(--ink-2);font-family:var(--font-body);transition:all .15s}
 .action-btn:hover{border-color:var(--blue);color:var(--blue)}
 .action-btn.primary{background:var(--blue-bg);border-color:var(--blue-mid);color:var(--blue)}
+.action-btn.danger{background:var(--red-bg);border-color:#f5c6c6;color:var(--red)}
 
 /* PROGRESS */
 .progress-wrap{background:var(--bg);border-radius:4px;height:6px;overflow:hidden}
@@ -139,54 +140,45 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--ink);font-siz
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
 .modal-overlay.open{opacity:1;pointer-events:all}
 .modal{background:var(--surface);border-radius:var(--radius-lg);padding:28px;width:500px;max-width:92vw;display:flex;flex-direction:column;gap:18px;box-shadow:0 8px 40px rgba(0,0,0,.15);max-height:90vh;overflow-y:auto}
+.modal-wide{width:760px}
 .modal-title{font-family:var(--font-display);font-size:17px;font-weight:700}
 .form-group{display:flex;flex-direction:column;gap:6px}
 .form-label{font-size:12px;font-weight:600;color:var(--ink-2)}
 .form-input,.form-select{padding:9px 12px;border:1px solid var(--border-2);border-radius:8px;font-size:13px;font-family:var(--font-body);color:var(--ink);background:var(--surface);outline:none;transition:border-color .15s}
 .form-input:focus,.form-select:focus{border-color:var(--blue)}
+.form-textarea{padding:10px 12px;border:1px solid var(--border-2);border-radius:8px;font-size:13px;font-family:var(--font-body);color:var(--ink);background:var(--surface);outline:none;transition:border-color .15s;resize:vertical;min-height:120px;width:100%}
+.form-textarea:focus{border-color:var(--blue)}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .modal-actions{display:flex;justify-content:flex-end;gap:10px;padding-top:4px;border-top:1px solid var(--border)}
 
-/* ══════════════════════════════════════════════════
-   SCRAPER MODULE — Google Places
-══════════════════════════════════════════════════ */
-.scraper-panel{
-  background:linear-gradient(135deg,#0f0f0f 0%,#1a1a2e 100%);
-  border-radius:var(--radius-lg);
-  padding:24px;
-  margin-bottom:18px;
-  position:relative;
-  overflow:hidden;
-}
-.scraper-panel::before{
-  content:'';position:absolute;top:-40px;right:-40px;
-  width:180px;height:180px;border-radius:50%;
-  background:rgba(22,73,255,.12);pointer-events:none;
-}
+/* EDITOR TOOLBAR */
+.editor-toolbar{display:flex;gap:4px;padding:8px 10px;background:var(--bg);border:1px solid var(--border-2);border-bottom:none;border-radius:8px 8px 0 0;flex-wrap:wrap}
+.editor-toolbar button{background:none;border:1px solid transparent;border-radius:5px;padding:4px 8px;font-size:12px;cursor:pointer;color:var(--ink-2);font-family:var(--font-body);transition:all .15s}
+.editor-toolbar button:hover{background:var(--surface);border-color:var(--border-2)}
+.editor-toolbar .sep{width:1px;background:var(--border-2);margin:0 4px}
+.editor-content{border:1px solid var(--border-2);border-radius:0 0 8px 8px;min-height:200px;padding:14px;outline:none;font-size:14px;line-height:1.7;color:var(--ink)}
+.editor-content:focus{border-color:var(--blue)}
+.editor-content h2{font-family:var(--font-display);font-size:20px;font-weight:700;margin:12px 0 6px}
+.editor-content h3{font-family:var(--font-display);font-size:16px;font-weight:700;margin:10px 0 4px}
+.editor-content p{margin:6px 0}
+.editor-content ul{margin:6px 0 6px 20px}
+.editor-content strong{font-weight:700}
+.editor-content em{font-style:italic}
+.editor-content a{color:var(--blue)}
+
+/* SCRAPER MODULE */
+.scraper-panel{background:linear-gradient(135deg,#0f0f0f 0%,#1a1a2e 100%);border-radius:var(--radius-lg);padding:24px;margin-bottom:18px;position:relative;overflow:hidden}
+.scraper-panel::before{content:'';position:absolute;top:-40px;right:-40px;width:180px;height:180px;border-radius:50%;background:rgba(22,73,255,.12);pointer-events:none}
 .scraper-title{font-family:var(--font-display);font-weight:700;font-size:15px;color:#fff;margin-bottom:4px}
 .scraper-sub{font-size:12px;color:rgba(255,255,255,.4);margin-bottom:20px}
 .scraper-form{display:grid;grid-template-columns:1fr 180px 140px auto;gap:10px;align-items:end}
 .scraper-label{font-size:11px;font-weight:600;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:.8px;margin-bottom:5px}
-.scraper-input{
-  padding:10px 14px;border-radius:8px;font-size:13px;
-  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);
-  color:#fff;outline:none;font-family:var(--font-body);width:100%;
-  transition:border-color .15s;
-}
+.scraper-input{padding:10px 14px;border-radius:8px;font-size:13px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:#fff;outline:none;font-family:var(--font-body);width:100%;transition:border-color .15s}
 .scraper-input::placeholder{color:rgba(255,255,255,.25)}
 .scraper-input:focus{border-color:rgba(22,73,255,.6);background:rgba(255,255,255,.1)}
-.scraper-select{
-  padding:10px 14px;border-radius:8px;font-size:13px;
-  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);
-  color:#fff;outline:none;font-family:var(--font-body);width:100%;cursor:pointer;
-}
+.scraper-select{padding:10px 14px;border-radius:8px;font-size:13px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:#fff;outline:none;font-family:var(--font-body);width:100%;cursor:pointer}
 .scraper-select option{background:#1a1a2e;color:#fff}
-.btn-scrape{
-  background:var(--blue);color:#fff;border:none;border-radius:8px;
-  padding:10px 18px;font-size:13px;font-weight:600;cursor:pointer;
-  font-family:var(--font-body);white-space:nowrap;height:40px;
-  display:flex;align-items:center;gap:6px;transition:opacity .15s;
-}
+.btn-scrape{background:var(--blue);color:#fff;border:none;border-radius:8px;padding:10px 18px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font-body);white-space:nowrap;height:40px;display:flex;align-items:center;gap:6px;transition:opacity .15s}
 .btn-scrape:hover{opacity:.88}
 .btn-scrape:disabled{opacity:.4;cursor:not-allowed}
 .scraper-status{margin-top:12px;font-size:12px;color:rgba(255,255,255,.4);min-height:18px;display:flex;align-items:center;gap:8px}
@@ -194,7 +186,7 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--ink);font-siz
 @keyframes spin{to{transform:rotate(360deg)}}
 .api-key-row{display:flex;align-items:center;gap:10px;margin-bottom:20px;padding:12px 14px;background:rgba(255,255,255,.05);border-radius:8px;border:1px solid rgba(255,255,255,.08)}
 .api-key-icon{font-size:16px}
-.api-key-input{flex:1;background:transparent;border:none;outline:none;font-size:12px;color:rgba(255,255,255,.6);font-family:var(--font-mono,'monospace')}
+.api-key-input{flex:1;background:transparent;border:none;outline:none;font-size:12px;color:rgba(255,255,255,.6);font-family:monospace}
 .api-key-input::placeholder{color:rgba(255,255,255,.2)}
 .api-key-label{font-size:11px;color:rgba(255,255,255,.3);white-space:nowrap}
 
@@ -220,13 +212,34 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--ink);font-siz
 .hunter-btn{background:none;border:1px solid var(--border);border-radius:6px;padding:4px 8px;font-size:11px;cursor:pointer;color:var(--ink-2);transition:all .15s;display:flex;align-items:center;gap:4px;font-family:var(--font-body)}
 .hunter-btn:hover{border-color:var(--purple);color:var(--purple)}
 .hunter-btn.found{border-color:var(--green);color:var(--green);background:var(--green-bg)}
-.import-bar{padding:14px 20px;background:var(--blue-bg);border-top:2px solid var(--blue-mid);display:flex;align-items:center;justify-content:space-between;display:none}
+.import-bar{padding:14px 20px;background:var(--blue-bg);border-top:2px solid var(--blue-mid);display:none;align-items:center;justify-content:space-between}
 .import-bar.visible{display:flex}
 .import-info{font-size:13px;color:var(--blue);font-weight:500}
 
 /* EMPTY */
 .empty{display:flex;flex-direction:column;align-items:center;gap:10px;padding:40px;color:var(--ink-3);text-align:center}
 .empty-icon{font-size:32px;opacity:.4}
+
+/* BLOG/NEWSLETTER */
+.content-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:24px}
+.content-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px;cursor:pointer;transition:all .2s;display:flex;flex-direction:column;gap:10px}
+.content-card:hover{border-color:var(--blue-mid);box-shadow:0 4px 20px rgba(22,73,255,.08)}
+.content-card-icon{font-size:28px}
+.content-card-title{font-family:var(--font-display);font-size:16px;font-weight:700}
+.content-card-sub{font-size:12px;color:var(--ink-3);line-height:1.6}
+.content-card-stats{display:flex;gap:12px;margin-top:4px}
+.content-stat{background:var(--bg);border-radius:8px;padding:8px 12px;text-align:center;flex:1}
+.content-stat-val{font-family:var(--font-display);font-size:20px;font-weight:800}
+.content-stat-lbl{font-size:10px;color:var(--ink-3);text-transform:uppercase;letter-spacing:.6px}
+.article-row{display:grid;grid-template-columns:1fr 100px 90px 110px 80px;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--border)}
+.article-row:last-child{border-bottom:none}
+.article-row:hover{background:var(--bg)}
+.nl-row{display:grid;grid-template-columns:1fr 80px 100px 110px 90px;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--border)}
+.nl-row:last-child{border-bottom:none}
+.nl-row:hover{background:var(--bg)}
+.recipients-panel{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;max-height:160px;overflow-y:auto}
+.recipient-item{display:flex;align-items:center;gap:8px;padding:5px 0;font-size:12px;border-bottom:1px solid var(--border)}
+.recipient-item:last-child{border-bottom:none}
 </style>
 </head>
 <body>
@@ -241,6 +254,8 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--ink);font-siz
   <div class="nav-item" onclick="showPage('pipeline',this)"><span class="icon">🔄</span> Pipeline</div>
   <div class="nav-item" onclick="showPage('calendrier',this)"><span class="icon">📅</span> Calendrier <span id="rdv-badge" style="display:none;background:var(--red);color:#fff;font-size:10px;padding:1px 6px;border-radius:10px;margin-left:4px"></span></div>
   <div class="nav-item" onclick="showPage('clients',this)"><span class="icon">🏢</span> Plans & Abonnements</div>
+  <div class="sidebar-section">Contenu</div>
+  <div class="nav-item" onclick="showPage('contenus',this)"><span class="icon">✍️</span> Blog & Newsletter</div>
   <div class="sidebar-section">Analyse</div>
   <div class="nav-item" onclick="showPage('conversion',this)"><span class="icon">📈</span> Conversion</div>
   <div class="nav-item" onclick="showPage('revenus',this)"><span class="icon">💶</span> Revenus</div>
@@ -305,13 +320,9 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--ink);font-siz
 
     <!-- ═══════ SCRAPER GOOGLE PLACES ═══════ -->
     <div class="page" id="page-scraper">
-
-      <!-- Panel de recherche -->
       <div class="scraper-panel">
         <div class="scraper-title">🗺️ Recherche d'agences — Google Places</div>
         <div class="scraper-sub">Trouve des agences immobilières indépendantes et importe-les directement dans ta liste de prospection</div>
-
-        <!-- Clé API -->
         <div class="api-key-row">
           <div class="api-key-icon">🔑</div>
           <div class="api-key-label">Clé API Google :</div>
@@ -319,8 +330,6 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--ink);font-siz
           <button onclick="toggleKeyVisibility()" style="background:none;border:none;color:rgba(255,255,255,.3);cursor:pointer;font-size:12px">👁</button>
           <button onclick="saveApiKey()" style="background:rgba(22,73,255,.3);border:1px solid rgba(22,73,255,.5);color:#fff;padding:4px 12px;border-radius:6px;font-size:11px;cursor:pointer;font-family:var(--font-body)">Enregistrer</button>
         </div>
-
-        <!-- Formulaire de recherche -->
         <div class="scraper-form">
           <div>
             <div class="scraper-label">Mot-clé</div>
@@ -350,7 +359,6 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--ink);font-siz
         <div class="scraper-status" id="scraper-status"></div>
       </div>
 
-      <!-- Import CSV / Excel -->
       <div class="card mb-18">
         <div class="card-header">
           <div class="card-title">📥 Importer depuis un fichier (CSV / Excel / Google Sheet)</div>
@@ -361,16 +369,12 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--ink);font-siz
               Colle directement les données copiées depuis ton Google Sheet, ou importe un fichier <strong>.csv</strong> / <strong>.xlsx</strong>.<br/>
               Colonnes attendues : <code style="background:var(--bg);padding:2px 6px;border-radius:4px;font-size:12px">Nom, Adresse, Note, Place ID</code> (ou similaire — détection automatique).
             </div>
-
             <div style="display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap">
-              <!-- Coller des données -->
               <div style="flex:1;min-width:280px;display:flex;flex-direction:column;gap:8px">
                 <label class="form-label">Coller depuis Google Sheet / Excel</label>
-                <textarea id="paste-area" placeholder="Colle ici (Cmd+V) les lignes copiées depuis ton tableau…&#10;Ex:&#10;Agence Dupont	12 rue de la Paix, Rennes	4.5	ChIJ...&#10;Immo Martin	8 avenue Foch, Rennes	4.2	ChIJ..." style="width:100%;min-height:120px;padding:10px 12px;border:1px solid var(--border-2);border-radius:8px;font-size:12px;font-family:monospace;resize:vertical;outline:none" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--border-2)'"></textarea>
+                <textarea id="paste-area" placeholder="Colle ici (Cmd+V) les lignes copiées depuis ton tableau…" style="width:100%;min-height:120px;padding:10px 12px;border:1px solid var(--border-2);border-radius:8px;font-size:12px;font-family:monospace;resize:vertical;outline:none" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--border-2)'"></textarea>
                 <button class="btn btn-primary btn-sm" style="align-self:flex-start" onclick="parsePastedData()">📋 Analyser le texte collé</button>
               </div>
-
-              <!-- Upload fichier -->
               <div style="flex:1;min-width:280px;display:flex;flex-direction:column;gap:8px">
                 <label class="form-label">Ou importe un fichier</label>
                 <div id="drop-zone" style="border:2px dashed var(--border-2);border-radius:10px;padding:28px 16px;text-align:center;cursor:pointer;transition:all .15s;display:flex;flex-direction:column;align-items:center;gap:8px" onclick="document.getElementById('file-input').click()">
@@ -381,18 +385,16 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--ink);font-siz
                 <input type="file" id="file-input" accept=".csv,.xlsx,.xls" style="display:none" onchange="handleFileImport(event)"/>
               </div>
             </div>
-
             <div id="import-status" style="font-size:12px;min-height:18px"></div>
           </div>
         </div>
       </div>
 
-      <!-- Résultats -->
       <div class="results-panel" id="results-panel">
         <div class="results-header">
           <div>
             <div class="results-count" id="results-count">0 agences trouvées</div>
-            <div style="font-size:11px;color:var(--ink-3);margin-top:2px">Coche les agences à importer dans ta liste de prospection</div>
+            <div style="font-size:11px;color:var(--ink-3);margin-top:2px">Coche les agences à importer</div>
           </div>
           <div class="results-actions">
             <label class="select-all-row">
@@ -414,12 +416,11 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--ink);font-siz
         </div>
       </div>
 
-      <!-- Tip Hunter.io -->
       <div style="background:var(--purple-bg);border:1px solid #d4cafc;border-radius:var(--radius-lg);padding:16px 20px;display:flex;gap:14px;align-items:flex-start">
         <div style="font-size:20px">💡</div>
         <div>
           <div style="font-family:var(--font-display);font-weight:700;font-size:13px;color:var(--purple);margin-bottom:4px">Trouver les emails avec Hunter.io</div>
-          <div style="font-size:12px;color:var(--ink-2);line-height:1.6">Google Places donne le téléphone et le site web, pas l'email direct. Pour chaque agence, clique sur <strong>Trouver email</strong> — ça ouvre Hunter.io avec le nom de domaine pré-rempli. 50 recherches gratuites/mois, puis 49€/mois pour 500 recherches.</div>
+          <div style="font-size:12px;color:var(--ink-2);line-height:1.6">Google Places donne le téléphone et le site web, pas l'email direct. Pour chaque agence, clique sur <strong>Trouver email</strong> — ça ouvre Hunter.io avec le nom de domaine pré-rempli.</div>
         </div>
       </div>
     </div>
@@ -429,11 +430,10 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--ink);font-siz
       <div class="kpi-row">
         <div class="kpi"><div class="kpi-label">Total liste</div><div class="kpi-val" style="color:var(--blue)" id="kpi-total">0</div><div class="kpi-sub"><span class="delta-neutral">agences cibles</span></div></div>
         <div class="kpi"><div class="kpi-label">Emails envoyés</div><div class="kpi-val" id="kpi-emails-envoyes">0</div><div class="kpi-sub"><span class="delta-neutral" id="kpi-emails-sub">aucun envoi pour l'instant</span></div></div>
-        <div class="kpi"><div class="kpi-label">Taux d'ouverture</div><div class="kpi-val" style="color:var(--green)" id="kpi-taux-ouverture">—</div><div class="kpi-sub"><span class="delta-neutral">pas encore de donnée</span></div></div>
+        <div class="kpi"><div class="kpi-label">WA envoyés</div><div class="kpi-val" style="color:var(--green)" id="kpi-wa-envoyes">0</div><div class="kpi-sub"><span class="delta-neutral">contacts WhatsApp tracés</span></div></div>
         <div class="kpi"><div class="kpi-label">À relancer</div><div class="kpi-val" style="color:var(--red)" id="kpi-a-relancer">0</div><div class="kpi-sub"><span class="delta-neutral">aucun pour l'instant</span></div></div>
       </div>
 
-      <!-- Segmentation par canal de contact -->
       <div class="card mb-18">
         <div class="card-header">
           <div class="card-title">📊 Segmentation par canal de contact</div>
@@ -448,7 +448,7 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--ink);font-siz
               <div style="font-size:11px;color:var(--ink-3);margin-top:6px">Séquence Sarah AI (Mail 1/2/3)</div>
             </div>
             <div style="background:var(--green-bg);border-radius:10px;padding:16px;cursor:pointer" onclick="filterByChannel('phone')">
-              <div style="font-size:11px;color:var(--green);text-transform:uppercase;letter-spacing:.8px;font-weight:600;margin-bottom:6px">📞 Canal Téléphone</div>
+              <div style="font-size:11px;color:var(--green);text-transform:uppercase;letter-spacing:.8px;font-weight:600;margin-bottom:6px">📞 Canal Téléphone / WA</div>
               <div style="font-family:var(--font-display);font-size:26px;font-weight:800;color:var(--green)" id="seg-phone-count">—</div>
               <div style="font-size:12px;color:var(--ink-2)" id="seg-phone-pct">— du total</div>
               <div style="font-size:11px;color:var(--ink-3);margin-top:6px">Appel ou WhatsApp direct</div>
@@ -460,21 +460,22 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--ink);font-siz
               <div style="font-size:11px;color:var(--ink-3);margin-top:6px">À enrichir manuellement</div>
             </div>
           </div>
-          <div id="channel-filter-active" style="display:none;margin-top:14px;padding:10px 14px;background:var(--amber-bg);border-radius:8px;font-size:12px;color:var(--amber);display:flex;justify-content:space-between;align-items:center">
+          <div id="channel-filter-active" style="display:none;margin-top:14px;padding:10px 14px;background:var(--amber-bg);border-radius:8px;font-size:12px;color:var(--amber);justify-content:space-between;align-items:center">
             <span id="channel-filter-label"></span>
             <button class="action-btn" onclick="clearChannelFilter()">✕ Retirer le filtre</button>
           </div>
         </div>
       </div>
+
       <div class="card mb-18">
         <div class="card-header">
           <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
             <div class="card-title">Liste de prospection</div>
             <div class="tabs" style="margin-bottom:0;border:none">
-              <div class="tab active" onclick="filterProspects('tous',this)">Tous <span style="background:var(--bg);padding:1px 6px;border-radius:10px;font-size:11px;margin-left:4px" id="tab-tous">10</span></div>
-              <div class="tab" onclick="filterProspects('relance',this)">À relancer <span style="background:var(--red-bg);color:var(--red);padding:1px 6px;border-radius:10px;font-size:11px;margin-left:4px">3</span></div>
-              <div class="tab" onclick="filterProspects('rdv',this)">RDV <span style="background:var(--blue-bg);color:var(--blue);padding:1px 6px;border-radius:10px;font-size:11px;margin-left:4px">2</span></div>
-              <div class="tab" onclick="filterProspects('signe',this)">Signés <span style="background:var(--green-bg);color:var(--green);padding:1px 6px;border-radius:10px;font-size:11px;margin-left:4px">3</span></div>
+              <div class="tab active" onclick="filterProspects('tous',this)">Tous <span style="background:var(--bg);padding:1px 6px;border-radius:10px;font-size:11px;margin-left:4px" id="tab-tous">0</span></div>
+              <div class="tab" onclick="filterProspects('relance',this)">À relancer</div>
+              <div class="tab" onclick="filterProspects('rdv',this)">RDV</div>
+              <div class="tab" onclick="filterProspects('signe',this)">Signés</div>
             </div>
           </div>
           <div style="display:flex;gap:8px;align-items:center">
@@ -484,19 +485,18 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--ink);font-siz
           </div>
         </div>
         <table class="table" id="prospects-table">
-          <thead><tr><th>Agence</th><th>Contact</th><th>Téléphone</th><th>Ville</th><th>Score</th><th>Statut</th><th>Séquence</th><th>Action</th></tr></thead>
+          <thead><tr><th>Agence</th><th>Contact</th><th>Téléphone / WA</th><th>Ville</th><th>Score</th><th>Statut</th><th>Séquence</th><th>Action</th></tr></thead>
           <tbody id="prospects-body"></tbody>
         </table>
       </div>
 
-      <!-- Panel Campagne Email -->
       <div class="card mb-18">
         <div class="card-header">
           <div class="card-title">📧 Campagne email — Sarah AI</div>
           <span style="font-size:11px;color:var(--ink-3)">Connecté à Google Sheets / Gmail via Apps Script</span>
         </div>
         <div class="card-body">
-          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px" id="campaign-stats">
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px">
             <div style="background:var(--bg);border-radius:8px;padding:12px;text-align:center">
               <div style="font-family:var(--font-display);font-size:22px;font-weight:800" id="stat-total">—</div>
               <div style="font-size:11px;color:var(--ink-3)">Total prospects</div>
@@ -514,9 +514,8 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--ink);font-siz
               <div style="font-size:11px;color:var(--ink-3)">À envoyer</div>
             </div>
           </div>
-
           <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
-            <button class="btn btn-ghost btn-sm" onclick="syncToAppsScript(10)" title="Synchronise les 10 prospects au score le plus élevé">🧪 Tester avec 10</button>
+            <button class="btn btn-ghost btn-sm" onclick="syncToAppsScript(10)">🧪 Tester avec 10</button>
             <button class="btn btn-ghost btn-sm" onclick="syncToAppsScript()">🔄 Synchroniser tout</button>
             <button class="btn btn-primary btn-sm" onclick="sendCampaignBatch()">📤 Envoyer un lot (25 max)</button>
             <button class="btn btn-ghost btn-sm" onclick="refreshCampaignStatus()">↻ Actualiser les statuts</button>
@@ -533,41 +532,29 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--ink);font-siz
         <button class="btn btn-primary btn-sm" onclick="openModal()">+ Nouvelle opportunité</button>
       </div>
       <div class="pipeline">
-        <div class="pipe-col">
-          <div class="pipe-col-header">Contacté <span class="pipe-count">0</span></div>
-        </div>
-        <div class="pipe-col">
-          <div class="pipe-col-header">Intéressé <span class="pipe-count">0</span></div>
-        </div>
-        <div class="pipe-col">
-          <div class="pipe-col-header">RDV planifié <span class="pipe-count">0</span></div>
-        </div>
-        <div class="pipe-col">
-          <div class="pipe-col-header">Démo faite <span class="pipe-count">0</span></div>
-        </div>
-        <div class="pipe-col">
-          <div class="pipe-col-header">Signé ✓ <span class="pipe-count">0</span></div>
-        </div>
+        <div class="pipe-col"><div class="pipe-col-header">Contacté <span class="pipe-count">0</span></div></div>
+        <div class="pipe-col"><div class="pipe-col-header">Intéressé <span class="pipe-count">0</span></div></div>
+        <div class="pipe-col"><div class="pipe-col-header">RDV planifié <span class="pipe-count">0</span></div></div>
+        <div class="pipe-col"><div class="pipe-col-header">Démo faite <span class="pipe-count">0</span></div></div>
+        <div class="pipe-col"><div class="pipe-col-header">Signé ✓ <span class="pipe-count">0</span></div></div>
       </div>
     </div>
 
     <!-- ═══════ CALENDRIER ═══════ -->
     <div class="page" id="page-calendrier">
-      <div id="rdv-alert-banner" style="display:none;background:var(--red-bg);border:1px solid #f5c6c6;border-radius:var(--radius-lg);padding:14px 18px;margin-bottom:18px;display:flex;align-items:center;gap:12px">
+      <div id="rdv-alert-banner" style="display:none;background:var(--red-bg);border:1px solid #f5c6c6;border-radius:var(--radius-lg);padding:14px 18px;margin-bottom:18px;align-items:center;gap:12px">
         <span style="font-size:20px">🔔</span>
         <div style="flex:1">
           <div style="font-weight:600;color:var(--red);font-size:13px" id="rdv-alert-title">Tu as des RDV aujourd'hui</div>
           <div style="font-size:12px;color:var(--ink-2)" id="rdv-alert-sub"></div>
         </div>
       </div>
-
       <div class="kpi-row">
         <div class="kpi"><div class="kpi-label">RDV ce mois</div><div class="kpi-val" style="color:var(--blue)" id="cal-kpi-mois">0</div></div>
         <div class="kpi"><div class="kpi-label">Aujourd'hui</div><div class="kpi-val" style="color:var(--red)" id="cal-kpi-today">0</div></div>
         <div class="kpi"><div class="kpi-label">Cette semaine</div><div class="kpi-val" style="color:var(--amber)" id="cal-kpi-semaine">0</div></div>
         <div class="kpi"><div class="kpi-label">RDV → Signé</div><div class="kpi-val" style="color:var(--green)" id="cal-kpi-taux">—</div></div>
       </div>
-
       <div class="card mb-18">
         <div class="card-header">
           <div style="display:flex;align-items:center;gap:12px">
@@ -578,19 +565,18 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--ink);font-siz
           <button class="btn btn-primary btn-sm" onclick="openRdvModal()">+ Ajouter un RDV</button>
         </div>
         <div class="card-body">
-          <div id="cal-grid-headers" style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:8px">
-            <div class="ts" style="text-align:center;font-weight:600">Lun</div>
-            <div class="ts" style="text-align:center;font-weight:600">Mar</div>
-            <div class="ts" style="text-align:center;font-weight:600">Mer</div>
-            <div class="ts" style="text-align:center;font-weight:600">Jeu</div>
-            <div class="ts" style="text-align:center;font-weight:600">Ven</div>
-            <div class="ts" style="text-align:center;font-weight:600">Sam</div>
-            <div class="ts" style="text-align:center;font-weight:600">Dim</div>
+          <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:8px">
+            <div style="text-align:center;font-weight:600;font-size:11px;color:var(--ink-3)">Lun</div>
+            <div style="text-align:center;font-weight:600;font-size:11px;color:var(--ink-3)">Mar</div>
+            <div style="text-align:center;font-weight:600;font-size:11px;color:var(--ink-3)">Mer</div>
+            <div style="text-align:center;font-weight:600;font-size:11px;color:var(--ink-3)">Jeu</div>
+            <div style="text-align:center;font-weight:600;font-size:11px;color:var(--ink-3)">Ven</div>
+            <div style="text-align:center;font-weight:600;font-size:11px;color:var(--ink-3)">Sam</div>
+            <div style="text-align:center;font-weight:600;font-size:11px;color:var(--ink-3)">Dim</div>
           </div>
           <div id="cal-grid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px"></div>
         </div>
       </div>
-
       <div class="card">
         <div class="card-header"><div class="card-title">Prochains rendez-vous</div></div>
         <table class="table">
@@ -603,10 +589,10 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--ink);font-siz
     <!-- ═══════ CLIENTS ═══════ -->
     <div class="page" id="page-clients">
       <div class="kpi-row">
-        <div class="kpi"><div class="kpi-label">MRR total</div><div class="kpi-val" style="color:var(--green)" id="sub-kpi-mrr">0€</div><div class="kpi-sub"><span class="delta-neutral">mensuel récurrent</span></div></div>
-        <div class="kpi"><div class="kpi-label">ARR projeté</div><div class="kpi-val" id="sub-kpi-arr">0€</div><div class="kpi-sub"><span class="delta-neutral">annualisé</span></div></div>
-        <div class="kpi"><div class="kpi-label">Plan Starter</div><div class="kpi-val" style="color:var(--blue)" id="sub-kpi-starter">0</div><div class="kpi-sub"><span class="delta-neutral">clients actifs</span></div></div>
-        <div class="kpi"><div class="kpi-label">Plan Pro</div><div class="kpi-val" style="color:var(--purple)" id="sub-kpi-pro">0</div><div class="kpi-sub"><span class="delta-neutral">clients actifs</span></div></div>
+        <div class="kpi"><div class="kpi-label">MRR total</div><div class="kpi-val" style="color:var(--green)" id="sub-kpi-mrr">0€</div></div>
+        <div class="kpi"><div class="kpi-label">ARR projeté</div><div class="kpi-val" id="sub-kpi-arr">0€</div></div>
+        <div class="kpi"><div class="kpi-label">Plan Starter</div><div class="kpi-val" style="color:var(--blue)" id="sub-kpi-starter">0</div></div>
+        <div class="kpi"><div class="kpi-label">Plan Pro</div><div class="kpi-val" style="color:var(--purple)" id="sub-kpi-pro">0</div></div>
       </div>
       <div class="card mb-18">
         <div class="card-header">
@@ -622,11 +608,112 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--ink);font-siz
       </div>
     </div>
 
+    <!-- ═══════ BLOG & NEWSLETTER ═══════ -->
+    <div class="page" id="page-contenus">
+
+      <!-- Vue d'ensemble -->
+      <div class="content-grid">
+        <div class="content-card" onclick="switchContentTab('blog')">
+          <div style="display:flex;align-items:center;gap:12px">
+            <div class="content-card-icon">📝</div>
+            <div>
+              <div class="content-card-title">Articles de blog</div>
+              <div class="content-card-sub">Crée et publie des articles directement sur ta landing page <code>agenc-ai.com/sarah/</code></div>
+            </div>
+          </div>
+          <div class="content-card-stats">
+            <div class="content-stat"><div class="content-stat-val" id="stat-articles-total" style="color:var(--blue)">0</div><div class="content-stat-lbl">Publiés</div></div>
+            <div class="content-stat"><div class="content-stat-val" id="stat-articles-draft">0</div><div class="content-stat-lbl">Brouillons</div></div>
+          </div>
+        </div>
+        <div class="content-card" onclick="switchContentTab('newsletter')">
+          <div style="display:flex;align-items:center;gap:12px">
+            <div class="content-card-icon">💌</div>
+            <div>
+              <div class="content-card-title">Newsletter</div>
+              <div class="content-card-sub">Envoie des newsletters à tes prospects et clients via <code>contact@agenc-ai.com</code></div>
+            </div>
+          </div>
+          <div class="content-card-stats">
+            <div class="content-stat"><div class="content-stat-val" id="stat-nl-sent" style="color:var(--green)">0</div><div class="content-stat-lbl">Envoyées</div></div>
+            <div class="content-stat"><div class="content-stat-val" id="stat-nl-recipients">0</div><div class="content-stat-lbl">Destinataires dispo</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabs Blog / Newsletter -->
+      <div class="tabs" id="contenus-tabs">
+        <div class="tab active" id="tab-blog" onclick="switchContentTab('blog')">📝 Articles de blog</div>
+        <div class="tab" id="tab-newsletter" onclick="switchContentTab('newsletter')">💌 Newsletter</div>
+      </div>
+
+      <!-- ── BLOG ── -->
+      <div id="panel-blog">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+          <div style="font-size:13px;color:var(--ink-2)">Les articles publiés génèrent un fichier JSON que tu intègres dans ta landing page pour afficher un blog SEO.</div>
+          <button class="btn btn-primary" onclick="openArticleModal()">✍️ Nouvel article</button>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Articles</div>
+            <div style="display:flex;gap:8px">
+              <div class="tabs" style="margin-bottom:0;border:none">
+                <div class="tab active" onclick="filterArticles('tous',this)" style="padding:6px 14px">Tous</div>
+                <div class="tab" onclick="filterArticles('publie',this)" style="padding:6px 14px">Publiés</div>
+                <div class="tab" onclick="filterArticles('brouillon',this)" style="padding:6px 14px">Brouillons</div>
+              </div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 100px 100px 120px 120px;padding:8px 16px;background:var(--bg);border-bottom:1px solid var(--border)">
+            <span style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--ink-3)">Titre</span>
+            <span style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--ink-3)">Catégorie</span>
+            <span style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--ink-3)">Statut</span>
+            <span style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--ink-3)">Date</span>
+            <span style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--ink-3)">Actions</span>
+          </div>
+          <div id="articles-list">
+            <div class="empty"><div class="empty-icon">📝</div><div class="empty-text">Aucun article encore — crée ton premier article avec le bouton ci-dessus</div></div>
+          </div>
+        </div>
+
+        <div style="margin-top:16px;background:var(--blue-bg);border:1px solid var(--blue-mid);border-radius:var(--radius-lg);padding:16px 20px;font-size:13px;color:var(--blue)">
+          💡 <strong>Comment ça marche :</strong> chaque article publié est sauvegardé en base via l'API. Pour l'afficher sur ta landing page, ajoute un appel à <code>GET /thee-api/articles</code> dans ton HTML <code>/sarah/index.html</code>.
+        </div>
+      </div>
+
+      <!-- ── NEWSLETTER ── -->
+      <div id="panel-newsletter" style="display:none">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+          <div style="font-size:13px;color:var(--ink-2)">Envoie une newsletter à tes prospects (email valide) ou clients actifs, via Apps Script / Gmail.</div>
+          <button class="btn btn-primary" onclick="openNewsletterModal()">💌 Nouvelle newsletter</button>
+        </div>
+
+        <div class="card mb-18">
+          <div class="card-header"><div class="card-title">Historique des envois</div></div>
+          <div style="display:grid;grid-template-columns:1fr 80px 120px 120px 100px;padding:8px 16px;background:var(--bg);border-bottom:1px solid var(--border)">
+            <span style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--ink-3)">Objet</span>
+            <span style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--ink-3)">Cible</span>
+            <span style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--ink-3)">Envoyés</span>
+            <span style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--ink-3)">Date</span>
+            <span style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--ink-3)">Statut</span>
+          </div>
+          <div id="newsletters-list">
+            <div class="empty"><div class="empty-icon">💌</div><div class="empty-text">Aucune newsletter envoyée pour l'instant</div></div>
+          </div>
+        </div>
+
+        <div style="background:var(--green-bg);border:1px solid #a3dac0;border-radius:var(--radius-lg);padding:16px 20px;font-size:13px;color:var(--green)">
+          💡 <strong>Expéditeur :</strong> <code>contact@agenc-ai.com</code> (alias Hostinger configuré dans Gmail). L'envoi passe par Apps Script — les destinataires sont filtrés automatiquement selon le segment choisi.
+        </div>
+      </div>
+    </div>
+
     <!-- ═══════ LANDING PAGE STATS ═══════ -->
     <div class="page" id="page-landingstats">
       <div class="kpi-row">
-        <div class="kpi"><div class="kpi-label">Visiteurs uniques</div><div class="kpi-val" style="color:var(--blue)" id="land-kpi-visitors">—</div><div class="kpi-sub"><span class="delta-neutral">total</span></div></div>
-        <div class="kpi"><div class="kpi-label">Vues totales</div><div class="kpi-val" id="land-kpi-views">—</div><div class="kpi-sub"><span class="delta-neutral">pages chargées</span></div></div>
+        <div class="kpi"><div class="kpi-label">Visiteurs uniques</div><div class="kpi-val" style="color:var(--blue)" id="land-kpi-visitors">—</div></div>
+        <div class="kpi"><div class="kpi-label">Vues totales</div><div class="kpi-val" id="land-kpi-views">—</div></div>
         <div class="kpi"><div class="kpi-label">Clics CTA</div><div class="kpi-val" style="color:var(--green)" id="land-kpi-cta">—</div><div class="kpi-sub" id="land-kpi-cta-rate">taux —</div></div>
         <div class="kpi"><div class="kpi-label">Scroll profond (90%)</div><div class="kpi-val" style="color:var(--purple)" id="land-kpi-scroll">—</div><div class="kpi-sub" id="land-kpi-scroll-rate">taux —</div></div>
       </div>
@@ -652,9 +739,6 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--ink);font-siz
           </div>
         </div>
       </div>
-      <div style="background:var(--blue-bg);border-radius:var(--radius-lg);padding:16px 20px;font-size:13px;color:var(--blue)">
-        💡 Ces statistiques proviennent du tracking en temps réel de ta landing page <strong>landing-sarah-ai.html</strong>. Chaque visite, scroll et clic CTA est enregistré automatiquement.
-      </div>
     </div>
 
     <!-- ═══════ MONITORING ═══════ -->
@@ -666,14 +750,12 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--ink);font-siz
           <div style="font-size:12px;color:var(--ink-2)" id="monitoring-status-sub"></div>
         </div>
       </div>
-
       <div class="kpi-row">
         <div class="kpi"><div class="kpi-label">Erreurs non résolues</div><div class="kpi-val" style="color:var(--red)" id="mon-kpi-unresolved">—</div></div>
         <div class="kpi"><div class="kpi-label">Dernière heure</div><div class="kpi-val" style="color:var(--amber)" id="mon-kpi-1h">—</div></div>
         <div class="kpi"><div class="kpi-label">Dernières 24h</div><div class="kpi-val" id="mon-kpi-24h">—</div></div>
         <div class="kpi"><div class="kpi-label">Leads captés (24h)</div><div class="kpi-val" style="color:var(--green)" id="mon-kpi-leads">—</div></div>
       </div>
-
       <div class="card">
         <div class="card-header">
           <div style="display:flex;align-items:center;gap:12px">
@@ -697,15 +779,15 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--ink);font-siz
     <!-- ═══════ CONVERSION ═══════ -->
     <div class="page" id="page-conversion">
       <div class="kpi-row">
-        <div class="kpi"><div class="kpi-label">Emails → Réponse</div><div class="kpi-val" style="color:var(--blue)">—</div><div class="kpi-sub"><span class="delta-neutral">pas encore de donnée</span></div></div>
-        <div class="kpi"><div class="kpi-label">Réponse → RDV</div><div class="kpi-val" style="color:var(--purple)">—</div><div class="kpi-sub"><span class="delta-neutral">pas encore de donnée</span></div></div>
-        <div class="kpi"><div class="kpi-label">RDV → Signé</div><div class="kpi-val" style="color:var(--green)">—</div><div class="kpi-sub"><span class="delta-neutral">pas encore de donnée</span></div></div>
-        <div class="kpi"><div class="kpi-label">Email → Client</div><div class="kpi-val" style="color:var(--amber)">—</div><div class="kpi-sub"><span class="delta-neutral">pas encore de donnée</span></div></div>
+        <div class="kpi"><div class="kpi-label">Emails → Réponse</div><div class="kpi-val" style="color:var(--blue)">—</div></div>
+        <div class="kpi"><div class="kpi-label">Réponse → RDV</div><div class="kpi-val" style="color:var(--purple)">—</div></div>
+        <div class="kpi"><div class="kpi-label">RDV → Signé</div><div class="kpi-val" style="color:var(--green)">—</div></div>
+        <div class="kpi"><div class="kpi-label">Email → Client</div><div class="kpi-val" style="color:var(--amber)">—</div></div>
       </div>
       <div class="card">
         <div class="card-header"><div class="card-title">Entonnoir détaillé</div></div>
         <div class="card-body">
-          <div class="empty"><div class="empty-icon">📈</div><div class="empty-text">Cette page se remplira automatiquement une fois ta première campagne lancée et tes premiers RDV/signatures enregistrés</div></div>
+          <div class="empty"><div class="empty-icon">📈</div><div class="empty-text">Cette page se remplira automatiquement une fois ta première campagne lancée</div></div>
         </div>
       </div>
     </div>
@@ -713,10 +795,10 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--ink);font-siz
     <!-- ═══════ REVENUS ═══════ -->
     <div class="page" id="page-revenus">
       <div class="kpi-row">
-        <div class="kpi"><div class="kpi-label">Revenus ce mois</div><div class="kpi-val" style="color:var(--green)">0€</div><div class="kpi-sub"><span class="delta-neutral">aucun client signé</span></div></div>
-        <div class="kpi"><div class="kpi-label">MRR</div><div class="kpi-val">0€</div><div class="kpi-sub"><span class="delta-neutral">—</span></div></div>
+        <div class="kpi"><div class="kpi-label">Revenus ce mois</div><div class="kpi-val" style="color:var(--green)">0€</div></div>
+        <div class="kpi"><div class="kpi-label">MRR</div><div class="kpi-val">0€</div></div>
         <div class="kpi"><div class="kpi-label">ARR</div><div class="kpi-val">0€</div></div>
-        <div class="kpi"><div class="kpi-label">CAC moyen</div><div class="kpi-val" style="color:var(--amber)">—</div><div class="kpi-sub"><span class="delta-neutral">pas encore de donnée</span></div></div>
+        <div class="kpi"><div class="kpi-label">CAC moyen</div><div class="kpi-val" style="color:var(--amber)">—</div></div>
       </div>
       <div class="card">
         <div class="card-header"><div class="card-title">Décomposition</div></div>
@@ -726,10 +808,14 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--ink);font-siz
       </div>
     </div>
 
-  </div>
-</div>
+  </div><!-- /content -->
+</div><!-- /main -->
 
-<!-- MODAL -->
+<!-- ══════════════════════════════════════════════════
+     MODALS
+══════════════════════════════════════════════════ -->
+
+<!-- Modal Ajouter prospect -->
 <div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
   <div class="modal" onclick="event.stopPropagation()">
     <div class="modal-title">Ajouter une agence</div>
@@ -750,15 +836,13 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--ink);font-siz
   </div>
 </div>
 
-<!-- MODAL RDV -->
+<!-- Modal RDV -->
 <div class="modal-overlay" id="rdv-modal-overlay" onclick="closeRdvModal(event)">
   <div class="modal" onclick="event.stopPropagation()">
     <div class="modal-title">Ajouter un rendez-vous</div>
     <div class="form-group">
       <label class="form-label">Agence</label>
-      <select class="form-select" id="rdv-prospect">
-        <option value="">— Sélectionner un prospect —</option>
-      </select>
+      <select class="form-select" id="rdv-prospect"><option value="">— Sélectionner un prospect —</option></select>
     </div>
     <div class="form-row">
       <div class="form-group"><label class="form-label">Date</label><input class="form-input" id="rdv-date" type="date"/></div>
@@ -772,7 +856,7 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--ink);font-siz
   </div>
 </div>
 
-<!-- MODAL ABONNEMENT -->
+<!-- Modal Abonnement -->
 <div class="modal-overlay" id="sub-modal-overlay" onclick="closeSubModal(event)">
   <div class="modal" onclick="event.stopPropagation()">
     <div class="modal-title">Nouveau client</div>
@@ -796,7 +880,7 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--ink);font-siz
   </div>
 </div>
 
-<!-- MODAL CORRECTION PROSPECT -->
+<!-- Modal Correction prospect -->
 <div class="modal-overlay" id="edit-prospect-modal-overlay" onclick="closeEditProspectModal(event)">
   <div class="modal" onclick="event.stopPropagation()">
     <div class="modal-title">Corriger les informations</div>
@@ -805,22 +889,13 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--ink);font-siz
       <label class="form-label">Nom de l'agence</label>
       <input class="form-input" id="edit-prospect-name" disabled style="opacity:.6;cursor:not-allowed"/>
     </div>
-    <div class="form-group">
-      <label class="form-label">Adresse</label>
-      <input class="form-input" id="edit-prospect-address" placeholder="12 rue de la Paix, Rennes"/>
-    </div>
+    <div class="form-group"><label class="form-label">Adresse</label><input class="form-input" id="edit-prospect-address" placeholder="12 rue de la Paix, Rennes"/></div>
     <div class="form-row">
       <div class="form-group"><label class="form-label">Ville</label><input class="form-input" id="edit-prospect-ville" placeholder="Rennes"/></div>
       <div class="form-group"><label class="form-label">Téléphone</label><input class="form-input" id="edit-prospect-phone" placeholder="06 12 34 56 78"/></div>
     </div>
-    <div class="form-group">
-      <label class="form-label">Email</label>
-      <input class="form-input" id="edit-prospect-email" type="email" placeholder="contact@agence.fr"/>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Site web</label>
-      <input class="form-input" id="edit-prospect-website" placeholder="https://agence.fr"/>
-    </div>
+    <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="edit-prospect-email" type="email" placeholder="contact@agence.fr"/></div>
+    <div class="form-group"><label class="form-label">Site web</label><input class="form-input" id="edit-prospect-website" placeholder="https://agence.fr"/></div>
     <div id="edit-prospect-feedback" style="display:none;font-size:13px;padding:10px 14px;border-radius:8px;margin-top:-8px"></div>
     <div class="modal-actions">
       <button class="btn btn-ghost" onclick="closeEditProspectModal()">Annuler</button>
@@ -829,337 +904,356 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--ink);font-siz
   </div>
 </div>
 
+<!-- ═══ MODAL ARTICLE DE BLOG ═══ -->
+<div class="modal-overlay" id="article-modal-overlay" onclick="closeArticleModal(event)">
+  <div class="modal modal-wide" onclick="event.stopPropagation()" style="width:760px">
+    <div class="modal-title" id="article-modal-title">Nouvel article</div>
+    <input type="hidden" id="article-edit-id"/>
+    <div class="form-group">
+      <label class="form-label">Titre de l'article</label>
+      <input class="form-input" id="article-title" placeholder="Ex : Comment un chatbot IA booste les leads de votre agence immobilière"/>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Catégorie</label>
+        <select class="form-select" id="article-category">
+          <option value="conseils">Conseils immobilier</option>
+          <option value="ia">Intelligence artificielle</option>
+          <option value="prospection">Prospection & commercial</option>
+          <option value="temoignage">Témoignage client</option>
+          <option value="actu">Actualité du marché</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Statut</label>
+        <select class="form-select" id="article-status">
+          <option value="brouillon">Brouillon</option>
+          <option value="publie">Publier maintenant</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Extrait (affiché dans la liste du blog)</label>
+      <input class="form-input" id="article-excerpt" placeholder="Résumé en 1-2 phrases affiché sur la page blog"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Contenu</label>
+      <div class="editor-toolbar">
+        <button onclick="fmt('bold')" title="Gras"><strong>B</strong></button>
+        <button onclick="fmt('italic')" title="Italique"><em>I</em></button>
+        <div class="sep"></div>
+        <button onclick="fmtBlock('h2')" title="Titre H2">H2</button>
+        <button onclick="fmtBlock('h3')" title="Titre H3">H3</button>
+        <div class="sep"></div>
+        <button onclick="fmt('insertUnorderedList')" title="Liste">• Liste</button>
+        <div class="sep"></div>
+        <button onclick="insertLink()" title="Lien">🔗 Lien</button>
+        <button onclick="insertCTA()" title="Bouton CTA" style="background:var(--blue-bg);border-color:var(--blue-mid);color:var(--blue);font-weight:600">+ CTA</button>
+      </div>
+      <div class="editor-content" id="article-editor" contenteditable="true" placeholder="Rédige ton article ici…"></div>
+    </div>
+    <div id="article-feedback" style="display:none;font-size:13px;padding:10px 14px;border-radius:8px"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeArticleModal()">Annuler</button>
+      <button class="btn btn-ghost" onclick="saveArticle('brouillon')">💾 Sauvegarder brouillon</button>
+      <button class="btn btn-primary" onclick="saveArticle('publie')">🚀 Publier sur la landing page</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MODAL NEWSLETTER ═══ -->
+<div class="modal-overlay" id="newsletter-modal-overlay" onclick="closeNewsletterModal(event)">
+  <div class="modal modal-wide" onclick="event.stopPropagation()" style="width:760px">
+    <div class="modal-title">Nouvelle newsletter</div>
+    <div class="form-group">
+      <label class="form-label">Objet de l'email</label>
+      <input class="form-input" id="nl-subject" placeholder="Ex : Sarah AI — Votre assistant immobilier travaille même la nuit 🌙"/>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Destinataires</label>
+        <select class="form-select" id="nl-segment" onchange="previewRecipients()">
+          <option value="email_valide">Prospects — email vérifié OK</option>
+          <option value="tous_email">Tous les prospects avec email</option>
+          <option value="clients">Clients actifs uniquement</option>
+          <option value="custom">Sélection manuelle</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Expéditeur</label>
+        <select class="form-select" id="nl-sender">
+          <option value="contact">L'équipe Sarah AI &lt;contact@agenc-ai.com&gt;</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Aperçu destinataires -->
+    <div style="background:var(--bg);border-radius:8px;padding:12px;font-size:12px">
+      <div style="font-weight:600;color:var(--ink-2);margin-bottom:6px">👥 Destinataires — <span id="nl-recipient-count" style="color:var(--blue)">0 contact(s)</span></div>
+      <div class="recipients-panel" id="nl-recipients-preview">
+        <div style="color:var(--ink-4);font-size:11px;padding:8px 0">Sélectionne un segment pour voir les destinataires</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Contenu de la newsletter</label>
+      <div class="editor-toolbar">
+        <button onclick="fmtNl('bold')"><strong>B</strong></button>
+        <button onclick="fmtNl('italic')"><em>I</em></button>
+        <div class="sep"></div>
+        <button onclick="fmtBlockNl('h2')">H2</button>
+        <button onclick="fmtBlockNl('h3')">H3</button>
+        <div class="sep"></div>
+        <button onclick="fmtNl('insertUnorderedList')">• Liste</button>
+        <div class="sep"></div>
+        <button onclick="insertNlLink()">🔗 Lien</button>
+        <button onclick="insertNlCTA()" style="background:var(--blue-bg);border-color:var(--blue-mid);color:var(--blue);font-weight:600">+ CTA</button>
+        <div class="sep"></div>
+        <button onclick="insertNlTemplate('reminder')" style="font-size:11px">📋 Template relance</button>
+        <button onclick="insertNlTemplate('announcement')" style="font-size:11px">📢 Template annonce</button>
+      </div>
+      <div class="editor-content" id="nl-editor" contenteditable="true" style="min-height:180px" placeholder="Rédige ta newsletter ici…"></div>
+    </div>
+    <div id="nl-feedback" style="display:none;font-size:13px;padding:10px 14px;border-radius:8px"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeNewsletterModal()">Annuler</button>
+      <button class="btn btn-ghost" onclick="previewNewsletter()">👁 Aperçu</button>
+      <button class="btn btn-primary" onclick="sendNewsletter()" id="nl-send-btn">📤 Envoyer la newsletter</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MODAL APERÇU NEWSLETTER ═══ -->
+<div class="modal-overlay" id="nl-preview-overlay" onclick="document.getElementById('nl-preview-overlay').classList.remove('open')">
+  <div class="modal modal-wide" onclick="event.stopPropagation()" style="width:680px">
+    <div class="modal-title">Aperçu de la newsletter</div>
+    <div id="nl-preview-body" style="border:1px solid var(--border);border-radius:8px;padding:24px;min-height:200px;font-size:14px;line-height:1.8;color:var(--ink)"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="document.getElementById('nl-preview-overlay').classList.remove('open')">Fermer</button>
+      <button class="btn btn-primary" onclick="document.getElementById('nl-preview-overlay').classList.remove('open');sendNewsletter()">📤 Confirmer l'envoi</button>
+    </div>
+  </div>
+</div>
+
 <script>
-// ── SUBSCRIPTIONS (Plans & Abonnements) ──────────────────────────────────────
+// ══════════════════════════════════════════════════
+// CONSTANTES & ÉTAT
+// ══════════════════════════════════════════════════
+const PROSPECTS_API   = "https://agenc-ai.com/thee-api/prospects";
+const SEGMENTS_API    = "https://agenc-ai.com/thee-api/prospects/segments";
 const SUBSCRIPTIONS_API = "https://agenc-ai.com/thee-api/subscriptions";
-
-function openSubModal(){
-  document.getElementById('sub-agency-name').value = '';
-  document.getElementById('sub-agency-id').value = '';
-  document.getElementById('sub-email').value = '';
-  document.getElementById('sub-plan').value = 'starter';
-  document.getElementById('sub-notes').value = '';
-  document.getElementById('sub-modal-overlay').classList.add('open');
-}
-function closeSubModal(e){
-  if(!e || e.target===document.getElementById('sub-modal-overlay')){
-    document.getElementById('sub-modal-overlay').classList.remove('open');
-  }
-}
-
-async function saveSubscription(){
-  const agencyName = document.getElementById('sub-agency-name').value.trim();
-  const agencyId = document.getElementById('sub-agency-id').value.trim();
-  if(!agencyName || !agencyId){ alert('Le nom et l\'identifiant sont obligatoires'); return; }
-
-  try{
-    const res = await fetch(SUBSCRIPTIONS_API, {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({
-        agency_id: agencyId,
-        agency_name: agencyName,
-        contact_email: document.getElementById('sub-email').value.trim() || null,
-        plan: document.getElementById('sub-plan').value,
-        notes: document.getElementById('sub-notes').value.trim() || null,
-      })
-    });
-    const result = await res.json();
-    if(result.success){
-      closeSubModal();
-      loadSubscriptions();
-    } else {
-      alert('Erreur : '+(result.error||'inconnue'));
-    }
-  }catch(e){
-    alert('Erreur de connexion : '+e.message);
-  }
-}
-
-async function loadSubscriptions(){
-  try{
-    const [listRes, summaryRes] = await Promise.all([
-      fetch(SUBSCRIPTIONS_API),
-      fetch(SUBSCRIPTIONS_API+'/summary')
-    ]);
-    const listData = await listRes.json();
-    const summary = await summaryRes.json();
-
-    document.getElementById('sub-kpi-mrr').textContent = Math.round(summary.mrr)+'€';
-    document.getElementById('sub-kpi-arr').textContent = Math.round(summary.arr)+'€';
-    document.getElementById('sub-kpi-starter').textContent = summary.starter_count;
-    document.getElementById('sub-kpi-pro').textContent = summary.pro_count;
-
-    const body = document.getElementById('subs-table-body');
-    if(!listData.subscriptions || !listData.subscriptions.length){
-      body.innerHTML = `<tr><td colspan="8"><div class="empty"><div class="empty-icon">🏢</div><div class="empty-text">Aucun client signé pour l'instant — ta première signature apparaîtra ici</div></div></td></tr>`;
-      return;
-    }
-
-    body.innerHTML = listData.subscriptions.map(s=>{
-      const planBadge = s.plan==='pro' ? '<span class="badge badge-purple">Pro</span>' : '<span class="badge badge-blue">Starter</span>';
-      const since = s.started_at ? new Date(s.started_at).toLocaleDateString('fr-FR',{day:'2-digit',month:'short',year:'numeric'}) : '—';
-      const setupBadge = s.setup_fee_paid ? '<span class="badge badge-green">✓ Payé</span>' : '<span class="badge badge-amber">En attente</span>';
-      return `<tr>
-        <td><strong>${s.agency_name}</strong><div style="font-size:11px;color:var(--ink-3)">${s.contact_email||'—'}</div></td>
-        <td>${planBadge}</td>
-        <td style="font-size:12px;color:var(--ink-3)">${since}</td>
-        <td><strong>${s.leads_count}</strong></td>
-        <td><strong>${s.rdv_count}</strong></td>
-        <td>${setupBadge}</td>
-        <td><strong>${Math.round(s.monthly_price)}€</strong></td>
-        <td><button class="action-btn" onclick="toggleSetupPaid('${s.id}', ${!s.setup_fee_paid})">${s.setup_fee_paid?'Annuler setup':'Marquer setup payé'}</button></td>
-      </tr>`;
-    }).join('');
-  }catch(e){
-    console.log('Erreur chargement abonnements:', e);
-  }
-}
-
-async function toggleSetupPaid(subId, newValue){
-  try{
-    await fetch(`${SUBSCRIPTIONS_API}/${subId}`, {
-      method:'PATCH',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({setup_fee_paid: newValue})
-    });
-    loadSubscriptions();
-  }catch(e){ console.log('Erreur update setup:', e); }
-}
-
-// ── LANDING PAGE STATS ────────────────────────────────────────────────────────
 const TRACK_STATS_API = "https://agenc-ai.com/thee-api/track/stats";
+const MONITORING_API  = "https://agenc-ai.com/thee-api/monitoring";
+const CAMPAIGN_API    = "https://script.google.com/macros/s/AKfycbwYUimK9EnHxBY3wCudAAF4LagLlBOVnZsMkM1JNjlBU0-3REUhiVv7WJihMFoUIOFl/exec";
+const ARTICLES_API    = "https://agenc-ai.com/thee-api/articles";  // à créer côté backend
+const CORS            = "https://agenc-ai.com/proxy/";
 
-async function loadLandingStats(){
-  try{
-    const res = await fetch(TRACK_STATS_API);
-    const s = await res.json();
+let prospects       = [];
+let nextId          = 100;
+let currentFilter   = 'tous';
+let searchQuery     = '';
+let currentChannelFilter = null;
+let searchResults   = [];
+let selectedResults = new Set();
+let articles        = JSON.parse(localStorage.getItem('sarah_articles') || '[]');
+let newsletters     = JSON.parse(localStorage.getItem('sarah_newsletters') || '[]');
+let articleFilter   = 'tous';
 
-    document.getElementById('land-kpi-visitors').textContent = s.unique_visitors;
-    document.getElementById('land-kpi-views').textContent = s.total_views;
-    document.getElementById('land-kpi-cta').textContent = s.cta_clicks;
-    document.getElementById('land-kpi-cta-rate').textContent = `taux ${s.cta_rate}%`;
-    document.getElementById('land-kpi-scroll').textContent = s.deep_scroll;
-    document.getElementById('land-kpi-scroll-rate').textContent = `taux ${s.deep_scroll_rate}%`;
-    document.getElementById('land-kpi-demo').textContent = s.demo_started;
-    document.getElementById('land-kpi-cta-rate-big').textContent = s.cta_rate+'%';
-    document.getElementById('land-kpi-scroll-rate-big').textContent = s.deep_scroll_rate+'%';
-  }catch(e){
-    console.log('Erreur chargement stats landing:', e);
-  }
+// ══════════════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════════════
+const pageTitles = {
+  dashboard:'Dashboard', prospection:'Prospection', scraper:'Chercher agences — Google Places',
+  pipeline:'Pipeline CRM', calendrier:'Calendrier des RDV', clients:'Plans & Abonnements',
+  contenus:'Blog & Newsletter', conversion:'Analyse conversion', revenus:'Revenus',
+  landingstats:'Landing page — Fréquentation', monitoring:'Monitoring système'
+};
+
+function showPage(name, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  if (el) el.classList.add('active');
+  document.getElementById('page-title').textContent = pageTitles[name] || name;
+  if (name === 'prospection' || name === 'dashboard') refreshCampaignStatus();
+  if (name === 'prospection') { renderProspects(); loadSegments(); }
+  if (name === 'calendrier') { renderCalendar(); renderRdvList(); }
+  if (name === 'clients') loadSubscriptions();
+  if (name === 'landingstats') loadLandingStats();
+  if (name === 'monitoring') loadMonitoring();
+  if (name === 'contenus') { renderArticles(); renderNewsletters(); updateContentStats(); }
 }
 
-// ── MONITORING ────────────────────────────────────────────────────────────────
-const MONITORING_API = "https://agenc-ai.com/thee-api/monitoring";
-let currentErrorFilter = 'tous';
+// ══════════════════════════════════════════════════
+// WHATSAPP — LOG CONTACT MANUEL
+// ══════════════════════════════════════════════════
+const VILLES_MAROC = ['casablanca','rabat','marrakech','tanger','fès','fes','agadir','meknès','meknes','oujda','kenitra','tétouan','tetouan'];
 
-async function loadMonitoring(){
-  try{
-    const [healthRes, errorsRes] = await Promise.all([
-      fetch(`${MONITORING_API}/health-summary`),
-      fetch(`${MONITORING_API}/errors`)
-    ]);
-    const health = await healthRes.json();
-    const errorsData = await errorsRes.json();
-
-    document.getElementById('mon-kpi-unresolved').textContent = health.unresolved_errors;
-    document.getElementById('mon-kpi-1h').textContent = health.errors_last_hour;
-    document.getElementById('mon-kpi-24h').textContent = health.errors_last_24h;
-    document.getElementById('mon-kpi-leads').textContent = health.leads_last_24h;
-
-    const banner = document.getElementById('monitoring-status-banner');
-    const icon = document.getElementById('monitoring-status-icon');
-    const title = document.getElementById('monitoring-status-title');
-    const sub = document.getElementById('monitoring-status-sub');
-
-    if(health.status === 'ok'){
-      banner.style.background = 'var(--green-bg)';
-      icon.textContent = '✅';
-      title.textContent = 'Tout fonctionne normalement';
-      title.style.color = 'var(--green)';
-      sub.textContent = `${health.pageviews_last_24h} vues landing et ${health.leads_last_24h} leads captés sur les dernières 24h`;
-    } else if(health.status === 'attention'){
-      banner.style.background = 'var(--amber-bg)';
-      icon.textContent = '⚠️';
-      title.textContent = 'Quelques erreurs détectées';
-      title.style.color = 'var(--amber)';
-      sub.textContent = `${health.unresolved_errors} erreur(s) non résolue(s) à vérifier`;
-    } else {
-      banner.style.background = 'var(--red-bg)';
-      icon.textContent = '🔴';
-      title.textContent = 'Attention — activité d\'erreurs élevée';
-      title.style.color = 'var(--red)';
-      sub.textContent = `${health.errors_last_hour} erreur(s) dans la dernière heure`;
-    }
-
-    // Badge dans le menu
-    const badge = document.getElementById('health-badge');
-    if(health.unresolved_errors > 0){
-      badge.textContent = health.unresolved_errors;
-      badge.style.display = 'inline-block';
-    } else {
-      badge.style.display = 'none';
-    }
-
-    window._allErrors = errorsData.errors || [];
-    renderErrors();
-  }catch(e){
-    console.log('Erreur chargement monitoring:', e);
-  }
+function detecterIndicatifPays(ville) {
+  if (!ville) return '33';
+  const v = ville.toLowerCase().trim();
+  return VILLES_MAROC.some(m => v.includes(m)) ? '212' : '33';
 }
 
-function renderErrors(){
-  const body = document.getElementById('errors-table-body');
-  let errors = window._allErrors || [];
-  if(currentErrorFilter === 'non-resolues') errors = errors.filter(e=>!e.resolved);
+function formatPhoneForWhatsApp(phone, ville) {
+  if (!phone) return '';
+  let c = phone.replace(/[\s.\-()]/g, '');
+  if (c.startsWith('+')) return c.replace(/^\+/, '');
+  if (c.startsWith('00')) return c.slice(2);
+  const ind = detecterIndicatifPays(ville);
+  if (c.startsWith('0')) c = c.slice(1);
+  return ind + c;
+}
 
-  if(!errors.length){
-    body.innerHTML = `<tr><td colspan="6"><div class="empty"><div class="empty-icon">✅</div><div class="empty-text">Aucune erreur — tout va bien</div></div></td></tr>`;
+function logWhatsApp(id) {
+  const p = prospects.find(x => x.id == id);
+  if (!p) return;
+  const notes = prompt(`✅ Confirmer le contact WhatsApp avec ${p.name}\n\nNotes rapides (facultatif) :`);
+  if (notes === null) return; // annulé
+
+  const now = new Date().toISOString();
+  p.wa_contacted_at = now;
+  p.wa_notes = notes || '';
+  p.seq = 'WA ' + new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' });
+
+  // Mise à jour en base
+  fetch(`${PROSPECTS_API}/${id}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ wa_contacted_at: now, wa_notes: p.wa_notes, seq: p.seq })
+  }).catch(e => console.log('PATCH WA error:', e));
+
+  renderProspects();
+}
+
+// ══════════════════════════════════════════════════
+// PROSPECTION — RENDER
+// ══════════════════════════════════════════════════
+const statusConfig = {
+  signe:   { label: 'Signé ✓',      cls: 'badge-green'  },
+  rdv:     { label: 'RDV planifié', cls: 'badge-blue'   },
+  relance: { label: 'À relancer',   cls: 'badge-amber'  },
+  contacte:{ label: 'Contacté',     cls: 'badge-gray'   },
+};
+const seqNext = { contacte:'Envoyer J5', relance:'Envoyer J10', rdv:'Préparer démo', signe:'Onboarding' };
+
+function renderProspects() {
+  const body = document.getElementById('prospects-body');
+  let data = [...prospects];
+  if (currentFilter !== 'tous') data = data.filter(p => p.status === currentFilter);
+  if (searchQuery) data = data.filter(p =>
+    (p.name||'').toLowerCase().includes(searchQuery) ||
+    (p.ville||'').toLowerCase().includes(searchQuery)
+  );
+  if (currentChannelFilter === 'email') data = data.filter(p => p.email && p.email.trim());
+  if (currentChannelFilter === 'phone') data = data.filter(p => (!p.email || !p.email.trim()) && p.phone && p.phone.trim());
+  data.sort((a, b) => (b.score || 0) - (a.score || 0));
+
+  document.getElementById('kpi-total').textContent = prospects.length;
+  document.getElementById('tab-tous').textContent = prospects.length;
+
+  // KPI WA
+  const waCount = prospects.filter(p => p.wa_contacted_at).length;
+  const waEl = document.getElementById('kpi-wa-envoyes');
+  if (waEl) waEl.textContent = waCount;
+
+  if (!data.length) {
+    body.innerHTML = `<tr><td colspan="8"><div class="empty"><div class="empty-icon">📭</div><div class="empty-text">Aucune agence dans ce filtre</div></div></td></tr>`;
     return;
   }
 
-  body.innerHTML = errors.map(e=>{
-    const date = e.created_at ? new Date(e.created_at).toLocaleString('fr-FR',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}) : '—';
+  body.innerHTML = data.map(p => {
+    const s = statusConfig[p.status] || statusConfig.contacte;
+    const score = p.score || 0;
+    const scoreColor = score >= 70 ? 'var(--green)' : score >= 40 ? 'var(--amber)' : 'var(--ink-3)';
+    const scoreBg = score >= 70 ? 'var(--green-bg)' : score >= 40 ? 'var(--amber-bg)' : 'var(--bg)';
+    const domain = p.website ? p.website.replace(/^https?:\/\//, '').replace(/^www\./, '').split('/')[0] : '';
+    const waFormatted = formatPhoneForWhatsApp(p.phone, p.ville);
+    const waDateLabel = p.wa_contacted_at
+      ? new Date(p.wa_contacted_at).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' })
+      : null;
+
     return `<tr>
-      <td><span class="badge badge-gray">${e.source}</span></td>
-      <td style="font-size:12px;font-weight:600">${e.error_type}</td>
-      <td style="font-size:12px;color:var(--ink-2);max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${e.message}">${e.message}</td>
-      <td style="font-size:11px;color:var(--ink-3)">${date}</td>
-      <td>${e.resolved?'<span class="badge badge-green">Résolu</span>':'<span class="badge badge-red">Ouvert</span>'}</td>
-      <td>${!e.resolved?`<button class="action-btn" onclick="resolveError('${e.id}')">Marquer résolu</button>`:'—'}</td>
-    </tr>`;
-  }).join('');
-}
-
-function filterErrors(filter, el){
-  currentErrorFilter = filter;
-  document.querySelectorAll('#page-monitoring .tab').forEach(t=>t.classList.remove('active'));
-  el.classList.add('active');
-  renderErrors();
-}
-
-async function resolveError(errorId){
-  try{
-    await fetch(`${MONITORING_API}/errors/${errorId}/resolve`, {method:'PATCH'});
-    loadMonitoring();
-  }catch(e){ console.log('Erreur résolution:', e); }
-}
-
-let prospects = [];
-let nextId = 11;
-let currentFilter = 'tous';
-let searchQuery = '';
-let currentChannelFilter = null; // null | 'email' | 'phone'
-let apiKey = '';
-let searchResults = [];
-let selectedResults = new Set();
-
-const statusConfig = {
-  signe:{label:'Signé ✓',cls:'badge-green'},
-  rdv:{label:'RDV planifié',cls:'badge-blue'},
-  relance:{label:'À relancer',cls:'badge-amber'},
-  contacte:{label:'Contacté',cls:'badge-gray'},
-};
-const seqNext = {contacte:'Envoyer J5',relance:'Envoyer J10',rdv:'Préparer démo',signe:'Onboarding'};
-
-// ── NAVIGATION ───────────────────────────────────────────────────────────────
-const pageTitles = {dashboard:'Dashboard',prospection:'Prospection',scraper:'Chercher agences — Google Places',pipeline:'Pipeline CRM',calendrier:'Calendrier des RDV',clients:'Plans & Abonnements',conversion:'Analyse conversion',revenus:'Revenus',landingstats:'Landing page — Fréquentation',monitoring:'Monitoring système'};
-function showPage(name,el){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.getElementById('page-'+name).classList.add('active');
-  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-  if(el) el.classList.add('active');
-  document.getElementById('page-title').textContent = pageTitles[name]||name;
-  if(name==='prospection') renderProspects();
-}
-
-// ── PROSPECTION ──────────────────────────────────────────────────────────────
-// Nettoie un numéro de téléphone et le formate pour un lien wa.me (format international sans + ni espaces)
-// Villes marocaines connues — sert à déterminer l'indicatif pays
-const VILLES_MAROC = ['casablanca', 'rabat', 'marrakech', 'tanger', 'fès', 'fes', 'agadir', 'meknès', 'meknes', 'oujda', 'kenitra', 'tétouan', 'tetouan'];
-
-function detecterIndicatifPays(ville){
-  if(!ville) return '33'; // France par défaut
-  const villeNorm = ville.toLowerCase().trim();
-  if(VILLES_MAROC.some(v => villeNorm.includes(v))) return '212'; // Maroc
-  return '33'; // France par défaut
-}
-
-function formatPhoneForWhatsApp(phone, ville){
-  if(!phone) return '';
-  let cleaned = phone.replace(/[\s.\-()]/g, '');
-
-  // Si le numéro a déjà un indicatif international (+33, +212, etc.), on le garde tel quel
-  if(cleaned.startsWith('+')){
-    return cleaned.replace(/^\+/, '');
-  }
-  if(cleaned.startsWith('00')){
-    return cleaned.slice(2);
-  }
-
-  // Sinon, on déduit l'indicatif depuis la ville du prospect
-  const indicatif = detecterIndicatifPays(ville);
-
-  // Retire le 0 initial (format national) avant d'ajouter l'indicatif
-  if(cleaned.startsWith('0')) cleaned = cleaned.slice(1);
-
-  return indicatif + cleaned;
-}
-
-function renderProspects(){
-  const body = document.getElementById('prospects-body');
-  let data = prospects;
-  if(currentFilter!=='tous') data=data.filter(p=>p.status===currentFilter);
-  if(searchQuery) data=data.filter(p=>p.name.toLowerCase().includes(searchQuery)||p.ville.toLowerCase().includes(searchQuery));
-  if(currentChannelFilter==='email') data=data.filter(p=>p.email && p.email.trim());
-  if(currentChannelFilter==='phone') data=data.filter(p=>(!p.email || !p.email.trim()) && p.phone && p.phone.trim());
-  data = [...data].sort((a,b)=>(b.score||0)-(a.score||0));
-  document.getElementById('kpi-total').textContent = prospects.length;
-  document.getElementById('tab-tous').textContent = prospects.length;
-  if(!data.length){body.innerHTML=`<tr><td colspan="7"><div class="empty"><div class="empty-icon">📭</div><div class="empty-text">Aucune agence dans ce filtre</div></div></td></tr>`;return;}
-  body.innerHTML = data.map(p=>{
-    const s = statusConfig[p.status];
-    const score = p.score||0;
-    const scoreColor = score>=70?'var(--green)':score>=40?'var(--amber)':'var(--ink-3)';
-    const scoreBg = score>=70?'var(--green-bg)':score>=40?'var(--amber-bg)':'var(--bg)';
-    const domain = p.website ? p.website.replace(/^https?:\/\//,'').replace(/^www\./,'').split('/')[0] : '';
-    return `<tr>
-      <td><strong>${p.name}</strong>${p.source==='google'?'<span class="badge badge-purple" style="margin-left:6px;font-size:10px">Maps</span>':''}${p.address?`<div style="font-size:11px;color:var(--ink-3)">${p.address}</div>`:''}</td>
-      <td>${p.contact||'—'}<div style="font-size:11px;color:var(--ink-3)">${p.email||'<em style="color:var(--ink-4)">aucun</em>'}</div></td>
-      <td>${p.phone?`<div style="font-size:12px">${p.phone}</div><a href="https://wa.me/${formatPhoneForWhatsApp(p.phone, p.ville)}" target="_blank" style="font-size:11px;color:var(--green);text-decoration:none">💬 WhatsApp</a>`:'<span style="color:var(--ink-4)">—</span>'}</td>
+      <td>
+        <strong>${p.name}</strong>
+        ${p.source === 'google' ? '<span class="badge badge-purple" style="margin-left:6px;font-size:10px">Maps</span>' : ''}
+        ${p.address ? `<div style="font-size:11px;color:var(--ink-3)">${p.address}</div>` : ''}
+      </td>
+      <td>
+        ${p.contact || '—'}
+        <div style="font-size:11px;color:var(--ink-3)">${p.email || '<em style="color:var(--ink-4)">aucun email</em>'}</div>
+      </td>
+      <td>
+        ${p.phone ? `
+          <div style="font-size:12px">${p.phone}</div>
+          <div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:3px">
+            <a href="https://wa.me/${waFormatted}" target="_blank"
+               style="font-size:11px;color:var(--green);text-decoration:none;white-space:nowrap">
+              💬 Ouvrir WA
+            </a>
+            ${waDateLabel
+              ? `<span style="font-size:10px;color:var(--green);background:var(--green-bg);border-radius:4px;padding:1px 6px;white-space:nowrap">
+                   ✅ ${waDateLabel}${p.wa_notes ? ' — ' + p.wa_notes.substring(0, 20) : ''}
+                 </span>`
+              : `<button class="action-btn" style="font-size:10px;padding:2px 7px" onclick="logWhatsApp('${p.id}')">
+                   ✅ Marquer envoyé
+                 </button>`
+            }
+          </div>
+        ` : '<span style="color:var(--ink-4)">—</span>'}
+      </td>
       <td>${p.ville}</td>
-      <td><span style="display:inline-flex;align-items:center;justify-content:center;min-width:32px;padding:3px 8px;border-radius:20px;font-size:12px;font-weight:700;color:${scoreColor};background:${scoreBg}">${score}</span></td>
+      <td>
+        <span style="display:inline-flex;align-items:center;justify-content:center;min-width:32px;padding:3px 8px;border-radius:20px;font-size:12px;font-weight:700;color:${scoreColor};background:${scoreBg}">
+          ${score}
+        </span>
+      </td>
       <td><span class="badge ${s.cls}">${s.label}</span></td>
-      <td><span style="font-size:12px;color:var(--ink-3)">${p.seq}</span></td>
-      <td style="display:flex;gap:6px;flex-wrap:wrap">
-        <button class="action-btn primary" onclick="nextAction('${p.id}')">${seqNext[p.status]}</button>
-        ${domain?`<button class="action-btn" onclick="window.open('https://hunter.io/domain-search?domain=${domain}','_blank')" title="Chercher l'email sur Hunter.io">🔍 Hunter</button>`:''}
-        <button class="action-btn" onclick='openEditProspectModal("${p.id}")' title="Corriger les informations">✏️ Corriger</button>
+      <td><span style="font-size:12px;color:var(--ink-3)">${p.seq || '—'}</span></td>
+      <td style="display:flex;gap:4px;flex-wrap:wrap">
+        <button class="action-btn primary" onclick="nextAction('${p.id}')">${seqNext[p.status] || '→'}</button>
+        ${domain ? `<button class="action-btn" onclick="window.open('https://hunter.io/domain-search?domain=${domain}','_blank')">🔍 Hunter</button>` : ''}
+        <button class="action-btn" onclick="openEditProspectModal('${p.id}')">✏️</button>
       </td>
     </tr>`;
   }).join('');
 }
-function filterProspects(f,el){
-  currentFilter=f;
-  document.querySelectorAll('#page-prospection .tab').forEach(t=>t.classList.remove('active'));
+
+function filterProspects(f, el) {
+  currentFilter = f;
+  document.querySelectorAll('#page-prospection .tab').forEach(t => t.classList.remove('active'));
   el.classList.add('active');
   renderProspects();
 }
-function searchProspects(v){searchQuery=v.toLowerCase();renderProspects();}
-function nextAction(id){
-  const p=prospects.find(x=>x.id===id);if(!p)return;
-  const next={contacte:'relance',relance:'rdv',rdv:'signe',signe:'signe'};
-  p.status=next[p.status];
-  if(p.status==='relance') p.seq+='+J5';
-  if(p.status==='rdv') p.seq+='+J10';
+function searchProspects(v) { searchQuery = v.toLowerCase(); renderProspects(); }
+function nextAction(id) {
+  const p = prospects.find(x => x.id == id); if (!p) return;
+  const next = { contacte:'relance', relance:'rdv', rdv:'signe', signe:'signe' };
+  p.status = next[p.status];
+  renderProspects();
+}
+function filterByChannel(channel) {
+  currentChannelFilter = channel;
+  const banner = document.getElementById('channel-filter-active');
+  const label = document.getElementById('channel-filter-label');
+  banner.style.display = 'flex';
+  label.textContent = channel === 'email'
+    ? '📧 Affichage filtré : prospects avec email exploitable'
+    : '📞 Affichage filtré : prospects sans email, contactables par téléphone / WA';
+  renderProspects();
+}
+function clearChannelFilter() {
+  currentChannelFilter = null;
+  document.getElementById('channel-filter-active').style.display = 'none';
   renderProspects();
 }
 
-// ── CORRECTION MANUELLE DES INFORMATIONS PROSPECT ────────────────────────────
-function openEditProspectModal(id){
-  const p = prospects.find(x=>x.id===id);
-  if(!p){ alert('Prospect introuvable'); return; }
-
+// ══════════════════════════════════════════════════
+// CORRECTION PROSPECT
+// ══════════════════════════════════════════════════
+function openEditProspectModal(id) {
+  const p = prospects.find(x => x.id == id);
+  if (!p) { alert('Prospect introuvable'); return; }
   document.getElementById('edit-prospect-id').value = p.id;
   document.getElementById('edit-prospect-name').value = p.name || '';
   document.getElementById('edit-prospect-address').value = p.address || '';
@@ -1170,808 +1264,817 @@ function openEditProspectModal(id){
   document.getElementById('edit-prospect-feedback').style.display = 'none';
   document.getElementById('edit-prospect-modal-overlay').classList.add('open');
 }
-
-function closeEditProspectModal(e){
-  if(!e || e.target===document.getElementById('edit-prospect-modal-overlay')){
+function closeEditProspectModal(e) {
+  if (!e || e.target === document.getElementById('edit-prospect-modal-overlay'))
     document.getElementById('edit-prospect-modal-overlay').classList.remove('open');
-  }
 }
-
-async function saveProspectEdit(){
+async function saveProspectEdit() {
   const id = document.getElementById('edit-prospect-id').value;
   const feedback = document.getElementById('edit-prospect-feedback');
-
   const payload = {
     address: document.getElementById('edit-prospect-address').value.trim() || null,
-    ville: document.getElementById('edit-prospect-ville').value.trim() || null,
-    phone: document.getElementById('edit-prospect-phone').value.trim() || null,
-    email: document.getElementById('edit-prospect-email').value.trim() || null,
+    ville:   document.getElementById('edit-prospect-ville').value.trim() || null,
+    phone:   document.getElementById('edit-prospect-phone').value.trim() || null,
+    email:   document.getElementById('edit-prospect-email').value.trim() || null,
     website: document.getElementById('edit-prospect-website').value.trim() || null,
   };
-  // Retire les champs vides pour ne pas écraser une donnée existante par du vide involontairement
-  Object.keys(payload).forEach(k => { if(!payload[k]) delete payload[k]; });
-
-  try{
+  Object.keys(payload).forEach(k => { if (!payload[k]) delete payload[k]; });
+  try {
     const res = await fetch(`${PROSPECTS_API}/${id}`, {
-      method: 'PATCH',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify(payload)
+      method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
     });
     const result = await res.json();
-
-    if(result.success){
-      feedback.style.display = 'block';
-      feedback.style.background = 'var(--green-bg)';
-      feedback.style.color = 'var(--green)';
+    if (result.success) {
+      feedback.style.display = 'block'; feedback.style.background = 'var(--green-bg)'; feedback.style.color = 'var(--green)';
       feedback.textContent = '✅ Informations mises à jour';
-
-      // Met à jour aussi la donnée locale pour un rafraîchissement immédiat sans rechargement
-      const p = prospects.find(x=>x.id===id);
-      if(p){ Object.assign(p, payload); }
-
-      setTimeout(()=>{
-        closeEditProspectModal();
-        renderProspects();
-        loadSegments();
-      }, 700);
+      const p = prospects.find(x => x.id == id);
+      if (p) Object.assign(p, payload);
+      setTimeout(() => { closeEditProspectModal(); renderProspects(); loadSegments(); }, 700);
     } else {
-      feedback.style.display = 'block';
-      feedback.style.background = 'var(--red-bg)';
-      feedback.style.color = 'var(--red)';
+      feedback.style.display = 'block'; feedback.style.background = 'var(--red-bg)'; feedback.style.color = 'var(--red)';
       feedback.textContent = '❌ Erreur : ' + (result.error || 'inconnue');
     }
-  }catch(e){
-    feedback.style.display = 'block';
-    feedback.style.background = 'var(--red-bg)';
-    feedback.style.color = 'var(--red)';
+  } catch (e) {
+    feedback.style.display = 'block'; feedback.style.background = 'var(--red-bg)'; feedback.style.color = 'var(--red)';
     feedback.textContent = '❌ Erreur de connexion : ' + e.message;
   }
 }
 
-// ── MODAL MANUEL ─────────────────────────────────────────────────────────────
-function openModal(){document.getElementById('modal-overlay').classList.add('open');}
-function closeModalDirect(){document.getElementById('modal-overlay').classList.remove('open');}
-function closeModal(e){if(e.target===document.getElementById('modal-overlay'))closeModalDirect();}
-function addProspectManual(){
-  const name=document.getElementById('m-name').value.trim();
-  const ville=document.getElementById('m-ville').value.trim();
-  if(!name||!ville){alert('Nom et ville requis');return;}
-  prospects.push({id:nextId++,name,contact:document.getElementById('m-contact').value.trim(),email:document.getElementById('m-email').value.trim(),ville,status:'contacte',seq:'À envoyer',ouvert:false,source:'manuel'});
-  closeModalDirect();
-  renderProspects();
-  document.querySelectorAll('#modal-overlay .form-input').forEach(i=>i.value='');
+// ══════════════════════════════════════════════════
+// MODAL PROSPECT MANUEL
+// ══════════════════════════════════════════════════
+function openModal() { document.getElementById('modal-overlay').classList.add('open'); }
+function closeModalDirect() { document.getElementById('modal-overlay').classList.remove('open'); }
+function closeModal(e) { if (e.target === document.getElementById('modal-overlay')) closeModalDirect(); }
+function addProspectManual() {
+  const name = document.getElementById('m-name').value.trim();
+  const ville = document.getElementById('m-ville').value.trim();
+  if (!name || !ville) { alert('Nom et ville requis'); return; }
+  prospects.push({
+    id: nextId++, name, contact: document.getElementById('m-contact').value.trim(),
+    email: document.getElementById('m-email').value.trim(), ville, status: 'contacte',
+    seq: 'À envoyer', ouvert: false, source: 'manuel', wa_contacted_at: null, wa_notes: ''
+  });
+  closeModalDirect(); renderProspects();
+  document.querySelectorAll('#modal-overlay .form-input').forEach(i => i.value = '');
 }
 
-// ── GOOGLE PLACES SCRAPER ─────────────────────────────────────────────────────
-function saveApiKey(){
-  apiKey = document.getElementById('api-key-input').value.trim();
-  if(apiKey) setStatus('✅ Clé API enregistrée','rgba(13,122,78,.8)');
-  else setStatus('⚠️ Clé vide','rgba(192,57,43,.8)');
-}
-function toggleKeyVisibility(){
-  const inp=document.getElementById('api-key-input');
-  inp.type = inp.type==='password'?'text':'password';
-}
-function setStatus(msg,color='rgba(255,255,255,.4)'){
-  const el=document.getElementById('scraper-status');
-  el.style.color=color;
-  el.innerHTML=msg;
-}
-
-const CORS = "https://agenc-ai.com/proxy/";
-
-function saveApiKey(){
+// ══════════════════════════════════════════════════
+// SCRAPER GOOGLE PLACES
+// ══════════════════════════════════════════════════
+function saveApiKey() {
   const k = document.getElementById('api-key-input').value.trim();
-  if(k){ localStorage.setItem('gkey', k); setStatus('✅ Clé API enregistrée','rgba(13,122,78,.8)'); }
+  if (k) { localStorage.setItem('gkey', k); setStatus('✅ Clé API enregistrée', 'rgba(13,122,78,.8)'); }
 }
-function toggleKeyVisibility(){
-  const inp=document.getElementById('api-key-input');
-  inp.type = inp.type==='password'?'text':'password';
+function toggleKeyVisibility() {
+  const inp = document.getElementById('api-key-input');
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+}
+function setStatus(msg, color = 'rgba(255,255,255,.4)') {
+  const el = document.getElementById('scraper-status');
+  el.style.color = color; el.innerHTML = msg;
 }
 async function gFetch(url) {
   const path = url.replace('https://maps.googleapis.com/', '');
   const res = await fetch(CORS + path);
   return res.json();
 }
-
-async function searchPlaces(){
+async function searchPlaces() {
   let GKEY = localStorage.getItem('gkey') || '';
-  if(!GKEY){
+  if (!GKEY) {
     const k = document.getElementById('api-key-input')?.value.trim();
-    if(k){ GKEY = k; localStorage.setItem('gkey', GKEY); }
+    if (k) { GKEY = k; localStorage.setItem('gkey', GKEY); }
     else { alert("Entre ta clé API Google Places d'abord"); return; }
   }
-  const keyword = document.getElementById('search-keyword').value.trim()||'agence immobilière';
+  const keyword = document.getElementById('search-keyword').value.trim() || 'agence immobilière';
   const location = document.getElementById('search-location').value.trim();
-  if(!location){alert('Entre une ville ou zone');return;}
+  if (!location) { alert('Entre une ville ou zone'); return; }
   const radius = document.getElementById('search-radius').value;
-
   const btn = document.getElementById('search-btn');
-  btn.disabled=true;
-  btn.innerHTML='<div class="spinner"></div> Recherche…';
-  setStatus('<div class="spinner" style="border-color:rgba(255,255,255,.2);border-top-color:rgba(255,255,255,.7)"></div> Géolocalisation de '+location+'…');
-
+  btn.disabled = true; btn.innerHTML = '<div class="spinner"></div> Recherche…';
+  setStatus('<div class="spinner" style="border-color:rgba(255,255,255,.2);border-top-color:rgba(255,255,255,.7)"></div> Géolocalisation de ' + location + '…');
   try {
-    // 1. Géocoder la ville
-    const geoUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(location)}&key=${GKEY}`;
-    const geoData = await gFetch(geoUrl);
-    if(!geoData.results?.length) throw new Error('Ville introuvable. Essaie "Lyon" ou "Bordeaux".');
-    const {lat,lng} = geoData.results[0].geometry.location;
-    setStatus('<div class="spinner" style="border-color:rgba(255,255,255,.2);border-top-color:rgba(255,255,255,.7)"></div> Recherche des agences dans un rayon de '+radius/1000+'km…');
-
-    // 2. Places Nearby Search
-    const placesUrl = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lng}&radius=${radius}&keyword=${encodeURIComponent(keyword)}&type=real_estate_agency&key=${GKEY}`;
-    const placesData = await gFetch(placesUrl);
-
-    if(placesData.status==='REQUEST_DENIED') throw new Error('Clé API refusée.');
-    if(placesData.status==='ZERO_RESULTS'){setStatus('Aucun résultat. Essaie un rayon plus grand.');btn.disabled=false;btn.innerHTML='<span>🔍</span> Rechercher';return;}
-
-    searchResults = placesData.results.map(p=>({
-      place_id: p.place_id,
-      name: p.name,
-      address: p.vicinity||'',
-      phone: '',
-      website: '',
-      rating: p.rating||0,
-      user_ratings_total: p.user_ratings_total||0,
-      email: '',
-    }));
-
-    // 3. Détails pour chaque lieu
-    const toDetail = searchResults.slice(0,10);
+    const geoData = await gFetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(location)}&key=${GKEY}`);
+    if (!geoData.results?.length) throw new Error('Ville introuvable.');
+    const { lat, lng } = geoData.results[0].geometry.location;
+    setStatus('<div class="spinner" style="border-color:rgba(255,255,255,.2);border-top-color:rgba(255,255,255,.7)"></div> Recherche dans un rayon de ' + radius / 1000 + 'km…');
+    const placesData = await gFetch(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lng}&radius=${radius}&keyword=${encodeURIComponent(keyword)}&type=real_estate_agency&key=${GKEY}`);
+    if (placesData.status === 'REQUEST_DENIED') throw new Error('Clé API refusée.');
+    if (placesData.status === 'ZERO_RESULTS') { setStatus('Aucun résultat. Essaie un rayon plus grand.'); btn.disabled = false; btn.innerHTML = '<span>🔍</span> Rechercher'; return; }
+    searchResults = placesData.results.map(p => ({ place_id: p.place_id, name: p.name, address: p.vicinity || '', phone: '', website: '', rating: p.rating || 0, user_ratings_total: p.user_ratings_total || 0, email: '' }));
+    const toDetail = searchResults.slice(0, 10);
     setStatus(`<div class="spinner" style="border-color:rgba(255,255,255,.2);border-top-color:rgba(255,255,255,.7)"></div> Récupération des détails (${toDetail.length} agences)…`);
-    await Promise.all(toDetail.map(async (p)=>{
-      try{
-        const dUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${p.place_id}&fields=formatted_phone_number,website&key=${GKEY}`;
-        const dData = await gFetch(dUrl);
-        if(dData.result){
-          p.phone = dData.result.formatted_phone_number||'';
-          p.website = dData.result.website ? dData.result.website.replace(/^https?:\/\//,'').replace(/\/$/,'') : '';
-        }
-      }catch(e){}
+    await Promise.all(toDetail.map(async p => {
+      try {
+        const dData = await gFetch(`https://maps.googleapis.com/maps/api/place/details/json?place_id=${p.place_id}&fields=formatted_phone_number,website&key=${GKEY}`);
+        if (dData.result) { p.phone = dData.result.formatted_phone_number || ''; p.website = dData.result.website ? dData.result.website.replace(/^https?:\/\//, '').replace(/\/$/, '') : ''; }
+      } catch (e) {}
     }));
-
     renderResults(searchResults, location);
-    setStatus(`✅ ${searchResults.length} agences trouvées à ${location}. Coche celles à importer.`,'rgba(13,122,78,.9)');
-  } catch(err){
-    setStatus('❌ '+err.message,'rgba(192,57,43,.9)');
+    setStatus(`✅ ${searchResults.length} agences trouvées à ${location}.`, 'rgba(13,122,78,.9)');
+  } catch (err) {
+    setStatus('❌ ' + err.message, 'rgba(192,57,43,.9)');
   } finally {
-    btn.disabled=false;
-    btn.innerHTML='<span>🔍</span> Rechercher';
+    btn.disabled = false; btn.innerHTML = '<span>🔍</span> Rechercher';
   }
 }
-
-function renderResults(results, location){
+function renderResults(results, location) {
   const panel = document.getElementById('results-panel');
   const list = document.getElementById('results-list');
-  const count = document.getElementById('results-count');
-  selectedResults.clear();
-  panel.classList.add('visible');
-  count.textContent = results.length+' agences trouvées à '+location;
-
-  list.innerHTML = results.map((r,i)=>{
-    const stars = r.rating ? '★'.repeat(Math.round(r.rating))+'☆'.repeat(5-Math.round(r.rating)) : '—';
+  selectedResults.clear(); panel.classList.add('visible');
+  document.getElementById('results-count').textContent = results.length + ' agences trouvées à ' + location;
+  list.innerHTML = results.map((r, i) => {
+    const stars = r.rating ? '★'.repeat(Math.round(r.rating)) + '☆'.repeat(5 - Math.round(r.rating)) : '—';
     const domain = r.website ? r.website.split('/')[0] : '';
     return `<div class="result-row" id="rrow-${i}">
       <input type="checkbox" class="result-checkbox" data-idx="${i}" onchange="toggleResult(${i},this.checked)"/>
-      <div>
-        <div class="result-name">${r.name}</div>
-        <div class="result-addr">${r.address}</div>
-      </div>
-      <div class="result-phone">${r.phone||'—'}</div>
-      <div><span class="stars">${stars}</span>${r.rating?`<span style="font-size:11px;color:var(--ink-3);margin-left:4px">${r.rating} (${r.user_ratings_total})</span>`:''}</div>
-      <div class="result-web" title="${r.website}">${r.website||'—'}</div>
-      <div>${r.email?`<span class="badge badge-green" style="font-size:10px">✓ ${r.email}</span>`:'<span style="font-size:11px;color:var(--ink-4)">—</span>'}</div>
-      <div style="display:flex;gap:6px;flex-wrap:wrap">
-        ${domain?`<button class="hunter-btn" id="hunter-${i}" onclick="findEmail(${i},'${domain}')">🔍 Email</button>`:''}
+      <div><div class="result-name">${r.name}</div><div class="result-addr">${r.address}</div></div>
+      <div class="result-phone">${r.phone || '—'}</div>
+      <div><span class="stars">${stars}</span>${r.rating ? `<span style="font-size:11px;color:var(--ink-3);margin-left:4px">${r.rating} (${r.user_ratings_total})</span>` : ''}</div>
+      <div class="result-web" title="${r.website}">${r.website || '—'}</div>
+      <div>${r.email ? `<span class="badge badge-green" style="font-size:10px">✓ ${r.email}</span>` : '<span style="font-size:11px;color:var(--ink-4)">—</span>'}</div>
+      <div style="display:flex;gap:4px;flex-wrap:wrap">
+        ${domain ? `<button class="hunter-btn" id="hunter-${i}" onclick="findEmail(${i},'${domain}')">🔍 Email</button>` : ''}
         <button class="action-btn" onclick="quickImport(${i})">+ Importer</button>
       </div>
     </div>`;
   }).join('');
   updateImportBar();
 }
+function toggleResult(idx, checked) { checked ? selectedResults.add(idx) : selectedResults.delete(idx); document.getElementById('rrow-' + idx).classList.toggle('selected', checked); updateImportBar(); }
+function toggleSelectAll(checked) { searchResults.forEach((_, i) => { const cb = document.querySelector(`[data-idx="${i}"]`); if (cb) { cb.checked = checked; toggleResult(i, checked); } }); }
+function updateImportBar() { const n = selectedResults.size; const bar = document.getElementById('import-bar'); if (n > 0) { bar.classList.add('visible'); document.getElementById('import-info').textContent = n + ' agence' + (n > 1 ? 's' : '') + ' sélectionnée' + (n > 1 ? 's' : ''); } else bar.classList.remove('visible'); }
+function clearSelection() { selectedResults.clear(); document.querySelectorAll('.result-checkbox').forEach(cb => cb.checked = false); document.querySelectorAll('.result-row').forEach(r => r.classList.remove('selected')); document.getElementById('select-all').checked = false; updateImportBar(); }
+function findEmail(idx, domain) { const btn = document.getElementById('hunter-' + idx); btn.innerHTML = '⏳'; setTimeout(() => { window.open(`https://hunter.io/domain-search?domain=${domain}`, '_blank'); btn.classList.add('found'); btn.innerHTML = '🔗 Hunter'; }, 400); }
+function quickImport(idx) { const r = searchResults[idx]; importOneResult(r); const row = document.getElementById('rrow-' + idx); row.style.opacity = '.4'; row.style.pointerEvents = 'none'; const btn = row.querySelector('.action-btn'); if (btn) { btn.textContent = '✓ Importé'; btn.classList.add('primary'); } }
+function importSelected() { selectedResults.forEach(idx => importOneResult(searchResults[idx])); const n = selectedResults.size; clearSelection(); showPage('prospection', document.querySelector('[onclick*=prospection]')); setTimeout(() => alert(`✅ ${n} agence${n > 1 ? 's' : ''} importée${n > 1 ? 's' : ''} dans ta liste !`), 100); }
+function importOneResult(r) { if (prospects.find(p => p.name === r.name)) return; prospects.push({ id: nextId++, name: r.name, contact: '—', email: r.email || '', phone: r.phone || '', ville: r.address.split(',').pop().trim() || '—', website: r.website || '', status: 'contacte', seq: 'À envoyer', ouvert: false, source: 'google', rating: r.rating, wa_contacted_at: null, wa_notes: '' }); }
+function exportCSV() { if (!searchResults.length) return; const rows = [['Nom','Adresse','Téléphone','Site web','Note','Email'], ...searchResults.map(r => [r.name, r.address, r.phone, r.website, r.rating, r.email])]; const csv = rows.map(r => r.map(v => '"' + (v || '').toString().replace(/"/g, '""') + '"').join(',')).join('\n'); const a = document.createElement('a'); a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent('\uFEFF' + csv); a.download = 'agences.csv'; a.click(); }
 
-function toggleResult(idx, checked){
-  checked ? selectedResults.add(idx) : selectedResults.delete(idx);
-  document.getElementById('rrow-'+idx).classList.toggle('selected',checked);
-  updateImportBar();
-}
-function toggleSelectAll(checked){
-  searchResults.forEach((_,i)=>{
-    const cb=document.querySelector(`[data-idx="${i}"]`);
-    if(cb){cb.checked=checked;toggleResult(i,checked);}
-  });
-}
-function updateImportBar(){
-  const bar=document.getElementById('import-bar');
-  const info=document.getElementById('import-info');
-  const n=selectedResults.size;
-  if(n>0){bar.classList.add('visible');info.textContent=n+' agence'+(n>1?'s':'')+' sélectionnée'+(n>1?'s':'');}
-  else bar.classList.remove('visible');
-}
-function clearSelection(){
-  selectedResults.clear();
-  document.querySelectorAll('.result-checkbox').forEach(cb=>cb.checked=false);
-  document.querySelectorAll('.result-row').forEach(r=>r.classList.remove('selected'));
-  document.getElementById('select-all').checked=false;
-  updateImportBar();
-}
-
-function findEmail(idx, domain){
-  const btn=document.getElementById('hunter-'+idx);
-  btn.innerHTML='⏳';
-  // Ouvre Hunter.io avec le domaine pré-rempli
-  setTimeout(()=>{
-    window.open(`https://hunter.io/domain-search?domain=${domain}`,'_blank');
-    btn.classList.add('found');
-    btn.innerHTML='🔗 Hunter';
-  },400);
-}
-
-function quickImport(idx){
-  const r = searchResults[idx];
-  importOneResult(r);
-  const row=document.getElementById('rrow-'+idx);
-  row.style.opacity='.4';
-  row.style.pointerEvents='none';
-  // mini feedback
-  const btn=row.querySelector('.action-btn');
-  if(btn){btn.textContent='✓ Importé';btn.classList.add('primary');}
-}
-
-function importSelected(){
-  selectedResults.forEach(idx=>importOneResult(searchResults[idx]));
-  const n=selectedResults.size;
-  clearSelection();
-  showPage('prospection',document.querySelector('[onclick*=prospection]'));
-  setTimeout(()=>alert(`✅ ${n} agence${n>1?'s':''} importée${n>1?'s':''} dans ta liste de prospection !`),100);
-}
-
-function importOneResult(r){
-  // Éviter les doublons
-  if(prospects.find(p=>p.name===r.name)) return;
-  prospects.push({
-    id:nextId++,
-    name:r.name,
-    contact:'—',
-    email:r.email||'',
-    phone:r.phone||'',
-    ville:r.address.split(',').pop().trim()||'—',
-    website:r.website||'',
-    status:'contacte',
-    seq:'À envoyer',
-    ouvert:false,
-    source:'google',
-    rating:r.rating,
-  });
-}
-
-function exportCSV(){
-  if(!searchResults.length) return;
-  const rows=[['Nom','Adresse','Téléphone','Site web','Note','Email'],...searchResults.map(r=>[r.name,r.address,r.phone,r.website,r.rating,r.email])];
-  const csv=rows.map(r=>r.map(v=>'"'+(v||'').toString().replace(/"/g,'""')+'"').join(',')).join('\n');
-  const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,'+encodeURIComponent('\uFEFF'+csv);a.download='agences-google-places.csv';a.click();
-}
-
-// ── CHARTS ────────────────────────────────────────────────────────────────────
-function renderBarChart(id,data,color){
-  const el=document.getElementById(id);if(!el)return;
-  const max=Math.max(...data.map(d=>d.val));
-  el.innerHTML=data.map(d=>{
-    const pct=max?Math.round((d.val/max)*100):0;
-    return `<div class="bar-col"><div class="bar-val">${d.val}</div><div class="bar" style="height:${Math.max(pct,4)}%;background:${color};opacity:${0.4+0.6*(d.val/(max||1))}"></div><div class="bar-lbl">${d.label}</div></div>`;
-  }).join('');
-}
-renderBarChart('activity-chart',[{label:'Lun',val:0},{label:'Mar',val:0},{label:'Mer',val:0},{label:'Jeu',val:0},{label:'Ven',val:0},{label:'Sam',val:0},{label:'Dim',val:0}],'var(--blue)');
-
-// ── IMPORT CSV / EXCEL / PASTE ───────────────────────────────────────────────
-function detectColumns(headerRow){
-  const map = {name:-1, address:-1, rating:-1, place_id:-1, phone:-1, email:-1, ville:-1, site:-1};
-  headerRow.forEach((h,i)=>{
-    const v = (h||'').toString().toLowerCase().trim();
-    if(/nom|name|agence/.test(v) && map.name===-1) map.name=i;
-    else if(/adresse|address|vicinity/.test(v) && map.address===-1) map.address=i;
-    else if(/note|rating|avis/.test(v) && map.rating===-1) map.rating=i;
-    else if(/place.?id/.test(v) && map.place_id===-1) map.place_id=i;
-    else if(/t[ée]l|phone/.test(v) && map.phone===-1) map.phone=i;
-    else if(/email|mail/.test(v) && map.email===-1) map.email=i;
-    else if(/ville|city/.test(v) && map.ville===-1) map.ville=i;
-    else if(/site|web/.test(v) && map.site===-1) map.site=i;
+// ══════════════════════════════════════════════════
+// IMPORT CSV / PASTE
+// ══════════════════════════════════════════════════
+function detectColumns(headerRow) {
+  const map = { name:-1, address:-1, rating:-1, place_id:-1, phone:-1, email:-1, ville:-1, site:-1 };
+  headerRow.forEach((h, i) => {
+    const v = (h || '').toString().toLowerCase().trim();
+    if (/nom|name|agence/.test(v) && map.name === -1) map.name = i;
+    else if (/adresse|address|vicinity/.test(v) && map.address === -1) map.address = i;
+    else if (/note|rating|avis/.test(v) && map.rating === -1) map.rating = i;
+    else if (/place.?id/.test(v) && map.place_id === -1) map.place_id = i;
+    else if (/t[ée]l|phone/.test(v) && map.phone === -1) map.phone = i;
+    else if (/email|mail/.test(v) && map.email === -1) map.email = i;
+    else if (/ville|city/.test(v) && map.ville === -1) map.ville = i;
+    else if (/site|web/.test(v) && map.site === -1) map.site = i;
   });
   return map;
 }
-
-async function rowsToProspectsAndImport(rows){
-  if(!rows.length){return 0;}
-  const firstRow = rows[0].map(c=>(c||'').toString().toLowerCase());
-  const looksLikeHeader = firstRow.some(c=>/nom|name|adresse|address|note|rating|place.?id/.test(c));
-  const map = detectColumns(rows[0]);
+async function rowsToProspectsAndImport(rows) {
+  if (!rows.length) return 0;
+  const firstRow = rows[0].map(c => (c || '').toString().toLowerCase());
+  const looksLikeHeader = firstRow.some(c => /nom|name|adresse|address|note|rating|place.?id/.test(c));
+  const map = looksLikeHeader ? detectColumns(rows[0]) : { name:0, address:1, rating:2, place_id:3, phone:-1, email:-1, ville:-1, site:-1 };
   const dataRows = looksLikeHeader ? rows.slice(1) : rows;
-  const useMap = looksLikeHeader ? map : {name:0,address:1,rating:2,place_id:3,phone:-1,email:-1,ville:-1,site:-1};
-
   const toImport = [];
-  dataRows.forEach(r=>{
-    const name = useMap.name>=0 ? r[useMap.name] : '';
-    if(!name || !name.toString().trim()) return;
-
-    const address = (useMap.address>=0 ? (r[useMap.address]||'') : '').toString().trim();
-    const ville = useMap.ville>=0 ? (r[useMap.ville]||'') : (address.split(',').pop()||'').trim();
-
-    // Déduplication précise : nom + adresse (deux agences au même nom mais
-    // adresses différentes restent distinctes). Sans adresse, on retombe sur nom+ville.
-    const isDuplicate = address
-      ? prospects.find(p=>p.name===name && p.address===address)
-      : prospects.find(p=>p.name===name && p.ville===ville);
-    if(isDuplicate) return;
-
-    const newP = {
-      id:nextId++,
-      name: name.toString().trim(),
-      address: address,
-      contact: '—',
-      email: useMap.email>=0 ? (r[useMap.email]||'') : '',
-      phone: useMap.phone>=0 ? (r[useMap.phone]||'') : '',
-      ville: ville || '—',
-      website: useMap.site>=0 ? (r[useMap.site]||'') : '',
-      status:'contacte',
-      seq:'À envoyer',
-      ouvert:false,
-      source:'import',
-      rating: useMap.rating>=0 ? (r[useMap.rating]||'') : '',
-    };
-
-    prospects.push(newP);
-    toImport.push(newP);
+  dataRows.forEach(r => {
+    const name = map.name >= 0 ? r[map.name] : '';
+    if (!name || !name.toString().trim()) return;
+    const address = (map.address >= 0 ? (r[map.address] || '') : '').toString().trim();
+    const ville = map.ville >= 0 ? (r[map.ville] || '') : (address.split(',').pop() || '').trim();
+    const isDuplicate = address ? prospects.find(p => p.name === name && p.address === address) : prospects.find(p => p.name === name && p.ville === ville);
+    if (isDuplicate) return;
+    const newP = { id: nextId++, name: name.toString().trim(), address, contact: '—', email: map.email >= 0 ? (r[map.email] || '') : '', phone: map.phone >= 0 ? (r[map.phone] || '') : '', ville: ville || '—', website: map.site >= 0 ? (r[map.site] || '') : '', status: 'contacte', seq: 'À envoyer', ouvert: false, source: 'import', rating: map.rating >= 0 ? (r[map.rating] || '') : '', wa_contacted_at: null, wa_notes: '' };
+    prospects.push(newP); toImport.push(newP);
   });
-
-  // Sauvegarde en base PostgreSQL via l'API
-  if(toImport.length){
-    try{
-      await fetch(`${PROSPECTS_API}/import`, {
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({prospects: toImport.map(p=>({
-          name:p.name, address:p.address, contact:p.contact, email:p.email, phone:p.phone,
-          ville:p.ville, website:p.website, rating:p.rating, source:p.source
-        }))})
-      });
-    }catch(e){ console.log('Erreur sauvegarde API:', e); }
+  if (toImport.length) {
+    try {
+      await fetch(`${PROSPECTS_API}/import`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prospects: toImport.map(p => ({ name:p.name, address:p.address, contact:p.contact, email:p.email, phone:p.phone, ville:p.ville, website:p.website, rating:p.rating, source:p.source })) }) });
+    } catch (e) { console.log('Erreur API import:', e); }
   }
-  const count = toImport.length;
-  return count;
+  return toImport.length;
 }
-
-function setImportStatus(msg, color='var(--ink-3)'){
-  const el = document.getElementById('import-status');
-  el.style.color = color;
-  el.textContent = msg;
-}
-
-async function parsePastedData(){
+function setImportStatus(msg, color = 'var(--ink-3)') { const el = document.getElementById('import-status'); el.style.color = color; el.textContent = msg; }
+async function parsePastedData() {
   const raw = document.getElementById('paste-area').value;
-  if(!raw.trim()){setImportStatus('⚠️ Colle d\'abord des données dans la zone de texte','var(--amber)');return;}
-  const sep = raw.includes('\t') ? '\t' : (raw.split('\n')[0].split(',').length>1 ? ',' : '\t');
-  const rows = raw.trim().split('\n').map(line=>line.split(sep).map(c=>c.trim()));
+  if (!raw.trim()) { setImportStatus('⚠️ Colle d\'abord des données', 'var(--amber)'); return; }
+  const sep = raw.includes('\t') ? '\t' : ',';
+  const rows = raw.trim().split('\n').map(line => line.split(sep).map(c => c.trim()));
   setImportStatus('⏳ Import en cours…');
   const count = await rowsToProspectsAndImport(rows);
-  if(count>0){
-    setImportStatus(`✅ ${count} agence${count>1?'s':''} importée${count>1?'s':''} dans ta liste de prospection !`,'var(--green)');
-    document.getElementById('paste-area').value='';
-    setTimeout(()=>showPage('prospection',document.querySelector('[onclick*=prospection]')),900);
-  } else {
-    setImportStatus('Aucune nouvelle agence trouvée (déjà présentes ou format non reconnu)','var(--amber)');
-  }
+  if (count > 0) { setImportStatus(`✅ ${count} agence${count > 1 ? 's' : ''} importée${count > 1 ? 's' : ''} !`, 'var(--green)'); document.getElementById('paste-area').value = ''; setTimeout(() => showPage('prospection', document.querySelector('[onclick*=prospection]')), 900); }
+  else setImportStatus('Aucune nouvelle agence (déjà présentes ou format non reconnu)', 'var(--amber)');
 }
-
-function parseCSV(text){
-  const sep = text.split('\n')[0].includes(';') ? ';' : ',';
-  return text.trim().split('\n').map(line=>line.split(sep).map(c=>c.replace(/^"|"$/g,'').trim()));
-}
-
-function handleFileImport(event){
-  const file = event.target.files[0];
-  if(!file) return;
+function parseCSV(text) { const sep = text.split('\n')[0].includes(';') ? ';' : ','; return text.trim().split('\n').map(line => line.split(sep).map(c => c.replace(/^"|"$/g, '').trim())); }
+function handleFileImport(event) {
+  const file = event.target.files[0]; if (!file) return;
   setImportStatus('⏳ Lecture du fichier…');
   const ext = file.name.split('.').pop().toLowerCase();
-  const reader = new FileReader();
-
-  if(ext === 'csv'){
-    reader.onload = async (e)=>{
-      const rows = parseCSV(e.target.result);
-      setImportStatus('⏳ Import en cours… (peut prendre du temps pour beaucoup de lignes)');
-      const count = await rowsToProspectsAndImport(rows);
-      if(count>0){
-        setImportStatus(`✅ ${count} agence${count>1?'s':''} importée${count>1?'s':''} depuis ${file.name} !`,'var(--green)');
-        setTimeout(()=>showPage('prospection',document.querySelector('[onclick*=prospection]')),900);
-      } else {
-        setImportStatus('Aucune nouvelle agence trouvée dans ce fichier','var(--amber)');
-      }
-    };
+  if (ext === 'csv') {
+    const reader = new FileReader();
+    reader.onload = async e => { const rows = parseCSV(e.target.result); const count = await rowsToProspectsAndImport(rows); if (count > 0) { setImportStatus(`✅ ${count} agence${count > 1 ? 's' : ''} importée${count > 1 ? 's' : ''} !`, 'var(--green)'); setTimeout(() => showPage('prospection', document.querySelector('[onclick*=prospection]')), 900); } else setImportStatus('Aucune nouvelle agence trouvée', 'var(--amber)'); };
     reader.readAsText(file, 'UTF-8');
-  } else if(ext === 'xlsx' || ext === 'xls'){
-    setImportStatus('⚠️ Pour les fichiers Excel, exporte d\'abord en CSV (Fichier → Télécharger → CSV), ou copie-colle directement les cellules dans la zone de texte ci-dessus.','var(--amber)');
-  } else {
-    setImportStatus('Format non supporté — utilise .csv ou colle le texte directement','var(--red)');
-  }
+  } else if (ext === 'xlsx' || ext === 'xls') {
+    setImportStatus('⚠️ Pour Excel, exporte d\'abord en CSV ou colle directement les cellules.', 'var(--amber)');
+  } else setImportStatus('Format non supporté', 'var(--red)');
   event.target.value = '';
 }
-
-document.addEventListener('DOMContentLoaded', ()=>{
-  const dz = document.getElementById('drop-zone');
-  if(!dz) return;
-  ['dragover','dragenter'].forEach(ev=>dz.addEventListener(ev, e=>{e.preventDefault();dz.style.borderColor='var(--blue)';dz.style.background='var(--blue-bg)';}));
-  ['dragleave','drop'].forEach(ev=>dz.addEventListener(ev, e=>{e.preventDefault();dz.style.borderColor='var(--border-2)';dz.style.background='transparent';}));
-  dz.addEventListener('drop', e=>{
-    const file = e.dataTransfer.files[0];
-    if(file){ handleFileImport({target:{files:[file], value:''}}); }
-  });
+document.addEventListener('DOMContentLoaded', () => {
+  const dz = document.getElementById('drop-zone'); if (!dz) return;
+  ['dragover','dragenter'].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); dz.style.borderColor = 'var(--blue)'; dz.style.background = 'var(--blue-bg)'; }));
+  ['dragleave','drop'].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); dz.style.borderColor = 'var(--border-2)'; dz.style.background = 'transparent'; }));
+  dz.addEventListener('drop', e => { const file = e.dataTransfer.files[0]; if (file) handleFileImport({ target: { files: [file], value: '' } }); });
 });
 
-// ── CAMPAGNE EMAIL — Connexion Apps Script ───────────────────────────────────
-const CAMPAIGN_API = "https://script.google.com/macros/s/AKfycbwYUimK9EnHxBY3wCudAAF4LagLlBOVnZsMkM1JNjlBU0-3REUhiVv7WJihMFoUIOFl/exec";
-
-function setCampaignStatus(msg, color='var(--ink-3)'){
-  const el = document.getElementById('campaign-status');
-  if(el){ el.style.color = color; el.innerHTML = msg; }
+// ══════════════════════════════════════════════════
+// CAMPAGNE EMAIL
+// ══════════════════════════════════════════════════
+function setCampaignStatus(msg, color = 'var(--ink-3)') { const el = document.getElementById('campaign-status'); if (el) { el.style.color = color; el.innerHTML = msg; } }
+async function campaignFetch(action, params = {}, method = 'GET', body = null) {
+  const url = new URL(CAMPAIGN_API); url.searchParams.set('action', action);
+  Object.entries(params).forEach(([k, v]) => url.searchParams.set(k, v));
+  const opts = { method }; if (body) { opts.method = 'POST'; opts.headers = { 'Content-Type': 'text/plain' }; opts.body = JSON.stringify(body); }
+  const res = await fetch(url.toString(), opts); return res.json();
 }
-
-async function campaignFetch(action, params={}, method='GET', body=null){
-  const url = new URL(CAMPAIGN_API);
-  url.searchParams.set('action', action);
-  Object.entries(params).forEach(([k,v])=>url.searchParams.set(k,v));
-
-  const opts = { method };
-  if(body){
-    opts.method = 'POST';
-    opts.headers = {'Content-Type':'text/plain'};
-    opts.body = JSON.stringify(body);
-  }
-  const res = await fetch(url.toString(), opts);
-  return res.json();
-}
-
-async function syncToAppsScript(limit){
-  setCampaignStatus('<div class="spinner" style="border-color:var(--border);border-top-color:var(--blue);width:12px;height:12px;display:inline-block;vertical-align:middle;margin-right:6px"></div> Synchronisation en cours…');
+async function syncToAppsScript(limit) {
+  setCampaignStatus('<span style="display:inline-flex;align-items:center;gap:6px"><span style="width:12px;height:12px;border:2px solid var(--border);border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite;display:inline-block"></span> Synchronisation…</span>');
   try {
-    let toSync = prospects.filter(p=>p.email)
-      .sort((a,b)=>(b.score||0)-(a.score||0))
-      .map(p=>({name:p.name, email:p.email, ville:p.ville, score:p.score||0}));
-
-    if(limit && limit>0) toSync = toSync.slice(0, limit);
-
-    if(!toSync.length){ setCampaignStatus('⚠️ Aucun prospect avec email à synchroniser','var(--amber)'); return; }
-
-    const result = await campaignFetch('sync', {}, 'POST', {prospects: toSync});
-    if(result.success){
-      setCampaignStatus(`✅ ${result.added} nouveau(x) prospect(s) synchronisé(s) (sur ${toSync.length} envoyés, triés par score). Total dans Apps Script : ${result.total}`,'var(--green)');
-      refreshCampaignStatus();
-    } else {
-      setCampaignStatus('❌ Erreur : '+(result.error||'inconnue'),'var(--red)');
-    }
-  } catch(e){
-    setCampaignStatus('❌ Erreur de connexion : '+e.message,'var(--red)');
-  }
+    let toSync = prospects.filter(p => p.email).sort((a, b) => (b.score || 0) - (a.score || 0)).map(p => ({ name: p.name, email: p.email, ville: p.ville, score: p.score || 0 }));
+    if (limit && limit > 0) toSync = toSync.slice(0, limit);
+    if (!toSync.length) { setCampaignStatus('⚠️ Aucun prospect avec email', 'var(--amber)'); return; }
+    const result = await campaignFetch('sync', {}, 'POST', { prospects: toSync });
+    if (result.success) { setCampaignStatus(`✅ ${result.added} nouveau(x) synchronisé(s)`, 'var(--green)'); refreshCampaignStatus(); }
+    else setCampaignStatus('❌ Erreur : ' + (result.error || 'inconnue'), 'var(--red)');
+  } catch (e) { setCampaignStatus('❌ Erreur de connexion : ' + e.message, 'var(--red)'); }
 }
-
-async function sendCampaignBatch(){
-  if(!confirm('Envoyer un lot d\'emails maintenant (jusqu\'à 25) ?')) return;
-  setCampaignStatus('<div class="spinner" style="border-color:var(--border);border-top-color:var(--blue);width:12px;height:12px;display:inline-block;vertical-align:middle;margin-right:6px"></div> Envoi en cours… (peut prendre 30-60s)');
+async function sendCampaignBatch() {
+  if (!confirm('Envoyer un lot d\'emails maintenant (jusqu\'à 25) ?')) return;
+  setCampaignStatus('⏳ Envoi en cours…');
   try {
-    const result = await campaignFetch('send', {batchSize:25, daysBetween:5});
-    if(result.success){
-      setCampaignStatus(`✅ ${result.sent} email(s) envoyé(s) dans ce lot`,'var(--green)');
-      refreshCampaignStatus();
-    } else {
-      setCampaignStatus('❌ Erreur : '+(result.error||'inconnue'),'var(--red)');
-    }
-  } catch(e){
-    setCampaignStatus('❌ Erreur de connexion : '+e.message,'var(--red)');
-  }
+    const result = await campaignFetch('send', { batchSize: 25, daysBetween: 5 });
+    if (result.success) { setCampaignStatus(`✅ ${result.sent} email(s) envoyé(s)`, 'var(--green)'); refreshCampaignStatus(); }
+    else setCampaignStatus('❌ ' + (result.error || 'Erreur inconnue'), 'var(--red)');
+  } catch (e) { setCampaignStatus('❌ ' + e.message, 'var(--red)'); }
 }
-
-async function refreshCampaignStatus(){
+async function refreshCampaignStatus() {
   try {
-    const result = await campaignFetch('status');
-    if(result.success){
-      const s = result.stats;
-      document.getElementById('stat-total').textContent = s.total;
-      document.getElementById('stat-sent').textContent = s.envoye1 + s.envoye2 + s.envoye3;
-      document.getElementById('stat-rdv').textContent = s.rdv;
-      document.getElementById('stat-todo').textContent = s.aEnvoyer;
-
-      // KPI de la page Prospection
-      const totalEnvoyes = s.envoye1 + s.envoye2 + s.envoye3;
-      const kpiEmailsEl = document.getElementById('kpi-emails-envoyes');
-      if(kpiEmailsEl){
-        kpiEmailsEl.textContent = totalEnvoyes;
-        document.getElementById('kpi-emails-sub').textContent = s.total ? `sur ${s.total} prospects synchronisés` : 'aucun envoi pour l\'instant';
-        document.getElementById('kpi-a-relancer').textContent = s.envoye1 + s.envoye2; // en attente de J5/J10
-      }
-
-      // Met à jour aussi les KPI du Dashboard principal
-      const dashContactees = document.getElementById('dash-kpi-contactees');
-      if(dashContactees){
-        dashContactees.textContent = s.envoye1 + s.envoye2 + s.envoye3;
-        document.getElementById('dash-kpi-rdv').textContent = s.rdv;
-        const totalSent = s.envoye1 + s.envoye2 + s.envoye3;
-        const funnelEl = document.getElementById('dash-funnel');
-        if(funnelEl && totalSent > 0){
-          funnelEl.innerHTML = `
-            <div class="funnel-step"><div class="funnel-label">Synchronisés</div><div class="funnel-bar-wrap"><div class="funnel-bar" style="width:100%;background:var(--blue)"><span class="funnel-count">${s.total}</span></div></div><div class="funnel-pct">100%</div></div>
-            <div class="funnel-step"><div class="funnel-label">Envoyés</div><div class="funnel-bar-wrap"><div class="funnel-bar" style="width:${Math.round(totalSent/s.total*100)}%;background:#5b7fff"><span class="funnel-count">${totalSent}</span></div></div><div class="funnel-pct">${Math.round(totalSent/s.total*100)}%</div></div>
-            <div class="funnel-step"><div class="funnel-label">RDV pris</div><div class="funnel-bar-wrap"><div class="funnel-bar" style="width:${s.total?Math.round(s.rdv/s.total*100):0}%;background:var(--green)"><span class="funnel-count">${s.rdv}</span></div></div><div class="funnel-pct">${s.total?Math.round(s.rdv/s.total*100):0}%</div></div>
-          `;
-        }
-      }
-
-      // Met à jour les statuts des prospects locaux si match par email
-      result.prospects.forEach(rp=>{
-        const local = prospects.find(p=>p.email===rp.email);
-        if(local){
-          if(rp.status==='RDV pris') local.status='rdv';
-          else if(rp.status.startsWith('Envoyé')) local.status='relance';
-          local.seq = rp.status;
-          local.ouvert = rp.status.includes('Ouvert');
-        }
-      });
-      if(currentFilter) renderProspects();
+    const result = await campaignFetch('status'); if (!result.success) return;
+    const s = result.stats;
+    document.getElementById('stat-total').textContent = s.total;
+    document.getElementById('stat-sent').textContent = s.envoye1 + s.envoye2 + s.envoye3;
+    document.getElementById('stat-rdv').textContent = s.rdv;
+    document.getElementById('stat-todo').textContent = s.aEnvoyer;
+    const totalEnvoyes = s.envoye1 + s.envoye2 + s.envoye3;
+    const kpiEl = document.getElementById('kpi-emails-envoyes');
+    if (kpiEl) { kpiEl.textContent = totalEnvoyes; document.getElementById('kpi-emails-sub').textContent = s.total ? `sur ${s.total} synchronisés` : 'aucun envoi'; document.getElementById('kpi-a-relancer').textContent = s.envoye1 + s.envoye2; }
+    const dashEl = document.getElementById('dash-kpi-contactees');
+    if (dashEl) { dashEl.textContent = totalEnvoyes; document.getElementById('dash-kpi-rdv').textContent = s.rdv; }
+    if (s.total > 0) {
+      const funnelEl = document.getElementById('dash-funnel');
+      if (funnelEl) funnelEl.innerHTML = `
+        <div class="funnel-step"><div class="funnel-label">Synchronisés</div><div class="funnel-bar-wrap"><div class="funnel-bar" style="width:100%;background:var(--blue)"><span class="funnel-count">${s.total}</span></div></div><div class="funnel-pct">100%</div></div>
+        <div class="funnel-step"><div class="funnel-label">Envoyés</div><div class="funnel-bar-wrap"><div class="funnel-bar" style="width:${Math.round(totalEnvoyes/s.total*100)}%;background:#5b7fff"><span class="funnel-count">${totalEnvoyes}</span></div></div><div class="funnel-pct">${Math.round(totalEnvoyes/s.total*100)}%</div></div>
+        <div class="funnel-step"><div class="funnel-label">RDV pris</div><div class="funnel-bar-wrap"><div class="funnel-bar" style="width:${Math.round(s.rdv/s.total*100)}%;background:var(--green)"><span class="funnel-count">${s.rdv}</span></div></div><div class="funnel-pct">${Math.round(s.rdv/s.total*100)}%</div></div>`;
     }
-  } catch(e){
-    console.log('Refresh status error:', e);
-  }
+    result.prospects?.forEach(rp => {
+      const local = prospects.find(p => p.email === rp.email);
+      if (local) { if (rp.status === 'RDV pris') local.status = 'rdv'; else if (rp.status.startsWith('Envoyé')) local.status = 'relance'; local.seq = rp.status; }
+    });
+    if (currentFilter) renderProspects();
+  } catch (e) { console.log('refreshCampaignStatus error:', e); }
 }
 
-// Charge le statut au démarrage de la page prospection
-const _origShowPage = showPage;
-showPage = function(name, el){
-  _origShowPage(name, el);
-  if(name === 'prospection' || name === 'dashboard') refreshCampaignStatus();
-  if(name === 'prospection') loadSegments();
-  if(name === 'calendrier'){ renderCalendar(); renderRdvList(); }
-  if(name === 'clients') loadSubscriptions();
-  if(name === 'landingstats') loadLandingStats();
-  if(name === 'monitoring') loadMonitoring();
-};
-
-const PROSPECTS_API = "https://agenc-ai.com/thee-api/prospects";
-
-async function loadProspectsFromServer(){
-  try{
-    const res = await fetch(`${PROSPECTS_API}?limit=1000`);
-    const data = await res.json();
-    if(data.prospects && data.prospects.length){
-      prospects.length = 0;
-      data.prospects.forEach(p=>{
-        prospects.push({
-          id: p.id, name: p.name, address: p.address||'', contact: p.contact||'—', email: p.email||'',
-          phone: p.phone||'', ville: p.ville||'—', website: p.website||'',
-          status: p.status||'contacte', seq: p.seq||'À envoyer', ouvert: p.ouvert||false,
-          source: p.source||'import', rating: p.rating||'', score: p.score||0
-        });
-      });
-      renderProspects();
-    }
-  }catch(e){ console.log('Chargement serveur impossible, utilisation des données locales:', e); }
-}
-
-// ── CALENDRIER RDV ────────────────────────────────────────────────────────────
-let rdvList = JSON.parse(localStorage.getItem('rdvList') || '[]');
-let calCurrentDate = new Date();
-
-function saveRdvList(){
-  localStorage.setItem('rdvList', JSON.stringify(rdvList));
-}
-
-function openRdvModal(){
-  const select = document.getElementById('rdv-prospect');
-  select.innerHTML = '<option value="">— Sélectionner un prospect —</option>' +
-    prospects.map(p=>`<option value="${p.id}">${p.name}${p.ville?' — '+p.ville:''}</option>`).join('');
-  document.getElementById('rdv-date').value = new Date().toISOString().split('T')[0];
-  document.getElementById('rdv-heure').value = '10:00';
-  document.getElementById('rdv-notes').value = '';
-  document.getElementById('rdv-modal-overlay').classList.add('open');
-}
-function closeRdvModal(e){
-  if(!e || e.target===document.getElementById('rdv-modal-overlay')){
-    document.getElementById('rdv-modal-overlay').classList.remove('open');
-  }
-}
-
-function saveRdv(){
-  const prospectId = document.getElementById('rdv-prospect').value;
-  const date = document.getElementById('rdv-date').value;
-  const heure = document.getElementById('rdv-heure').value;
-  const notes = document.getElementById('rdv-notes').value;
-
-  if(!prospectId || !date){ alert('Sélectionne un prospect et une date'); return; }
-
-  const prospect = prospects.find(p=>p.id==prospectId);
-  rdvList.push({
-    id: Date.now(),
-    prospectId: prospectId,
-    prospectName: prospect ? prospect.name : 'Inconnu',
-    date: date,
-    heure: heure,
-    notes: notes,
-    status: 'planifie' // planifie | fait | annule
-  });
-  saveRdvList();
-
-  // Met aussi à jour le statut du prospect en local
-  if(prospect){ prospect.status = 'rdv'; prospect.seq = (prospect.seq||'')+' +RDV'; }
-
-  closeRdvModal();
-  renderCalendar();
-  renderRdvList();
-  checkRdvAlerts();
-}
-
-function deleteRdv(id){
-  if(!confirm('Supprimer ce rendez-vous ?')) return;
-  rdvList = rdvList.filter(r=>r.id!==id);
-  saveRdvList();
-  renderCalendar();
-  renderRdvList();
-  checkRdvAlerts();
-}
-
-function markRdvDone(id){
-  const r = rdvList.find(x=>x.id===id);
-  if(r){ r.status = 'fait'; saveRdvList(); renderRdvList(); renderCalendar(); }
-}
-
-function changeMonth(delta){
-  calCurrentDate.setMonth(calCurrentDate.getMonth()+delta);
-  renderCalendar();
-}
-
-function renderCalendar(){
-  const year = calCurrentDate.getFullYear();
-  const month = calCurrentDate.getMonth();
-  const monthNames = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
-  document.getElementById('cal-month-label').textContent = `${monthNames[month]} ${year}`;
-
-  const firstDay = new Date(year, month, 1);
-  const lastDay = new Date(year, month+1, 0);
-  let startWeekday = firstDay.getDay(); // 0=dim
-  startWeekday = startWeekday===0 ? 6 : startWeekday-1; // lundi=0
-
-  const grid = document.getElementById('cal-grid');
-  let html = '';
-
-  for(let i=0;i<startWeekday;i++) html += '<div></div>';
-
-  const todayStr = new Date().toISOString().split('T')[0];
-
-  for(let d=1; d<=lastDay.getDate(); d++){
-    const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    const rdvsJour = rdvList.filter(r=>r.date===dateStr && r.status!=='annule');
-    const isToday = dateStr===todayStr;
-
-    html += `<div style="min-height:64px;border:1px solid var(--border);border-radius:8px;padding:6px;background:${isToday?'var(--blue-bg)':'var(--surface)'};${isToday?'border-color:var(--blue-mid)':''}">
-      <div style="font-size:11px;font-weight:${isToday?'700':'500'};color:${isToday?'var(--blue)':'var(--ink-2)'}">${d}</div>
-      ${rdvsJour.slice(0,2).map(r=>`<div style="font-size:9px;background:${r.status==='fait'?'var(--green-bg)':'var(--purple-bg)'};color:${r.status==='fait'?'var(--green)':'var(--purple)'};border-radius:4px;padding:1px 4px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${r.prospectName} ${r.heure}">${r.heure} ${r.prospectName}</div>`).join('')}
-      ${rdvsJour.length>2?`<div style="font-size:9px;color:var(--ink-3);margin-top:2px">+${rdvsJour.length-2}</div>`:''}
-    </div>`;
-  }
-
-  grid.innerHTML = html;
-
-  // KPIs
-  const thisMonthRdv = rdvList.filter(r=>{
-    const rd = new Date(r.date);
-    return rd.getFullYear()===year && rd.getMonth()===month && r.status!=='annule';
-  });
-  document.getElementById('cal-kpi-mois').textContent = thisMonthRdv.length;
-
-  const todayRdv = rdvList.filter(r=>r.date===todayStr && r.status!=='annule');
-  document.getElementById('cal-kpi-today').textContent = todayRdv.length;
-
-  const weekStart = new Date();
-  const weekEnd = new Date();
-  weekEnd.setDate(weekEnd.getDate()+7);
-  const weekRdv = rdvList.filter(r=>{
-    const rd = new Date(r.date);
-    return rd>=weekStart && rd<=weekEnd && r.status!=='annule';
-  });
-  document.getElementById('cal-kpi-semaine').textContent = weekRdv.length;
-
-  const faits = rdvList.filter(r=>r.status==='fait').length;
-  const signes = prospects.filter(p=>p.status==='signe').length;
-  document.getElementById('cal-kpi-taux').textContent = faits>0 ? Math.round((signes/faits)*100)+'%' : '—';
-}
-
-function renderRdvList(){
-  const body = document.getElementById('rdv-list-body');
-  const upcoming = [...rdvList]
-    .filter(r=>r.status!=='annule')
-    .sort((a,b)=>(a.date+a.heure).localeCompare(b.date+b.heure));
-
-  if(!upcoming.length){
-    body.innerHTML = `<tr><td colspan="6"><div class="empty"><div class="empty-icon">📅</div><div class="empty-text">Aucun rendez-vous planifié</div></div></td></tr>`;
-    return;
-  }
-
-  const todayStr = new Date().toISOString().split('T')[0];
-  body.innerHTML = upcoming.map(r=>{
-    const isPast = r.date < todayStr;
-    const isToday = r.date === todayStr;
-    const dateLabel = new Date(r.date+'T00:00').toLocaleDateString('fr-FR',{day:'2-digit',month:'short'});
-    return `<tr>
-      <td>${isToday?'<span class="badge badge-red">Aujourd\u2019hui</span> ':''}${dateLabel}</td>
-      <td>${r.heure}</td>
-      <td><strong>${r.prospectName}</strong></td>
-      <td style="font-size:12px;color:var(--ink-3)">${r.notes||'—'}</td>
-      <td><span class="badge ${r.status==='fait'?'badge-green':isPast?'badge-gray':'badge-purple'}">${r.status==='fait'?'Fait':isPast?'Passé':'Planifié'}</span></td>
-      <td style="display:flex;gap:6px">
-        ${r.status!=='fait'?`<button class="action-btn primary" onclick="markRdvDone(${r.id})">✓ Fait</button>`:''}
-        <button class="action-btn" onclick="deleteRdv(${r.id})">Suppr.</button>
-      </td>
-    </tr>`;
-  }).join('');
-}
-
-function checkRdvAlerts(){
-  const todayStr = new Date().toISOString().split('T')[0];
-  const todayRdv = rdvList.filter(r=>r.date===todayStr && r.status==='planifie');
-  const badge = document.getElementById('rdv-badge');
-  const banner = document.getElementById('rdv-alert-banner');
-
-  if(todayRdv.length>0){
-    badge.textContent = todayRdv.length;
-    badge.style.display = 'inline-block';
-    banner.style.display = 'flex';
-    document.getElementById('rdv-alert-title').textContent = `Tu as ${todayRdv.length} RDV aujourd'hui`;
-    document.getElementById('rdv-alert-sub').textContent = todayRdv.map(r=>`${r.heure} — ${r.prospectName}`).join(' · ');
-  } else {
-    badge.style.display = 'none';
-    banner.style.display = 'none';
-  }
-}
-
-
-// ── SEGMENTATION PAR CANAL DE CONTACT ────────────────────────────────────────
-const SEGMENTS_API = "https://agenc-ai.com/thee-api/prospects/segments";
-
-async function loadSegments(){
-  try{
-    const res = await fetch(SEGMENTS_API);
-    const s = await res.json();
-
+// ══════════════════════════════════════════════════
+// SEGMENTATION
+// ══════════════════════════════════════════════════
+async function loadSegments() {
+  try {
+    const res = await fetch(SEGMENTS_API); const s = await res.json();
     document.getElementById('seg-email-count').textContent = s.canal_email;
     document.getElementById('seg-email-pct').textContent = s.pct_email + '% du total';
     document.getElementById('seg-phone-count').textContent = s.canal_telephone;
     document.getElementById('seg-phone-pct').textContent = s.pct_telephone + '% du total';
     document.getElementById('seg-none-count').textContent = s.sans_contact;
     document.getElementById('seg-none-pct').textContent = s.pct_sans_contact + '% du total';
-  }catch(e){
-    console.log('Erreur chargement segments:', e);
+  } catch (e) { console.log('Erreur segments:', e); }
+}
+
+// ══════════════════════════════════════════════════
+// ABONNEMENTS
+// ══════════════════════════════════════════════════
+function openSubModal() { ['sub-agency-name','sub-agency-id','sub-email','sub-notes'].forEach(id => document.getElementById(id).value = ''); document.getElementById('sub-plan').value = 'starter'; document.getElementById('sub-modal-overlay').classList.add('open'); }
+function closeSubModal(e) { if (!e || e.target === document.getElementById('sub-modal-overlay')) document.getElementById('sub-modal-overlay').classList.remove('open'); }
+async function saveSubscription() {
+  const agencyName = document.getElementById('sub-agency-name').value.trim();
+  const agencyId = document.getElementById('sub-agency-id').value.trim();
+  if (!agencyName || !agencyId) { alert('Nom et identifiant obligatoires'); return; }
+  try {
+    const res = await fetch(SUBSCRIPTIONS_API, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ agency_id: agencyId, agency_name: agencyName, contact_email: document.getElementById('sub-email').value.trim() || null, plan: document.getElementById('sub-plan').value, notes: document.getElementById('sub-notes').value.trim() || null }) });
+    const result = await res.json();
+    if (result.success) { closeSubModal(); loadSubscriptions(); }
+    else alert('Erreur : ' + (result.error || 'inconnue'));
+  } catch (e) { alert('Erreur de connexion : ' + e.message); }
+}
+async function loadSubscriptions() {
+  try {
+    const [listRes, summaryRes] = await Promise.all([fetch(SUBSCRIPTIONS_API), fetch(SUBSCRIPTIONS_API + '/summary')]);
+    const listData = await listRes.json(); const summary = await summaryRes.json();
+    document.getElementById('sub-kpi-mrr').textContent = Math.round(summary.mrr) + '€';
+    document.getElementById('sub-kpi-arr').textContent = Math.round(summary.arr) + '€';
+    document.getElementById('sub-kpi-starter').textContent = summary.starter_count;
+    document.getElementById('sub-kpi-pro').textContent = summary.pro_count;
+    const body = document.getElementById('subs-table-body');
+    if (!listData.subscriptions?.length) { body.innerHTML = `<tr><td colspan="8"><div class="empty"><div class="empty-icon">🏢</div><div class="empty-text">Aucun client signé pour l'instant</div></div></td></tr>`; return; }
+    body.innerHTML = listData.subscriptions.map(s => {
+      const planBadge = s.plan === 'pro' ? '<span class="badge badge-purple">Pro</span>' : '<span class="badge badge-blue">Starter</span>';
+      const since = s.started_at ? new Date(s.started_at).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' }) : '—';
+      const setupBadge = s.setup_fee_paid ? '<span class="badge badge-green">✓ Payé</span>' : '<span class="badge badge-amber">En attente</span>';
+      return `<tr><td><strong>${s.agency_name}</strong><div style="font-size:11px;color:var(--ink-3)">${s.contact_email || '—'}</div></td><td>${planBadge}</td><td style="font-size:12px;color:var(--ink-3)">${since}</td><td><strong>${s.leads_count}</strong></td><td><strong>${s.rdv_count}</strong></td><td>${setupBadge}</td><td><strong>${Math.round(s.monthly_price)}€</strong></td><td><button class="action-btn" onclick="toggleSetupPaid('${s.id}',${!s.setup_fee_paid})">${s.setup_fee_paid ? 'Annuler setup' : 'Marquer payé'}</button></td></tr>`;
+    }).join('');
+  } catch (e) { console.log('Erreur abonnements:', e); }
+}
+async function toggleSetupPaid(subId, newValue) { try { await fetch(`${SUBSCRIPTIONS_API}/${subId}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ setup_fee_paid: newValue }) }); loadSubscriptions(); } catch (e) { console.log(e); } }
+
+// ══════════════════════════════════════════════════
+// LANDING STATS
+// ══════════════════════════════════════════════════
+async function loadLandingStats() {
+  try {
+    const res = await fetch(TRACK_STATS_API); const s = await res.json();
+    document.getElementById('land-kpi-visitors').textContent = s.unique_visitors;
+    document.getElementById('land-kpi-views').textContent = s.total_views;
+    document.getElementById('land-kpi-cta').textContent = s.cta_clicks;
+    document.getElementById('land-kpi-cta-rate').textContent = `taux ${s.cta_rate}%`;
+    document.getElementById('land-kpi-scroll').textContent = s.deep_scroll;
+    document.getElementById('land-kpi-scroll-rate').textContent = `taux ${s.deep_scroll_rate}%`;
+    document.getElementById('land-kpi-demo').textContent = s.demo_started;
+    document.getElementById('land-kpi-cta-rate-big').textContent = s.cta_rate + '%';
+    document.getElementById('land-kpi-scroll-rate-big').textContent = s.deep_scroll_rate + '%';
+  } catch (e) { console.log('Erreur stats landing:', e); }
+}
+
+// ══════════════════════════════════════════════════
+// MONITORING
+// ══════════════════════════════════════════════════
+let currentErrorFilter = 'tous';
+async function loadMonitoring() {
+  try {
+    const [healthRes, errorsRes] = await Promise.all([fetch(`${MONITORING_API}/health-summary`), fetch(`${MONITORING_API}/errors`)]);
+    const health = await healthRes.json(); const errorsData = await errorsRes.json();
+    document.getElementById('mon-kpi-unresolved').textContent = health.unresolved_errors;
+    document.getElementById('mon-kpi-1h').textContent = health.errors_last_hour;
+    document.getElementById('mon-kpi-24h').textContent = health.errors_last_24h;
+    document.getElementById('mon-kpi-leads').textContent = health.leads_last_24h;
+    const banner = document.getElementById('monitoring-status-banner');
+    const icon = document.getElementById('monitoring-status-icon');
+    const title = document.getElementById('monitoring-status-title');
+    const sub = document.getElementById('monitoring-status-sub');
+    if (health.status === 'ok') { banner.style.background = 'var(--green-bg)'; icon.textContent = '✅'; title.textContent = 'Tout fonctionne normalement'; title.style.color = 'var(--green)'; sub.textContent = `${health.pageviews_last_24h} vues et ${health.leads_last_24h} leads sur 24h`; }
+    else if (health.status === 'attention') { banner.style.background = 'var(--amber-bg)'; icon.textContent = '⚠️'; title.textContent = 'Quelques erreurs détectées'; title.style.color = 'var(--amber)'; sub.textContent = `${health.unresolved_errors} erreur(s) non résolue(s)`; }
+    else { banner.style.background = 'var(--red-bg)'; icon.textContent = '🔴'; title.textContent = 'Activité d\'erreurs élevée'; title.style.color = 'var(--red)'; sub.textContent = `${health.errors_last_hour} erreur(s) dans la dernière heure`; }
+    const badge = document.getElementById('health-badge');
+    if (health.unresolved_errors > 0) { badge.textContent = health.unresolved_errors; badge.style.display = 'inline-block'; } else badge.style.display = 'none';
+    window._allErrors = errorsData.errors || [];
+    renderErrors();
+  } catch (e) { console.log('Erreur monitoring:', e); }
+}
+function renderErrors() {
+  const body = document.getElementById('errors-table-body');
+  let errors = window._allErrors || [];
+  if (currentErrorFilter === 'non-resolues') errors = errors.filter(e => !e.resolved);
+  if (!errors.length) { body.innerHTML = `<tr><td colspan="6"><div class="empty"><div class="empty-icon">✅</div><div class="empty-text">Aucune erreur — tout va bien</div></div></td></tr>`; return; }
+  body.innerHTML = errors.map(e => {
+    const date = e.created_at ? new Date(e.created_at).toLocaleString('fr-FR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }) : '—';
+    return `<tr><td><span class="badge badge-gray">${e.source}</span></td><td style="font-size:12px;font-weight:600">${e.error_type}</td><td style="font-size:12px;color:var(--ink-2);max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${e.message}">${e.message}</td><td style="font-size:11px;color:var(--ink-3)">${date}</td><td>${e.resolved ? '<span class="badge badge-green">Résolu</span>' : '<span class="badge badge-red">Ouvert</span>'}</td><td>${!e.resolved ? `<button class="action-btn" onclick="resolveError('${e.id}')">Marquer résolu</button>` : '—'}</td></tr>`;
+  }).join('');
+}
+function filterErrors(filter, el) { currentErrorFilter = filter; document.querySelectorAll('#page-monitoring .tab').forEach(t => t.classList.remove('active')); el.classList.add('active'); renderErrors(); }
+async function resolveError(errorId) { try { await fetch(`${MONITORING_API}/errors/${errorId}/resolve`, { method: 'PATCH' }); loadMonitoring(); } catch (e) { console.log(e); } }
+
+// ══════════════════════════════════════════════════
+// CALENDRIER RDV
+// ══════════════════════════════════════════════════
+let rdvList = JSON.parse(localStorage.getItem('rdvList') || '[]');
+let calCurrentDate = new Date();
+function saveRdvList() { localStorage.setItem('rdvList', JSON.stringify(rdvList)); }
+function openRdvModal() {
+  const select = document.getElementById('rdv-prospect');
+  select.innerHTML = '<option value="">— Sélectionner —</option>' + prospects.map(p => `<option value="${p.id}">${p.name}${p.ville ? ' — ' + p.ville : ''}</option>`).join('');
+  document.getElementById('rdv-date').value = new Date().toISOString().split('T')[0];
+  document.getElementById('rdv-heure').value = '10:00';
+  document.getElementById('rdv-notes').value = '';
+  document.getElementById('rdv-modal-overlay').classList.add('open');
+}
+function closeRdvModal(e) { if (!e || e.target === document.getElementById('rdv-modal-overlay')) document.getElementById('rdv-modal-overlay').classList.remove('open'); }
+function saveRdv() {
+  const prospectId = document.getElementById('rdv-prospect').value;
+  const date = document.getElementById('rdv-date').value;
+  if (!prospectId || !date) { alert('Sélectionne un prospect et une date'); return; }
+  const prospect = prospects.find(p => p.id == prospectId);
+  rdvList.push({ id: Date.now(), prospectId, prospectName: prospect ? prospect.name : 'Inconnu', date, heure: document.getElementById('rdv-heure').value, notes: document.getElementById('rdv-notes').value, status: 'planifie' });
+  saveRdvList();
+  if (prospect) { prospect.status = 'rdv'; }
+  closeRdvModal(); renderCalendar(); renderRdvList(); checkRdvAlerts();
+}
+function deleteRdv(id) { if (!confirm('Supprimer ce RDV ?')) return; rdvList = rdvList.filter(r => r.id !== id); saveRdvList(); renderCalendar(); renderRdvList(); checkRdvAlerts(); }
+function markRdvDone(id) { const r = rdvList.find(x => x.id === id); if (r) { r.status = 'fait'; saveRdvList(); renderRdvList(); renderCalendar(); } }
+function changeMonth(delta) { calCurrentDate.setMonth(calCurrentDate.getMonth() + delta); renderCalendar(); }
+function renderCalendar() {
+  const year = calCurrentDate.getFullYear(); const month = calCurrentDate.getMonth();
+  const monthNames = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+  document.getElementById('cal-month-label').textContent = `${monthNames[month]} ${year}`;
+  const firstDay = new Date(year, month, 1); const lastDay = new Date(year, month + 1, 0);
+  let startWeekday = firstDay.getDay(); startWeekday = startWeekday === 0 ? 6 : startWeekday - 1;
+  const grid = document.getElementById('cal-grid'); let html = '';
+  for (let i = 0; i < startWeekday; i++) html += '<div></div>';
+  const todayStr = new Date().toISOString().split('T')[0];
+  for (let d = 1; d <= lastDay.getDate(); d++) {
+    const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+    const rdvsJour = rdvList.filter(r => r.date === dateStr && r.status !== 'annule');
+    const isToday = dateStr === todayStr;
+    html += `<div style="min-height:64px;border:1px solid var(--border);border-radius:8px;padding:6px;background:${isToday ? 'var(--blue-bg)' : 'var(--surface)'};${isToday ? 'border-color:var(--blue-mid)' : ''}">
+      <div style="font-size:11px;font-weight:${isToday ? '700' : '500'};color:${isToday ? 'var(--blue)' : 'var(--ink-2)'}">${d}</div>
+      ${rdvsJour.slice(0, 2).map(r => `<div style="font-size:9px;background:${r.status === 'fait' ? 'var(--green-bg)' : 'var(--purple-bg)'};color:${r.status === 'fait' ? 'var(--green)' : 'var(--purple)'};border-radius:4px;padding:1px 4px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${r.heure} ${r.prospectName}</div>`).join('')}
+      ${rdvsJour.length > 2 ? `<div style="font-size:9px;color:var(--ink-3);margin-top:2px">+${rdvsJour.length - 2}</div>` : ''}
+    </div>`;
+  }
+  grid.innerHTML = html;
+  const thisMonthRdv = rdvList.filter(r => { const rd = new Date(r.date); return rd.getFullYear() === year && rd.getMonth() === month && r.status !== 'annule'; });
+  document.getElementById('cal-kpi-mois').textContent = thisMonthRdv.length;
+  const todayRdv = rdvList.filter(r => r.date === todayStr && r.status !== 'annule');
+  document.getElementById('cal-kpi-today').textContent = todayRdv.length;
+  const weekEnd = new Date(); weekEnd.setDate(weekEnd.getDate() + 7);
+  const weekRdv = rdvList.filter(r => { const rd = new Date(r.date); return rd >= new Date() && rd <= weekEnd && r.status !== 'annule'; });
+  document.getElementById('cal-kpi-semaine').textContent = weekRdv.length;
+  const faits = rdvList.filter(r => r.status === 'fait').length;
+  const signes = prospects.filter(p => p.status === 'signe').length;
+  document.getElementById('cal-kpi-taux').textContent = faits > 0 ? Math.round((signes / faits) * 100) + '%' : '—';
+}
+function renderRdvList() {
+  const body = document.getElementById('rdv-list-body');
+  const upcoming = [...rdvList].filter(r => r.status !== 'annule').sort((a, b) => (a.date + a.heure).localeCompare(b.date + b.heure));
+  if (!upcoming.length) { body.innerHTML = `<tr><td colspan="6"><div class="empty"><div class="empty-icon">📅</div><div class="empty-text">Aucun rendez-vous planifié</div></div></td></tr>`; return; }
+  const todayStr = new Date().toISOString().split('T')[0];
+  body.innerHTML = upcoming.map(r => {
+    const isPast = r.date < todayStr; const isToday = r.date === todayStr;
+    const dateLabel = new Date(r.date + 'T00:00').toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' });
+    return `<tr><td>${isToday ? '<span class="badge badge-red">Aujourd\'hui</span> ' : ''}${dateLabel}</td><td>${r.heure}</td><td><strong>${r.prospectName}</strong></td><td style="font-size:12px;color:var(--ink-3)">${r.notes || '—'}</td><td><span class="badge ${r.status === 'fait' ? 'badge-green' : isPast ? 'badge-gray' : 'badge-purple'}">${r.status === 'fait' ? 'Fait' : isPast ? 'Passé' : 'Planifié'}</span></td><td style="display:flex;gap:6px">${r.status !== 'fait' ? `<button class="action-btn primary" onclick="markRdvDone(${r.id})">✓ Fait</button>` : ''}<button class="action-btn" onclick="deleteRdv(${r.id})">Suppr.</button></td></tr>`;
+  }).join('');
+}
+function checkRdvAlerts() {
+  const todayStr = new Date().toISOString().split('T')[0];
+  const todayRdv = rdvList.filter(r => r.date === todayStr && r.status === 'planifie');
+  const badge = document.getElementById('rdv-badge'); const banner = document.getElementById('rdv-alert-banner');
+  if (todayRdv.length > 0) { badge.textContent = todayRdv.length; badge.style.display = 'inline-block'; banner.style.display = 'flex'; document.getElementById('rdv-alert-title').textContent = `Tu as ${todayRdv.length} RDV aujourd'hui`; document.getElementById('rdv-alert-sub').textContent = todayRdv.map(r => `${r.heure} — ${r.prospectName}`).join(' · '); }
+  else { badge.style.display = 'none'; banner.style.display = 'none'; }
+}
+
+// ══════════════════════════════════════════════════
+// CHARTS
+// ══════════════════════════════════════════════════
+function renderBarChart(id, data, color) {
+  const el = document.getElementById(id); if (!el) return;
+  const max = Math.max(...data.map(d => d.val));
+  el.innerHTML = data.map(d => { const pct = max ? Math.round((d.val / max) * 100) : 0; return `<div class="bar-col"><div class="bar-val">${d.val}</div><div class="bar" style="height:${Math.max(pct, 4)}%;background:${color};opacity:${0.4 + 0.6 * (d.val / (max || 1))}"></div><div class="bar-lbl">${d.label}</div></div>`; }).join('');
+}
+renderBarChart('activity-chart', [{label:'Lun',val:0},{label:'Mar',val:0},{label:'Mer',val:0},{label:'Jeu',val:0},{label:'Ven',val:0},{label:'Sam',val:0},{label:'Dim',val:0}], 'var(--blue)');
+
+// ══════════════════════════════════════════════════
+// BLOG & NEWSLETTER — GESTION DES CONTENUS
+// ══════════════════════════════════════════════════
+
+// ── Tabs ──────────────────────────────────────────
+function switchContentTab(tab) {
+  document.getElementById('panel-blog').style.display = tab === 'blog' ? 'block' : 'none';
+  document.getElementById('panel-newsletter').style.display = tab === 'newsletter' ? 'block' : 'none';
+  document.getElementById('tab-blog').classList.toggle('active', tab === 'blog');
+  document.getElementById('tab-newsletter').classList.toggle('active', tab === 'newsletter');
+}
+
+// ── Stats globales ─────────────────────────────────
+function updateContentStats() {
+  document.getElementById('stat-articles-total').textContent = articles.filter(a => a.status === 'publie').length;
+  document.getElementById('stat-articles-draft').textContent = articles.filter(a => a.status === 'brouillon').length;
+  document.getElementById('stat-nl-sent').textContent = newsletters.length;
+  const emailProspects = prospects.filter(p => p.email && p.email.trim()).length;
+  document.getElementById('stat-nl-recipients').textContent = emailProspects;
+}
+
+// ── BLOG — Article modal ───────────────────────────
+function openArticleModal(id = null) {
+  document.getElementById('article-edit-id').value = id || '';
+  document.getElementById('article-modal-title').textContent = id ? 'Modifier l\'article' : 'Nouvel article';
+  if (id) {
+    const art = articles.find(a => a.id === id);
+    if (art) {
+      document.getElementById('article-title').value = art.title;
+      document.getElementById('article-category').value = art.category;
+      document.getElementById('article-status').value = art.status;
+      document.getElementById('article-excerpt').value = art.excerpt || '';
+      document.getElementById('article-editor').innerHTML = art.content || '';
+    }
+  } else {
+    document.getElementById('article-title').value = '';
+    document.getElementById('article-excerpt').value = '';
+    document.getElementById('article-editor').innerHTML = '';
+    document.getElementById('article-status').value = 'brouillon';
+  }
+  document.getElementById('article-feedback').style.display = 'none';
+  document.getElementById('article-modal-overlay').classList.add('open');
+}
+function closeArticleModal(e) {
+  if (!e || e.target === document.getElementById('article-modal-overlay'))
+    document.getElementById('article-modal-overlay').classList.remove('open');
+}
+
+// Formatage éditeur blog
+function fmt(cmd) { document.getElementById('article-editor').focus(); document.execCommand(cmd, false, null); }
+function fmtBlock(tag) { document.getElementById('article-editor').focus(); document.execCommand('formatBlock', false, tag); }
+function insertLink() { const url = prompt('URL du lien :'); if (url) { document.getElementById('article-editor').focus(); document.execCommand('createLink', false, url); } }
+function insertCTA() {
+  document.getElementById('article-editor').focus();
+  document.execCommand('insertHTML', false, `<div style="text-align:center;margin:20px 0"><a href="https://calendly.com/thee-ai/30min" style="background:#1649ff;color:#fff;padding:12px 28px;border-radius:40px;text-decoration:none;font-weight:600;font-size:14px;display:inline-block">📅 Réserver une démo gratuite</a></div>`);
+}
+
+async function saveArticle(forcedStatus = null) {
+  const title = document.getElementById('article-title').value.trim();
+  if (!title) { alert('Le titre est obligatoire'); return; }
+  const content = document.getElementById('article-editor').innerHTML;
+  const status = forcedStatus || document.getElementById('article-status').value;
+  const id = document.getElementById('article-edit-id').value;
+  const feedback = document.getElementById('article-feedback');
+
+  const articleData = {
+    id: id || ('art_' + Date.now()),
+    title,
+    category: document.getElementById('article-category').value,
+    excerpt: document.getElementById('article-excerpt').value.trim(),
+    content,
+    status,
+    created_at: id ? (articles.find(a => a.id === id)?.created_at || new Date().toISOString()) : new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  };
+
+  // Sauvegarde locale (localStorage)
+  if (id) {
+    const idx = articles.findIndex(a => a.id === id);
+    if (idx >= 0) articles[idx] = articleData; else articles.push(articleData);
+  } else {
+    articles.push(articleData);
+  }
+  localStorage.setItem('sarah_articles', JSON.stringify(articles));
+
+  // Tentative sauvegarde API
+  try {
+    await fetch(ARTICLES_API, {
+      method: id ? 'PUT' : 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(articleData)
+    });
+  } catch (e) { console.log('API articles indisponible, sauvegarde locale uniquement:', e); }
+
+  feedback.style.display = 'block';
+  feedback.style.background = status === 'publie' ? 'var(--green-bg)' : 'var(--blue-bg)';
+  feedback.style.color = status === 'publie' ? 'var(--green)' : 'var(--blue)';
+  feedback.textContent = status === 'publie' ? '🚀 Article publié sur la landing page !' : '💾 Brouillon sauvegardé';
+
+  setTimeout(() => { closeArticleModal(); renderArticles(); updateContentStats(); }, 800);
+}
+
+// ── BLOG — Render liste ───────────────────────────
+function filterArticles(filter, el) {
+  articleFilter = filter;
+  document.querySelectorAll('#panel-blog .tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  renderArticles();
+}
+
+function renderArticles() {
+  const list = document.getElementById('articles-list');
+  let data = [...articles];
+  if (articleFilter === 'publie') data = data.filter(a => a.status === 'publie');
+  if (articleFilter === 'brouillon') data = data.filter(a => a.status === 'brouillon');
+  data.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
+
+  if (!data.length) {
+    list.innerHTML = `<div class="empty"><div class="empty-icon">📝</div><div class="empty-text">Aucun article dans ce filtre</div></div>`;
+    return;
+  }
+
+  const catLabels = { conseils:'Conseils', ia:'IA', prospection:'Prospection', temoignage:'Témoignage', actu:'Actualité' };
+
+  list.innerHTML = data.map(art => {
+    const date = new Date(art.updated_at).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' });
+    const statusBadge = art.status === 'publie'
+      ? '<span class="badge badge-green">✓ Publié</span>'
+      : '<span class="badge badge-gray">Brouillon</span>';
+    return `<div class="article-row">
+      <div>
+        <div style="font-weight:600;font-size:13px">${art.title}</div>
+        ${art.excerpt ? `<div style="font-size:11px;color:var(--ink-3);margin-top:2px">${art.excerpt.substring(0, 80)}${art.excerpt.length > 80 ? '…' : ''}</div>` : ''}
+      </div>
+      <div><span class="badge badge-purple" style="font-size:10px">${catLabels[art.category] || art.category}</span></div>
+      <div>${statusBadge}</div>
+      <div style="font-size:11px;color:var(--ink-3)">${date}</div>
+      <div style="display:flex;gap:4px">
+        <button class="action-btn primary" onclick="openArticleModal('${art.id}')">✏️ Éditer</button>
+        <button class="action-btn" onclick="toggleArticleStatus('${art.id}')">${art.status === 'publie' ? '↩ Dépublier' : '🚀 Publier'}</button>
+        <button class="action-btn danger" onclick="deleteArticle('${art.id}')">🗑</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleArticleStatus(id) {
+  const art = articles.find(a => a.id === id); if (!art) return;
+  art.status = art.status === 'publie' ? 'brouillon' : 'publie';
+  art.updated_at = new Date().toISOString();
+  localStorage.setItem('sarah_articles', JSON.stringify(articles));
+  renderArticles(); updateContentStats();
+}
+
+function deleteArticle(id) {
+  if (!confirm('Supprimer cet article définitivement ?')) return;
+  articles = articles.filter(a => a.id !== id);
+  localStorage.setItem('sarah_articles', JSON.stringify(articles));
+  renderArticles(); updateContentStats();
+}
+
+// ── NEWSLETTER ────────────────────────────────────
+function openNewsletterModal() {
+  document.getElementById('nl-subject').value = '';
+  document.getElementById('nl-editor').innerHTML = '';
+  document.getElementById('nl-segment').value = 'email_valide';
+  document.getElementById('nl-feedback').style.display = 'none';
+  previewRecipients();
+  document.getElementById('newsletter-modal-overlay').classList.add('open');
+}
+function closeNewsletterModal(e) {
+  if (!e || e.target === document.getElementById('newsletter-modal-overlay'))
+    document.getElementById('newsletter-modal-overlay').classList.remove('open');
+}
+
+function getRecipientsBySegment(segment) {
+  if (segment === 'email_valide') return prospects.filter(p => p.email && p.email.trim());
+  if (segment === 'tous_email') return prospects.filter(p => p.email && p.email.trim());
+  if (segment === 'clients') return []; // à connecter à la base clients
+  return [];
+}
+
+function previewRecipients() {
+  const segment = document.getElementById('nl-segment').value;
+  const recipients = getRecipientsBySegment(segment);
+  document.getElementById('nl-recipient-count').textContent = recipients.length + ' contact(s)';
+  const preview = document.getElementById('nl-recipients-preview');
+  if (!recipients.length) { preview.innerHTML = '<div style="color:var(--ink-4);font-size:11px;padding:8px 0">Aucun contact dans ce segment</div>'; return; }
+  preview.innerHTML = recipients.slice(0, 20).map(p =>
+    `<div class="recipient-item">
+      <span style="flex:1;font-weight:500">${p.name}</span>
+      <span style="color:var(--ink-3)">${p.email}</span>
+      <span style="color:var(--ink-4);margin-left:8px">${p.ville}</span>
+    </div>`
+  ).join('') + (recipients.length > 20 ? `<div style="font-size:11px;color:var(--ink-3);padding:6px 0 2px">… et ${recipients.length - 20} autre(s)</div>` : '');
+}
+
+// Formatage éditeur newsletter
+function fmtNl(cmd) { document.getElementById('nl-editor').focus(); document.execCommand(cmd, false, null); }
+function fmtBlockNl(tag) { document.getElementById('nl-editor').focus(); document.execCommand('formatBlock', false, tag); }
+function insertNlLink() { const url = prompt('URL du lien :'); if (url) { document.getElementById('nl-editor').focus(); document.execCommand('createLink', false, url); } }
+function insertNlCTA() {
+  document.getElementById('nl-editor').focus();
+  document.execCommand('insertHTML', false, `<div style="text-align:center;margin:20px 0"><a href="https://calendly.com/thee-ai/30min" style="background:#1649ff;color:#fff;padding:12px 28px;border-radius:40px;text-decoration:none;font-weight:600;font-size:14px;display:inline-block">📅 Réserver une démo gratuite</a></div>`);
+}
+function insertNlTemplate(type) {
+  const editor = document.getElementById('nl-editor');
+  editor.focus();
+  if (type === 'reminder') {
+    editor.innerHTML = `<p>Bonjour,</p><p>Je me permets de revenir vers vous concernant <strong>Sarah AI</strong>, l'assistant conversationnel conçu spécifiquement pour les agences immobilières indépendantes.</p><p>Depuis notre dernier contact, plusieurs agences ont déjà intégré Sarah AI sur leur site et constatent :</p><ul><li>Des leads captés 24h/24, même la nuit</li><li>Des temps de réponse réduits de 80%</li><li>Une qualification automatique des prospects</li></ul><p>Seriez-vous disponible pour une démonstration rapide de 20 minutes ?</p><div style="text-align:center;margin:24px 0"><a href="https://calendly.com/thee-ai/30min" style="background:#1649ff;color:#fff;padding:12px 28px;border-radius:40px;text-decoration:none;font-weight:600;font-size:14px;display:inline-block">📅 Choisir un créneau</a></div><p>Cordialement,<br/><strong>L'équipe Sarah AI</strong></p>`;
+  } else if (type === 'announcement') {
+    editor.innerHTML = `<h2>🎉 Nouvelle fonctionnalité Sarah AI</h2><p>Bonjour,</p><p>Nous avons le plaisir de vous annoncer [votre annonce ici].</p><p>Cette nouveauté vous permettra de [bénéfice principal].</p><h3>Ce que ça change pour vous</h3><ul><li>Point 1</li><li>Point 2</li><li>Point 3</li></ul><div style="text-align:center;margin:24px 0"><a href="https://agenc-ai.com/sarah/" style="background:#1649ff;color:#fff;padding:12px 28px;border-radius:40px;text-decoration:none;font-weight:600;font-size:14px;display:inline-block">En savoir plus</a></div><p>L'équipe Sarah AI</p>`;
   }
 }
 
-function filterByChannel(channel){
-  currentChannelFilter = channel;
-  const banner = document.getElementById('channel-filter-active');
-  const label = document.getElementById('channel-filter-label');
-  banner.style.display = 'flex';
-  label.textContent = channel === 'email'
-    ? '📧 Affichage filtré : prospects avec email exploitable'
-    : '📞 Affichage filtré : prospects sans email, contactables par téléphone';
-  renderProspects();
+function previewNewsletter() {
+  const subject = document.getElementById('nl-subject').value.trim();
+  const content = document.getElementById('nl-editor').innerHTML;
+  const previewBody = document.getElementById('nl-preview-body');
+  previewBody.innerHTML = `
+    <div style="font-size:12px;color:var(--ink-3);margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--border)">
+      <strong>Objet :</strong> ${subject || '(aucun objet)'} &nbsp;|&nbsp;
+      <strong>De :</strong> L'équipe Sarah AI &lt;contact@agenc-ai.com&gt;
+    </div>
+    ${content || '<em style="color:var(--ink-4)">Corps vide</em>'}
+  `;
+  document.getElementById('nl-preview-overlay').classList.add('open');
 }
 
-function clearChannelFilter(){
-  currentChannelFilter = null;
-  document.getElementById('channel-filter-active').style.display = 'none';
-  renderProspects();
+async function sendNewsletter() {
+  const subject = document.getElementById('nl-subject').value.trim();
+  const content = document.getElementById('nl-editor').innerHTML;
+  const segment = document.getElementById('nl-segment').value;
+  const feedback = document.getElementById('nl-feedback');
+
+  if (!subject) { alert('L\'objet est obligatoire'); return; }
+  if (!content || content === '<br>') { alert('Le contenu est obligatoire'); return; }
+
+  const recipients = getRecipientsBySegment(segment);
+  if (!recipients.length) { alert('Aucun destinataire dans ce segment'); return; }
+  if (!confirm(`Envoyer cette newsletter à ${recipients.length} contact(s) ?`)) return;
+
+  document.getElementById('nl-send-btn').disabled = true;
+  document.getElementById('nl-send-btn').textContent = '⏳ Envoi…';
+  feedback.style.display = 'block'; feedback.style.background = 'var(--blue-bg)'; feedback.style.color = 'var(--blue)';
+  feedback.textContent = `⏳ Envoi en cours vers ${recipients.length} destinataire(s)…`;
+
+  // Envoi via Apps Script
+  try {
+    const result = await fetch(CAMPAIGN_API + '?action=newsletter', {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({ subject, content, recipients: recipients.map(p => ({ name: p.name, email: p.email, ville: p.ville })) })
+    }).then(r => r.json());
+
+    const nlRecord = { id: 'nl_' + Date.now(), subject, segment, recipient_count: recipients.length, sent_at: new Date().toISOString(), status: result.success ? 'envoye' : 'erreur', error: result.error || null };
+    newsletters.unshift(nlRecord);
+    localStorage.setItem('sarah_newsletters', JSON.stringify(newsletters));
+
+    if (result.success) {
+      feedback.style.background = 'var(--green-bg)'; feedback.style.color = 'var(--green)';
+      feedback.textContent = `✅ Newsletter envoyée à ${result.sent || recipients.length} destinataire(s) !`;
+      setTimeout(() => { closeNewsletterModal(); renderNewsletters(); updateContentStats(); }, 1000);
+    } else {
+      feedback.style.background = 'var(--red-bg)'; feedback.style.color = 'var(--red)';
+      feedback.textContent = '❌ Erreur : ' + (result.error || 'inconnue');
+    }
+  } catch (e) {
+    // Sauvegarde locale même en cas d'erreur réseau
+    const nlRecord = { id: 'nl_' + Date.now(), subject, segment, recipient_count: recipients.length, sent_at: new Date().toISOString(), status: 'erreur', error: e.message };
+    newsletters.unshift(nlRecord);
+    localStorage.setItem('sarah_newsletters', JSON.stringify(newsletters));
+    feedback.style.background = 'var(--red-bg)'; feedback.style.color = 'var(--red)';
+    feedback.textContent = '❌ Erreur de connexion : ' + e.message + ' — Vérifie que l\'Apps Script est bien déployé avec l\'action "newsletter".';
+  } finally {
+    document.getElementById('nl-send-btn').disabled = false;
+    document.getElementById('nl-send-btn').textContent = '📤 Envoyer la newsletter';
+  }
 }
 
+// ── Render liste newsletters ───────────────────────
+function renderNewsletters() {
+  const list = document.getElementById('newsletters-list');
+  if (!newsletters.length) { list.innerHTML = `<div class="empty"><div class="empty-icon">💌</div><div class="empty-text">Aucune newsletter envoyée pour l'instant</div></div>`; return; }
+  const segLabels = { email_valide:'Emails vérifiés', tous_email:'Tous emails', clients:'Clients', custom:'Manuel' };
+  list.innerHTML = newsletters.map(nl => {
+    const date = new Date(nl.sent_at).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+    const statusBadge = nl.status === 'envoye' ? '<span class="badge badge-green">✓ Envoyée</span>' : '<span class="badge badge-red">Erreur</span>';
+    return `<div class="nl-row">
+      <div>
+        <div style="font-weight:600;font-size:13px">${nl.subject}</div>
+        ${nl.error ? `<div style="font-size:11px;color:var(--red);margin-top:2px">${nl.error}</div>` : ''}
+      </div>
+      <div style="font-size:11px;color:var(--ink-3)">${segLabels[nl.segment] || nl.segment}</div>
+      <div style="font-size:13px;font-weight:600">${nl.recipient_count} contact(s)</div>
+      <div style="font-size:11px;color:var(--ink-3)">${date}</div>
+      <div>${statusBadge}</div>
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════════
+// CHARGEMENT PROSPECTS DEPUIS SERVEUR
+// ══════════════════════════════════════════════════
+async function loadProspectsFromServer() {
+  try {
+    const res = await fetch(`${PROSPECTS_API}?limit=1000`);
+    const data = await res.json();
+    if (data.prospects && data.prospects.length) {
+      prospects.length = 0;
+      data.prospects.forEach(p => {
+        prospects.push({
+          id: p.id, name: p.name, address: p.address || '', contact: p.contact || '—',
+          email: p.email || '', phone: p.phone || '', ville: p.ville || '—', website: p.website || '',
+          status: p.status || 'contacte', seq: p.seq || 'À envoyer', ouvert: p.ouvert || false,
+          source: p.source || 'import', rating: p.rating || '', score: p.score || 0,
+          // ↓ Champs WhatsApp
+          wa_contacted_at: p.wa_contacted_at || null,
+          wa_notes: p.wa_notes || '',
+        });
+      });
+      nextId = Math.max(...prospects.map(p => parseInt(p.id) || 0)) + 1;
+      renderProspects();
+    }
+  } catch (e) { console.log('Chargement serveur impossible, données locales conservées:', e); }
+}
+
+// ══════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════
 renderProspects();
 loadProspectsFromServer();
 checkRdvAlerts();
 refreshCampaignStatus();
 loadMonitoring();
 loadSegments();
+renderBarChart('activity-chart', [{label:'Lun',val:0},{label:'Mar',val:0},{label:'Mer',val:0},{label:'Jeu',val:0},{label:'Ven',val:0},{label:'Sam',val:0},{label:'Dim',val:0}], 'var(--blue)');
 </script>
 </body>
 </html>
