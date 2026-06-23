@@ -638,7 +638,7 @@ function renderGrid(articles) {
     const date = new Date(art.updated_at).toLocaleDateString('fr-FR', {day:'2-digit',month:'long',year:'numeric'});
     const isFeatured = i === 0 && articles.length >= 3;
     return `
-      <div class="article-card ${isFeatured ? 'featured' : ''}" onclick="showArticle(${JSON.stringify(art).replace(/"/g,'&quot;')})">
+      <div class="article-card ${isFeatured ? 'featured' : ''}" style="opacity:0;transform:translateY(18px);transition:opacity .5s ease,transform .5s ease" onclick="showArticle(${JSON.stringify(art).replace(/"/g,'&quot;')})">
         <div class="card-top">
           <span class="card-category">${cat.icon} ${cat.label}</span>
           <div class="card-icon">${cat.icon}</div>
@@ -654,10 +654,12 @@ function renderGrid(articles) {
       </div>`;
   }).join('');
 
-  // Scroll animations
-  const io = new IntersectionObserver(entries => entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('in'); }), {threshold:0.1});
-  grid.querySelectorAll('.article-card').forEach(el => { el.style.opacity='0'; el.style.transform='translateY(18px)'; el.style.transition='opacity .5s ease, transform .5s ease'; io.observe(el); });
-  setTimeout(() => grid.querySelectorAll('.article-card').forEach(el => el.classList.add('in')), 80);
+  // Apparition directe sans attendre le scroll
+  setTimeout(() => {
+    grid.querySelectorAll('.article-card').forEach((el, i) => {
+      setTimeout(() => { el.style.opacity='1'; el.style.transform='translateY(0)'; }, i * 80);
+    });
+  }, 50);
 }
 
 function filterArticles(cat, el) {
