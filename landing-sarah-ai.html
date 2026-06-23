@@ -38,8 +38,10 @@ nav{padding:22px 0;border-bottom:1px solid var(--line)}
 .logo-text{font-size:20px;font-weight:800;color:var(--gold);letter-spacing:-.3px}
 .nav-links{display:flex;gap:32px;font-size:14.5px;font-weight:500;color:var(--gray)}
 @media (max-width:900px){.nav-links{display:none}}
-.nav-links a{text-decoration:none}
+.nav-links a{text-decoration:none;transition:color .2s}
 .nav-links a:hover{color:var(--white)}
+.nav-links a.blog-link{color:var(--gold-light)}
+.nav-links a.blog-link:hover{color:var(--white)}
 .nav-actions{display:flex;align-items:center;gap:12px}
 .btn-gold{
   font-family:var(--font-body);font-size:14px;font-weight:700;
@@ -231,6 +233,38 @@ nav{padding:22px 0;border-bottom:1px solid var(--line)}
   background:var(--gold);padding:9px 20px;border-radius:100px;
 }
 
+/* ===== BLOG TEASER ===== */
+.blog-teaser{padding:80px 0;border-top:1px solid var(--line)}
+.blog-teaser-head{text-align:center;margin-bottom:40px}
+.blog-teaser-eyebrow{font-size:12.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+.blog-teaser-head h2{font-size:clamp(24px,3vw,34px);font-weight:800;letter-spacing:-1px;line-height:1.15}
+.blog-teaser-head h2 .accent{color:var(--gold)}
+.blog-teaser-head p{font-size:15px;color:var(--gray);margin-top:12px}
+.blog-preview-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:36px}
+@media (max-width:880px){.blog-preview-grid{grid-template-columns:1fr 1fr}}
+@media (max-width:600px){.blog-preview-grid{grid-template-columns:1fr}}
+.blog-preview-card{
+  background:var(--bg-card);border:1px solid var(--line);border-radius:14px;padding:24px;
+  cursor:pointer;transition:border-color .2s, transform .2s;text-decoration:none;color:inherit;display:block;
+}
+.blog-preview-card:hover{border-color:rgba(212,168,47,.4);transform:translateY(-2px)}
+.blog-preview-cat{font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+.blog-preview-title{font-size:16px;font-weight:700;line-height:1.35;margin-bottom:10px}
+.blog-preview-excerpt{font-size:13px;color:var(--gray);line-height:1.6}
+.blog-preview-empty{
+  text-align:center;padding:40px;color:var(--gray-dim);
+  border:1px dashed rgba(255,255,255,.1);border-radius:14px;
+  grid-column:1/-1;font-size:14px;
+}
+.blog-cta-row{text-align:center}
+.btn-outline-gold{
+  font-family:var(--font-body);font-size:14px;font-weight:700;
+  background:transparent;color:var(--gold);border:1.5px solid var(--gold);
+  padding:13px 28px;border-radius:9px;cursor:pointer;text-decoration:none;
+  transition:all .2s ease;display:inline-block;
+}
+.btn-outline-gold:hover{background:var(--gold);color:var(--bg)}
+
 /* ===== FINAL CTA ===== */
 .final-cta{padding:90px 0;text-align:center;border-top:1px solid var(--line)}
 .final-cta h2{font-size:clamp(28px,4.6vw,48px);font-weight:900;letter-spacing:-1.5px;line-height:1.1;max-width:760px;margin:0 auto 18px}
@@ -268,6 +302,7 @@ footer{border-top:1px solid var(--line);padding:48px 0 32px}
       <a href="#features">Comment ça marche</a>
       <a href="#demo">Démo</a>
       <a href="#plans">Tarifs</a>
+      <a href="blog.html" class="blog-link">Blog</a>
       <a href="mailto:contact@agenc-ai.com">Contact</a>
     </div>
     <div class="nav-actions">
@@ -283,7 +318,6 @@ footer{border-top:1px solid var(--line);padding:48px 0 32px}
       <div class="reveal in">
         <h1>Je transforme tes visiteurs en <span class="accent">rendez-vous qualifiés</span> pour ton agence</h1>
         <p class="hero-sub">Sarah répond à tes visiteurs 24h/24, qualifie leur projet et propose une visite — automatiquement, pendant que tu t'occupes du reste.</p>
-
         <div class="hero-notice">
           <div class="hero-notice-icon">🎁</div>
           <div>
@@ -291,13 +325,11 @@ footer{border-top:1px solid var(--line);padding:48px 0 32px}
             <div class="hero-notice-sub">Vois Sarah en action sur ton propre site, sans contrainte.</div>
           </div>
         </div>
-
         <div class="hero-actions">
           <button class="btn-gold-lg cta-trigger">Demander une Démo</button>
           <button class="btn-outline-lg" id="see-plans-btn">Voir les tarifs</button>
         </div>
       </div>
-
       <div class="product-card reveal in">
         <div class="product-card-head">
           <div class="product-icon">✦</div>
@@ -396,6 +428,23 @@ footer{border-top:1px solid var(--line);padding:48px 0 32px}
   </div>
 </section>
 
+<!-- BLOG TEASER — articles récents depuis l'API -->
+<section class="blog-teaser" id="blog-teaser">
+  <div class="wrap">
+    <div class="blog-teaser-head reveal">
+      <div class="blog-teaser-eyebrow">Ressources</div>
+      <h2>Conseils & <span class="accent">actualités immobilières</span></h2>
+      <p>Insights sur l'IA, la prospection et l'immobilier indépendant.</p>
+    </div>
+    <div class="blog-preview-grid reveal" id="blog-preview-grid">
+      <div class="blog-preview-empty">⏳ Chargement des articles…</div>
+    </div>
+    <div class="blog-cta-row reveal">
+      <a href="blog.html" class="btn-outline-gold">Lire tous les articles →</a>
+    </div>
+  </div>
+</section>
+
 <section class="section" id="plans">
   <div class="wrap">
     <div class="section-head reveal">
@@ -467,6 +516,7 @@ footer{border-top:1px solid var(--line);padding:48px 0 32px}
       <div class="footer-links">
         <a href="#features">Fonctionnalités</a>
         <a href="#plans">Tarifs</a>
+        <a href="blog.html">Blog</a>
         <a href="privacy.html">Confidentialité</a>
         <a href="terms.html">CGU</a>
         <a href="#">WhatsApp</a>
@@ -477,6 +527,7 @@ footer{border-top:1px solid var(--line);padding:48px 0 32px}
 
 <script>
 const TRACK_API = "https://agenc-ai.com/thee-api/track";
+const ARTICLES_API = "https://agenc-ai.com/thee-api/articles";
 const sessionId = "land_" + Date.now() + "_" + Math.random().toString(36).slice(2,9);
 const startTime = Date.now();
 let scrollFlags = { s50: false, s90: false };
@@ -494,11 +545,9 @@ window.addEventListener('scroll', () => {
   if (scrolled > 0.9 && !scrollFlags.s90) { scrollFlags.s90 = true; track('scroll_90'); }
 });
 window.addEventListener('beforeunload', () => track('time_on_page', { duration_seconds: Math.round((Date.now() - startTime) / 1000) }));
-
 document.querySelectorAll('.cta-trigger').forEach(btn => {
   btn.addEventListener('click', () => { track('cta_click'); window.open('https://calendly.com/thee-ai/30min', '_blank'); });
 });
-
 document.getElementById('see-plans-btn')?.addEventListener('click', () => document.getElementById('plans').scrollIntoView({behavior:'smooth'}));
 document.getElementById('see-plans-btn-2')?.addEventListener('click', () => document.getElementById('plans').scrollIntoView({behavior:'smooth'}));
 
@@ -509,15 +558,8 @@ function switchDevice(mode){
   const frame = document.getElementById('mockup-desktop');
   const btnDesktop = document.getElementById('btn-desktop');
   const btnMobile = document.getElementById('btn-mobile');
-  if(mode === 'mobile'){
-    frame.classList.add('mockup-mobile');
-    btnDesktop.classList.remove('active');
-    btnMobile.classList.add('active');
-  } else {
-    frame.classList.remove('mockup-mobile');
-    btnMobile.classList.remove('active');
-    btnDesktop.classList.add('active');
-  }
+  if(mode === 'mobile'){ frame.classList.add('mockup-mobile'); btnDesktop.classList.remove('active'); btnMobile.classList.add('active'); }
+  else { frame.classList.remove('mockup-mobile'); btnMobile.classList.remove('active'); btnDesktop.classList.add('active'); }
 }
 
 const conversation = [
@@ -544,20 +586,9 @@ function startDemo() {
         typing.className = 'chat-typing';
         typing.innerHTML = '<span></span><span></span><span></span>';
         body.appendChild(typing);
-        setTimeout(() => {
-          typing.remove();
-          const el = document.createElement('div');
-          el.className = 'chat-msg sarah';
-          el.textContent = msg.text;
-          body.appendChild(el);
-          i++; next();
-        }, 850);
+        setTimeout(() => { typing.remove(); const el = document.createElement('div'); el.className = 'chat-msg sarah'; el.textContent = msg.text; body.appendChild(el); i++; next(); }, 850);
       } else {
-        const el = document.createElement('div');
-        el.className = 'chat-msg visitor';
-        el.textContent = msg.text;
-        body.appendChild(el);
-        i++; next();
+        const el = document.createElement('div'); el.className = 'chat-msg visitor'; el.textContent = msg.text; body.appendChild(el); i++; next();
       }
     }, delay);
   }
@@ -565,6 +596,38 @@ function startDemo() {
 }
 const demoObserver = new IntersectionObserver((entries) => { entries.forEach(e => { if (e.isIntersecting) { startDemo(); demoObserver.disconnect(); } }); }, { threshold: 0.3 });
 demoObserver.observe(document.querySelector('.mockup-frame'));
+
+// ── Blog teaser ──────────────────────────────────
+const catLabels = { conseils:'Conseils', ia:'IA & Innovation', prospection:'Prospection', temoignage:'Témoignage', actu:'Actualité' };
+async function loadBlogTeaser() {
+  const grid = document.getElementById('blog-preview-grid');
+  try {
+    // API first, localStorage fallback
+    let articles = [];
+    try {
+      const res = await fetch(ARTICLES_API + '?status=publie&limit=3');
+      const data = await res.json();
+      articles = data.articles || [];
+    } catch(e) {
+      const local = JSON.parse(localStorage.getItem('sarah_articles') || '[]');
+      articles = local.filter(a => a.status === 'publie').slice(0, 3);
+    }
+    if (!articles.length) {
+      grid.innerHTML = `<div class="blog-preview-empty">✍️ Les articles arrivent bientôt — <a href="blog.html" style="color:var(--gold)">consulter le blog</a></div>`;
+      return;
+    }
+    grid.innerHTML = articles.map(art => `
+      <a href="blog.html?id=${art.id}" class="blog-preview-card">
+        <div class="blog-preview-cat">${catLabels[art.category] || art.category}</div>
+        <div class="blog-preview-title">${art.title}</div>
+        <div class="blog-preview-excerpt">${(art.excerpt || '').substring(0, 100)}${(art.excerpt||'').length > 100 ? '…' : ''}</div>
+      </a>
+    `).join('');
+  } catch(e) {
+    grid.innerHTML = `<div class="blog-preview-empty"><a href="blog.html" style="color:var(--gold)">Voir le blog →</a></div>`;
+  }
+}
+loadBlogTeaser();
 </script>
 </body>
 </html>
