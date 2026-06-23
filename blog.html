@@ -284,30 +284,42 @@ img{max-width:100%;display:block}
 
 /* Article body */
 .article-body{
-  max-width:720px;margin:0 auto;
-  font-size:17px;line-height:1.8;color:var(--navy);
+  max-width:680px;margin:0 auto;
+  font-size:16.5px;line-height:1.75;color:var(--navy);
 }
+/* Supprime les paragraphes vides générés par l'éditeur */
+.article-body p:empty{display:none}
+.article-body p{margin:0 0 16px}
+.article-body p + p{margin-top:0}
 .article-body h2{
-  font-family:var(--font-display);font-size:26px;font-weight:700;
-  color:var(--navy);margin:40px 0 16px;letter-spacing:-.5px;
+  font-family:var(--font-display);font-size:24px;font-weight:700;
+  color:var(--navy);margin:36px 0 12px;letter-spacing:-.5px;
+  padding-bottom:8px;border-bottom:2px solid var(--line-gold);
 }
 .article-body h3{
-  font-family:var(--font-display);font-size:20px;font-weight:700;
-  color:var(--navy);margin:32px 0 12px;
+  font-family:var(--font-display);font-size:19px;font-weight:700;
+  color:var(--navy);margin:28px 0 10px;
 }
-.article-body p{margin:0 0 22px}
-.article-body ul,.article-body ol{margin:0 0 22px 24px}
-.article-body li{margin-bottom:8px}
+.article-body ul,.article-body ol{margin:0 0 18px 20px}
+.article-body li{
+  margin-bottom:4px;
+  padding-left:4px;
+}
+.article-body li + li{margin-top:2px}
 .article-body strong{font-weight:700;color:var(--navy-2)}
 .article-body em{font-style:italic}
 .article-body a{color:var(--gold);border-bottom:1px solid var(--line-gold);transition:border-color .2s}
 .article-body a:hover{border-color:var(--gold)}
 .article-body blockquote{
   border-left:3px solid var(--gold);
-  margin:28px 0;padding:16px 24px;
+  margin:24px 0;padding:14px 20px;
   background:rgba(217,166,46,.06);border-radius:0 8px 8px 0;
-  font-style:italic;color:var(--gray);
+  font-style:italic;color:var(--gray);font-size:15.5px;
 }
+/* Nettoyage espaces excessifs entre blocs */
+.article-body br + br{display:none}
+.article-body > *:first-child{margin-top:0}
+.article-body > *:last-child{margin-bottom:0}
 
 /* CTA in article */
 .article-cta-block{
