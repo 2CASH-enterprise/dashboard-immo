@@ -500,6 +500,9 @@ img{max-width:100%;display:block}
 
     <!-- Header article -->
     <div class="article-header">
+      <div id="art-cover-wrap" style="display:none;border-radius:16px;overflow:hidden;margin-bottom:32px;max-height:360px">
+        <img id="art-cover-img" src="" alt="" style="width:100%;height:360px;object-fit:cover"/>
+      </div>
       <div class="article-cat-badge" id="art-cat-badge">Catégorie</div>
       <h1 class="article-title" id="art-title">Titre de l'article</h1>
       <div class="article-meta">
@@ -639,9 +642,10 @@ function renderGrid(articles) {
     const isFeatured = i === 0 && articles.length >= 3;
     return `
       <div class="article-card ${isFeatured ? 'featured' : ''}" style="opacity:0;transform:translateY(18px);transition:opacity .5s ease,transform .5s ease" onclick="showArticle(${JSON.stringify(art).replace(/"/g,'&quot;')})">
-        <div class="card-top">
-          <span class="card-category">${cat.icon} ${cat.label}</span>
-          <div class="card-icon">${cat.icon}</div>
+        <div class="card-top" style="${art.og_image ? 'background:url('+art.og_image+') center/cover no-repeat;' : ''}">
+          ${art.og_image ? '<div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(30,35,88,.45),rgba(30,35,88,.8));border-radius:0"></div>' : ''}
+          <span class="card-category" style="position:relative">${cat.icon} ${cat.label}</span>
+          <div class="card-icon" style="position:relative">${art.og_image ? '' : cat.icon}</div>
         </div>
         <div class="card-body">
           <div class="card-title">${art.title}</div>
@@ -697,6 +701,17 @@ function showArticle(art) {
   const wordCount = art.content.replace(/<[^>]+>/g,'').split(/\s+/).length;
   const readMin = Math.max(1, Math.round(wordCount / 200));
   document.getElementById('art-read-time').textContent = `${readMin} min de lecture`;
+
+  // Image de couverture
+  const coverWrap = document.getElementById('art-cover-wrap');
+  const coverImg = document.getElementById('art-cover-img');
+  if (art.og_image) {
+    coverImg.src = art.og_image;
+    coverImg.alt = art.title;
+    coverWrap.style.display = 'block';
+  } else {
+    coverWrap.style.display = 'none';
+  }
 
   // Corps
   document.getElementById('art-body').innerHTML = art.content;
